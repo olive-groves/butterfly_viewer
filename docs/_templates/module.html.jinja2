@@ -1,0 +1,34 @@
+{% extends "default/module.html.jinja2" %}
+{# Hide inherited members in submodule pages to reduce length. #}
+{% block inherit_members scoped %}{% endblock %}
+{# Remove Contents title in navigation bar (reduce clutter). #}
+{% block nav_index %}
+    {% set index = module.docstring | to_markdown | to_html | attr("toc_html") %}
+    {% if index %}
+        <h2>Butterfly Viewer</h2>
+        {{ index | safe }}
+    {% endif %}
+{% endblock %}
+{# Rename Submodules block in navigation bar to Modules. #}
+{% block nav_submodules_title %}<h2>Modules</h2>{% endblock %}
+{# Rearrange list of modules in navigation bar to show main script at top. #}
+{% block nav_submodules_list %}
+    <ul>
+        <li>
+            {% for submodule in module.submodules %}
+                {% if ( module.modulename == submodule.name ) %}
+                    <li>{{ submodule.taken_from | link(text=submodule.name) }}</li>
+                {% endif %}
+            {% endfor %}
+            <ul>
+                {% for submodule in module.submodules if is_public(submodule) | trim %}
+                    {% if ( module.modulename != submodule.name ) %}
+                        <li>{{ submodule.taken_from | link(text=submodule.name) }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
+{# Hide Documentation block in navigation bar as this is not used. #}
+{% block nav_members %}{% endblock %}

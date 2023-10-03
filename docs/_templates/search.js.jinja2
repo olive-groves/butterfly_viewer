@@ -1,0 +1,51 @@
+{#
+This file contains the search index and is only loaded on demand (when the user focuses the search field).
+We use a JS file instead of JSON as this works with `file://`.
+#}
+window.pdocSearch = (function(){
+    {% include "resources/elasticlunr.min.js" %}
+
+    /** pdoc search index */const docs = {{ search_index | safe }};
+
+    // mirrored in build-search-index.js (part 1)
+    // Also split on html tags. this is a cheap heuristic, but good enough.
+    elasticlunr.tokenizer.setSeperator(/[\s\-.;&_'"=,()]+|<[^>]*>/);
+
+    let searchIndex;
+    if (docs._isPrebuiltIndex) {
+        console.info("using precompiled search index");
+        searchIndex = elasticlunr.Index.load(docs);
+    } else {
+        console.time("building search index");
+        // mirrored in build-search-index.js (part 2)
+        searchIndex = elasticlunr(function () {
+            this.pipeline.remove(elasticlunr.stemmer);
+            this.pipeline.remove(elasticlunr.stopWordFilter);
+            this.addField("qualname");
+            this.addField("fullname");
+            this.addField("annotation");
+            this.addField("default_value");
+            this.addField("signature");
+            this.addField("bases");
+            this.addField("doc");
+            this.setRef("fullname");
+        });
+        for (let doc of docs) {
+            searchIndex.addDoc(doc);
+        }
+        console.timeEnd("building search index");
+    }
+
+    return (term) => searchIndex.search(term, {
+        fields: {
+            qualname: {boost: 4},
+            fullname: {boost: 2},
+            annotation: {boost: 2},
+            default_value: {boost: 2},
+            signature: {boost: 2},
+            bases: {boost: 2},
+            doc: {boost: 1},
+        },
+        expand: true
+    });
+})();

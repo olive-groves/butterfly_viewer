@@ -1,0 +1,57 @@
+/*
+This file is empty by default.
+Override it in your custom template to provide additional CSS rules.
+*/
+.pdoc {
+    --link: #0969da; /* Brighter for visibility. */
+    --link-hover: #0969da; /* Use underline instead of change in color. */
+} 
+
+.pdoc h1, .pdoc h2, .pdoc h3, .pdoc h4 {
+    font-weight: 400;
+    margin: .3em 0;
+    padding: .2em 0;
+}
+
+.pdoc a:hover {
+    color: var(--link-hover);
+    text-decoration: underline; /* Use underline instead of change in color. */
+}
+.pdoc pre {
+    border: none;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fcfcfc;
+}
+.pdoc pre > code {
+    color: #666666;
+}
+.pdoc img {
+    max-width: 100%; /* Don't let images be wider than the width of the page. */
+    height: auto;
+}
+nav.pdoc {
+    box-shadow: None; /* Remove drop shadow from navigation (hamburger) box. */
+}
+nav.pdoc input[type=search] {
+    margin-bottom: 1.5rem;
+}
+nav.pdoc li a { /* Reduce font size of section in navbar */
+    font-size: 90%; 
+}
+nav.pdoc > div > ul > li > a { /* Increase font size of chapter in navbar */
+    margin-top: 0.5rem;
+    font-size: 110%;
+}
+.pdoc blockquote {
+    color: var(--text); /* Style the blockquote because the default does not. */
+    border-left: 0.5rem solid hsl(60, 8%, 73%);
+    padding: 1rem 1rem 1rem 1rem;
+    margin-left: 1rem;
+    margin-right: 2rem;
+    font-size: 85%;
+    background-color:hsl(60, 28%, 95%);;
+}
+.pdoc blockquote > p {
+    margin-bottom: 0.2rem;
+}
