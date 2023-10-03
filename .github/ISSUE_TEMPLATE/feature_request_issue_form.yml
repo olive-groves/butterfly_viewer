@@ -1,0 +1,37 @@
+name: Feature request
+description: Request a feature with a form
+title: "[Feature] <title>"
+labels: ["feature"]
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing request for this feature?
+    description: Please search the issues to see if a request already exists for the feature you'd like.
+    options:
+    - label: I have searched the existing issues
+      required: true
+- type: textarea
+  attributes:
+    label: Is your feature request related to a problem?
+    description: A concise description of what the problem is.
+    placeholder: "I'm always frustrated when..."
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Describe the solution you'd like
+    description: A concise description of what you want to happen. Paste in screenshots of existing features in other software if that helps.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Describe alternatives you've considered
+    description: A clear and concise description of any alternative solutions or features you've considered.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: Add any other context or screenshots about the feature request here.
+  validations:
+    required: false

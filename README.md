@@ -1,2 +1,51 @@
-# butterfly_viewer
-Desktop multi-image viewer with sliding overlays and synchronized pan and zoom. Built to rapidly compare local image files from painting analyses including hi-res and raking-light photos, X-rays, and element maps from XRF and RIS. Installs as a Windows executable and runs directly on Python. Very open source.
+<div id="user-content-toc" align="center">
+  <ul>
+    <summary>
+      <h2 style="display: inline-block;">
+        <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#download-and-install">Download</a>
+        ·
+        <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#tutorial">Tutorial</a>
+      </h2>
+    </summary>
+  </ul>
+</div>
+
+<h1 align="center"> 
+  Butterfly Viewer
+</h1>
+
+<p align="center">
+  <img src="https://olive-groves.github.io/butterfly_viewer/images/viewer_sliding_overlay.gif" alt="Animated screencapture of the Butterfly Viewer showing a sliding overlay with three images being panned and zoomed.">
+  <br />
+  <i>Sliding overlays</i>
+</p>
+
+<p align="center">
+  <img src="https://olive-groves.github.io/butterfly_viewer/images/viewer_dragdrop_sync.gif" alt="Animated screencapture of the Butterfly Viewer showing image files loaded via drag-and-drop and then synchronously panned and zoomed.">
+  <br />
+  <i>Synchronized pan and zoom</i>
+</p>
+
+Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
+
+The Viewer runs as an [installable Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable) or directly on its [Python source code](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python).
+
+Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
+
+To accurately compare images with synchronous movement and sliding overlays in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned. This alignment is referred to as *registration*, and you can use [Butterfly Registrator](https://olive-groves.github.io/butterfly_registrator) to create registered copies of your images.
+
+## How-to's
+
+Our [Butterfly Viewer page](https://olive-groves.github.io/butterfly_viewer) documents how to install and use the Viewer, as well how contribute to it as a developer. 
+
+### Install as [Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable)
+
+### Run on [Python](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python)
+
+### [Tutorial](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#tutorial) of main features
+
+### [Help](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#help) with common questions
+
+### [Developers](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#developers)
+
+Or see the source markdown file in the `docs` branch under `docs/DEVELOPERS.md`.
