@@ -36,7 +36,9 @@ You can download and install Butterfly Viewer to run:
 
 ## Windows executable
 
-> Download latest: [`butterfly_viewer_v1.y.z_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest)
+> Download latest [`butterfly_viewer_v1.y.z_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest)
+> 
+> **Restart recommended after installing**.
 
 For Windows, Butterfly Viewer installs to your computer with an executable (.exe) installer similar to how other programs install on your computer. The Viewer will be added to your list of programs and optionally to your desktop as a shortcut.
 
@@ -121,10 +123,11 @@ Once the installer loads, follow the onscreen steps to install the Viewer:
 - Choose to create a desktop shortcut. This can be useful to have.
 - Choose the install folder. The default should be ok.
   <br>
-  >*Updating with a newer version? Select the same install folder and **Install anyway**. Or first [uninstall the old version](#uninstall) and re-run the new installer if you experience problems.*
+  > *Updating with a newer version? First [uninstall the old version](#uninstall) and then re-run the new installer.
 
 - Install.
-- Finish. You can check **Launch** to verify the Viewer installed properly.
+- Restart. **Restart recommended** to avoid issues with drag-and-drop not working.
+
 
 ![Two screenshots of the Butterfly Viewer installer: 1) the first page showing the license agreement, and 2) the final page confirming a completed install.](images/install/install_installer.jpg)   
 
@@ -238,6 +241,11 @@ Hide the interface by clicking ![Hide interface button](images/tutorial/hide_int
 Let's add our first image: the color photograph of *Small Pear Tree in Blossom*.
 
 Click and drag `s0039V1962_b_crop.png` from the sample images folder into the Viewer’s main area.
+
+> **Drag-and-drop not working?** 
+> Try restarting your computer and reopening the Viewer. 
+>
+> Some users report this solves issues with images not being droppable.
 
 ![Screenshot showing the color image file dragged into the Viewer's main area.](images/tutorial/drag_single.jpg)
 
