@@ -29,6 +29,7 @@ SetupIconFile=C:\github\olive-groves\butterfly_viewer\butterfly_viewer\icons\ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+AlwaysRestart=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
