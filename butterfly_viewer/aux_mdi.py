@@ -111,38 +111,31 @@ class QMdiAreaWithCustomSignals(QtWidgets.QMdiArea):
             self.tileSubWindows()
 
     def dragEnterEvent(self, event):
-        """event: Signal that one or more image files have been dragged into the area."""
-        if event.mimeData().hasImage:
-            self.file_path_dragged.emit(True)
-            event.accept()
-        else:
-            event.ignore()
+        """event: Signal that one or more files have been dragged into the area."""
+        self.file_path_dragged.emit(True)
+        event.accept()
 
     def dragMoveEvent(self, event):
-        """event: Signal that one or more image files are being dragged in the area."""
-        if event.mimeData().hasImage:
-            event.accept()
-        else:
-            event.ignore()
+        """event: Signal that one or more files are being dragged in the area."""
+        event.accept()
 
     def dragLeaveEvent(self, event):
-        """event: Signal that one or more image files have been dragged out of the area."""
+        """event: Signal that one or more files have been dragged out of the area."""
         self.file_path_dragged.emit(False)
+        event.accept()
 
     def dropEvent(self, event):
-        """event: Signal that one or more image files have been dropped into the area."""
-        if event.mimeData().hasImage:
+        """event: Signal that one or more files have been dropped into the area."""
+        event.setDropAction(QtCore.Qt.CopyAction)
 
-            event.setDropAction(QtCore.Qt.CopyAction)
+        self.file_path_dragged.emit(False)
 
-            self.file_path_dragged.emit(False)
+        urls = event.mimeData().urls()
 
-            i = -1
-            for url in event.mimeData().urls():
-                i += 1
-                file_path = event.mimeData().urls()[i].toLocalFile()
+        if urls:
+            for url in urls:
+                file_path = url.toLocalFile()
                 self.file_path_dragged_and_dropped.emit(file_path)
-            
             event.accept()
         else:
             event.ignore()
