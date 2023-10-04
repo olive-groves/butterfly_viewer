@@ -2,14 +2,14 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Butterfly Viewer"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.0.1"
 #define MyAppURL "https://olive-groves.github.io/butterfly_viewer"
 #define MyAppExeName "butterfly_viewer.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{18097D65-E564-4726-BB31-CEB25EFD8FA4}
+AppId={{591B7202-9D87-495C-97AD-9C1E546CA9D3}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -19,13 +19,13 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=C:\github\olive-groves\private_butterfly_viewer\LICENSE.txt
+LicenseFile=C:\github\olive-groves\butterfly_viewer\LICENSE.txt
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputDir=C:\Users\admin\Downloads\butterfly_viewer_v1.0.0_win64_setup
-OutputBaseFilename=butterfly_viewer_v1.0.0_win64_setup
-SetupIconFile=C:\github\olive-groves\private_butterfly_viewer\butterfly_viewer\icons\icon.ico
+OutputDir=C:\Users\admin\Downloads\butterfly_viewer_v1.0.1_win64_setup
+OutputBaseFilename=butterfly_viewer_v1.0.1_win64_setup
+SetupIconFile=C:\github\olive-groves\butterfly_viewer\butterfly_viewer\icons\icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
