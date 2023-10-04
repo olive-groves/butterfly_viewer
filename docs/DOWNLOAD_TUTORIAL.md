@@ -36,9 +36,11 @@ You can download and install Butterfly Viewer to run:
 
 ## Windows executable
 
->[`butterfly_viewer_1.0.0_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest)
+> Download latest: [`butterfly_viewer_v1.y.z_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest)
 
 For Windows, Butterfly Viewer installs to your computer with an executable (.exe) installer similar to how other programs install on your computer. The Viewer will be added to your list of programs and optionally to your desktop as a shortcut.
+
+Here v1.0.0 is shown in the screenshots, but you should use the [latest version](https://github.com/olive-groves/butterfly_viewer/releases/latest) unless advised otherwise.
 
 ![Butterfly Viewer shortcut and icon on Windows](images/install/windows_shortcut.jpg)
 
@@ -52,13 +54,15 @@ For Windows, Butterfly Viewer installs to your computer with an executable (.exe
 
 ### Download ZIP
 
-Download the Viewer from the latest release of the Viewer's GitHub repo, which is packaged as an installer under *Assets* as [`butterfly_viewer_1.0.0_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest).
+Download the Viewer from the latest release of the Viewer's GitHub repo, which is packaged as an installer under *Assets* as [`butterfly_viewer_v1.y.z_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest).
 
 ![Screenshot showing the download link of the Butterfly Viewer installer ZIP on its GitHub repo.](images/install/download_zip.jpg)
+<br>
+<sup>Here v1.0.0 is shown, but you should download the [latest version](https://github.com/olive-groves/butterfly_viewer/releases/latest).</sup>
 
 ### Extract ZIP
 
-Extract `butterfly_viewer_1.0.0_win64_setup.exe` from the ZIP:
+Extract `butterfly_viewer_v1.y.z_win64_setup.exe` from the ZIP:
 
 1. Go to the folder where you downloaded the ZIP.
 2. Right-click the ZIP.
@@ -79,9 +83,9 @@ Your computer might block you from running the installer via double-click if you
 
 #### Option 1: With admin privileges
 
-If you have admin privileges, run the installer by double-clicking on `butterfly_viewer_1.0.0_win64_setup.exe`:
+If you have admin privileges, run the installer by double-clicking on `butterfly_viewer_v1.y.z_win64_setup.exe`:
 
-1. Double-click on `butterfly_viewer_1.0.0_win64_setup.exe`.
+1. Double-click on `butterfly_viewer_v1.y.z_win64_setup.exe`.
 2. Select **More info**.
 3. Select **Run anyway**.
   <br>
