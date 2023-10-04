@@ -197,6 +197,14 @@ class DragDropImageLabel(QtWidgets.QWidget):
         
         self.show_filename = show_filename
         self.show_pushbuttons = show_pushbuttons
+
+        self.image_filetypes = [
+            ".jpeg", ".jpg", ".jpe", ".jif", ".jfif", ".jfi", ".pjpeg", ".pjp",
+            ".png",
+            ".tiff", ".tif",
+            ".bmp",
+            ".webp",
+            ".ico", ".cur"]
         
         self.setAcceptDrops(True)
 
@@ -288,7 +296,7 @@ class DragDropImageLabel(QtWidgets.QWidget):
     
     
     def dragEnterEvent(self, event):
-        """event: Override dragEnterEvent() to set stylesheet as hovered and read filepath from a dragged image, but reject multiple files or non-image files."""
+        """event: Override dragEnterEvent() to set stylesheet as hovered and read filepath from a dragged image, but reject multiple files."""
         if len(event.mimeData().urls()) is 1 and self.grab_image_urls_from_mimedata(event.mimeData()):
             self.image_label_child.set_stylesheet_hovered(True)
             event.accept()
@@ -296,7 +304,7 @@ class DragDropImageLabel(QtWidgets.QWidget):
             event.ignore()
 
     def dragMoveEvent(self, event):
-        """event: Override dragMoveEvent() to reject multiple files or non-image files."""
+        """event: Override dragMoveEvent() to reject multiple files."""
         if len(event.mimeData().urls()) is 1 and self.grab_image_urls_from_mimedata(event.mimeData()):
             event.accept()
         else:
@@ -312,19 +320,20 @@ class DragDropImageLabel(QtWidgets.QWidget):
         if len(urls) is 1 and urls:
             event.setDropAction(QtCore.Qt.CopyAction)
             file_path = urls[0].toLocalFile()
-            self.load_image(file_path)
-            
-            event.accept()
+            loaded = self.load_image(file_path)
+            if loaded:
+                event.accept()
+            else:
+                event.ignore()
+                self.image_label_child.set_stylesheet_hovered(False)
         else:
             event.ignore()
 
     def grab_image_urls_from_mimedata(self, mimedata):
-        """mimeData: Get urls (filepaths) from drag event and filter out non-image files."""
+        """mimeData: Get urls (filepaths) from drag event."""
         urls = list()
-        db = QtCore.QMimeDatabase()
         for url in mimedata.urls():
-            mimetype = db.mimeTypeForUrl(url)
-            if "image/" in mimetype.name():
+            if any([filetype in url.toLocalFile().lower() for filetype in self.image_filetypes]):
                 urls.append(url)
         return urls
     
@@ -347,7 +356,10 @@ class DragDropImageLabel(QtWidgets.QWidget):
         self.clear_pushbutton.setVisible(True)
     
     def load_image(self, file_path):
-        """str: Load image from filepath with loading grayout; set filename text."""
+        """str: Load image from filepath with loading grayout; set filename text.
+        
+        Returns:
+            loaded (bool): True if image successfully loaded; False if not."""
         loading_text = "Loading..."
         if self.show_filepath_while_loading:
             loading_text = loading_text.replace("...",  " '" + file_path.split("/")[-1] + "'...")
@@ -355,12 +367,13 @@ class DragDropImageLabel(QtWidgets.QWidget):
         pixmap = QtGui.QPixmap(file_path)
         if pixmap.depth() is 0:
             self.display_loading_grayout(False)
-            return
+            return False
 
         self.set_image(pixmap)
         self.set_filename_label(file_path)
         self.file_path = file_path
         self.display_loading_grayout(False)
+        return True
         
     def open_image_via_dialog(self):
         """Open dialog window to select and load image from file."""
@@ -437,6 +450,14 @@ class FourDragDropImageLabel(QtWidgets.QFrame):
     def __init__(self):
         super().__init__()
 
+        self.image_filetypes = [
+            ".jpeg", ".jpg", ".jpe", ".jif", ".jfif", ".jfi", ".pjpeg", ".pjp",
+            ".png",
+            ".tiff", ".tif",
+            ".bmp",
+            ".webp",
+            ".ico", ".cur"]
+
         self.setAcceptDrops(True)
 
         main_layout = QtWidgets.QGridLayout()
@@ -504,31 +525,38 @@ class FourDragDropImageLabel(QtWidgets.QFrame):
         n_str = str(n)
         if n >= 1 and n <= 4 and urls:
             event.setDropAction(QtCore.Qt.CopyAction)
-
             i = 0
             file_path = urls[i].toLocalFile()
 
             self.will_start_loading.emit(True, "Loading to creator " + str(i+1) + "/" + n_str + "...")
 
-            self.app_main_topleft.load_image(file_path)
+            loaded = self.app_main_topleft.load_image(file_path)
+            if not loaded:
+                self.app_main_topleft.image_label_child.set_stylesheet_hovered(False)
 
             if n >= 2:
                 i += 1
                 file_path = urls[i].toLocalFile()
                 self.will_start_loading.emit(True, "Loading to creator " + str(i+1) + "/" + n_str + "...")
-                self.app_topright.load_image(file_path)
+                loaded = self.app_topright.load_image(file_path)
+                if not loaded:
+                    self.app_topright.image_label_child.set_stylesheet_hovered(False)
 
                 if n >= 3:
                     i += 1
                     file_path = urls[i].toLocalFile()
                     self.will_start_loading.emit(True, "Loading to creator " + str(i+1) + "/" + n_str + "...")
-                    self.app_bottomright.load_image(file_path)
+                    loaded = self.app_bottomright.load_image(file_path)
+                    if not loaded:
+                        self.app_bottomright.image_label_child.set_stylesheet_hovered(False)
 
                     if n >= 4:
                         i += 1
                         file_path = urls[i].toLocalFile()
                         self.will_start_loading.emit(True, "Loading to creator " + str(i+1) + "/" + n_str + "...")
-                        self.app_bottomleft.load_image(file_path)
+                        loaded = self.app_bottomleft.load_image(file_path)
+                        if not loaded:
+                            self.app_bottomleft.image_label_child.set_stylesheet_hovered(False)
 
             self.has_stopped_loading.emit(False)
             
@@ -537,12 +565,10 @@ class FourDragDropImageLabel(QtWidgets.QFrame):
             event.ignore()
 
     def grab_image_urls_from_mimedata(self, mimedata):
-        """mimeData: Get urls (filepaths) from drag event and filter out non-image files."""
+        """mimeData: Get urls (filepaths) from drag event."""
         urls = list()
-        db = QtCore.QMimeDatabase()
         for url in mimedata.urls():
-            mimetype = db.mimeTypeForUrl(url)
-            if "image/" in mimetype.name():
+            if any([filetype in url.toLocalFile().lower() for filetype in self.image_filetypes]):
                 urls.append(url)
         return urls
 
