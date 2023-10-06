@@ -37,9 +37,14 @@
     <li><a href="#sliding-overlays-and-opacity-sliders">Sliding overlays and opacity sliders</a></li>
     <li><a href="#alphascale-maps-with-sliding-overlays">Alphascale maps with sliding overlays</a></li>
   </ul></li>
-  <li><a href="#help">Help!</a>
+  <li><a href="#common-questions">Common questions</a>
   <ul>
-    <li><a href="#my-images-are-unequally-zoomed-with-sync-enabled">My images are unequally zoomed with sync enabled</a></li>
+    <li><a href="#report-a-bug">Report a bug?</a></li>
+    <li><a href="#request-new-feature">Request new feature?</a></li>
+    <li><a href="#seeing-pixelated-images">Seeing pixelated images?</a></li>
+    <li><a href="#unequal-zoom-with-sync-enabled">Unequal zoom with sync enabled?</a></li>
+    <li><a href="#where-is-butterfly-registrator">Where is Butterfly Registrator?</a></li>
+    <li><a href="#what-is-alphascale">What is alphascale?</a></li>
   </ul></li>
   <li><a href="#developers">Developers</a>
   <ul>
@@ -115,7 +120,7 @@ butterfly_viewer    </h1>
 
 <p>Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. </p>
 
-<p>To accurately compare images with synchronous movement and sliding overlays in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned. This alignment is referred to as <em>registration</em>, and you can use <a href="https://olive-groves.github.io/butterfly_registrator">Butterfly Registrator<sup>↗</sup></a> to create registered copies of your images.</p>
+<p>To accurately compare images with synchronous movement and sliding overlays in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned. This alignment is referred to as <em>registration</em>, and you can use <a href="#where-is-butterfly-registrator">Butterfly Registrator<sup>↗</sup></a> to create registered copies of your images.</p>
 
 <h1 id="download-and-install">Download and install</h1>
 
@@ -129,9 +134,9 @@ butterfly_viewer    </h1>
 <h2 id="windows-executable">Windows executable</h2>
 
 <blockquote>
-  <p>Download latest <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest"><code>butterfly_viewer_v1.y.z_win64_setup.exe.zip</code><sup>↗</sup></a></p>
+  <p>Download: <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest"><code>butterfly_viewer_v1.y.z_win64_setup.exe.zip</code><sup>↗</sup></a></p>
   
-  <p><strong>Restart recommended after installing</strong>.</p>
+  <p><sup> <strong>Restart after install recommended</strong> · <strong>Uses 106 MB storage</strong></sup></p>
 </blockquote>
 
 <p>For Windows, Butterfly Viewer installs to your computer with an executable (.exe) installer similar to how other programs install on your computer. The Viewer will be added to your list of programs and optionally to your desktop as a shortcut.</p>
@@ -144,6 +149,7 @@ butterfly_viewer    </h1>
 
 <ul>
 <li><p>The Viewer executable only runs on Windows. There's currently no support for executables for Linux or macOS.</p></li>
+<li><p>The Viewer uses 106 MB of storage space as an installed app.</p></li>
 <li><p>The Viewer uses locally stored images (like PNG, JPEG, TIFF) to create and explore views of those images. It's designed to be navigated by mouse or trackpad by clicking, dragging, and dropping.</p></li>
 <li><p>The Viewer doesn't use the internet, so any online images you wish to use must be locally available — for example, by downloading them or by selecting “always keep on your device” if they sync to cloud storage like OneDrive or Google Drive. Images on network shares can be loaded into the Viewer, but they can take more time to load than those stored locally, especially if accessing the share through a VPN.</p></li>
 </ul>
@@ -220,7 +226,7 @@ butterfly_viewer    </h1>
 <li>Open the Start menu  (<code>⊞ Win</code>).</li>
 <li>Type <strong>cmd</strong>.</li>
 <li>Press the <code>Enter</code> key or select the Command Prompt app.</li>
-<li>Paste into the prompt the installer path you copied with <code>Ctrl+V</code>.</li>
+<li>Paste into the prompt the installer path you copied with <code>Ctrl·V</code>.</li>
 <li>Run by pressing <code>Enter</code>. </li>
 <li>Wait for the installer to load. This may take a few seconds.</li>
 </ol>
@@ -312,18 +318,21 @@ butterfly_viewer    </h1>
 
 <h1 id="tutorial">Tutorial</h1>
 
+<blockquote>
+  <p>Sample images: <a href="https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA"><code>VGM_Datapackage_2023000_Butterfly_Images_V20231003.zip</code><sup>↗</sup></a></p>
+  
+  <p><sup>Credits: Van Gogh Museum, Amsterdam</sup></p>
+</blockquote>
+
 <p>This tutorial guides you through the Butterfly Viewer's main features using a stack of sample technical images of Vincent van Gogh's <em>Small Pear Tree in Blossom</em>.</p>
 
 <h2 id="download-sample-van-gogh-images">Download sample Van Gogh images</h2>
 
-<ul>
-<li><p>Download the <a href="https://vgm.data.surfsara.nl/index.php/s/dIIuM2cHEzJNtbP">ZIP of sample technical images<sup>↗</sup></a> of <em>Small Pear Tree in Blossom</em> by Vincent van Gogh, with credits to the Van Gogh Museum, Amsterdam.</p></li>
-<li><p>Extract the ZIP and open the folder of images.
-<br>
-<sup>How to: <a href="#extract-zip">Extract a ZIP</a></sup></p></li>
-</ul>
+<p>Download the <a href="https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA">ZIP of sample technical images<sup>↗</sup></a> of <em>Small Pear Tree in Blossom</em> by Vincent van Gogh, with credits to the Van Gogh Museum, Amsterdam.</p>
 
 <p><img src="images/tutorial/download_images.jpg" alt="Screenshot of the download button for the tutorial's sample images." /></p>
+
+<p>Extract the ZIP and open the folder of images. <sup>How to: <a href="#extract-zip">Extract a ZIP</a></sup></p>
 
 <p><img src="images/tutorial/images_folder.jpg" alt="Screenshot of the images folder from the downloaded sample ZIP." /></p>
 
@@ -380,9 +389,7 @@ butterfly_viewer    </h1>
 
 <p><img src="images/tutorial/drag_multiple.jpg" alt="Screenshots showing the raking light and zinc map dragged into the Viewer's main area." /></p>
 
-<blockquote>
-  <p>Clicking and dragging image files directly into the Viewer creates an individual image window for each image and automatically arranges them side-by-side.</p>
-</blockquote>
+<p>Clicking and dragging image files directly into the Viewer creates an individual image window for each image and automatically arranges them side-by-side.</p>
 
 <p><img src="images/tutorial/grid_multiple.jpg" alt="Screenshot showing the three previously added images arranged as a grid." /></p>
 
@@ -392,9 +399,7 @@ butterfly_viewer    </h1>
 
 <p><img src="images/tutorial/arrange_multiple_grid_to_row.jpg" alt="Screenshot showing the Viewer's windows arranged horizontally." /></p>
 
-<blockquote>
-  <p>When arranged horizontally, image windows are shown left-to-right in the order they were created.</p>
-</blockquote>
+<p>When arranged horizontally, image windows are shown left-to-right in the order they were created.</p>
 
 <p>Zoom (scroll) and pan (left-click drag) to explore the images synchronously.</p>
 
@@ -454,7 +459,7 @@ butterfly_viewer    </h1>
 <blockquote>
   <p>To accurately compare images with a sliding overlay in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned.</p>
   
-  <p>The sample images here are already registered. If you want to easily create registered copies of your own images, check out <a href="https://olive-groves.github.io/butterfly_registrator">Butterfly Registrator<sup>↗</sup></a>.</p>
+  <p>The sample images here are already registered. If you want to easily create registered copies of your own images, check out <a href="#where-is-butterfly-registrator">Butterfly Registrator<sup>↗</sup></a>.</p>
 </blockquote>
 
 <p><img src="images/tutorial/creator_topright_bottomright.jpg" alt="Screenshot indicating where in the sliding overlay creator to click and drag the raking light photo (top-right) and zinc element map (bottom-right)." /></p>
@@ -519,11 +524,7 @@ butterfly_viewer    </h1>
   <i>Alphascale maps in a sliding overlay</i>
 </p>
 
-<p>Here we're going to use alphascale versions of the XRF element maps (not grayscale versions) to better compare them with the color photo of <em>Small Pear Tree in Blossom</em> in a sliding overlay, which we introduced in the previous section. We'll also cover some more features.</p>
-
-<blockquote>
-  <p>If you want to create alphascale versions of your own grayscale maps, check out <a href="https://olive-groves.github.io/butterfly_registrator">Butterfly Registrator<sup>↗</sup></a>.</p>
-</blockquote>
+<p>Here we're going to use alphascale versions of the XRF element maps to better compare them with the color photo of <em>Small Pear Tree in Blossom</em>. We'll use a sliding overlay as in the previous section, and also cover some more features of the Viewer.</p>
 
 <p>First, make sure the Viewer is started with the interface showing.</p>
 
@@ -532,6 +533,14 @@ butterfly_viewer    </h1>
 <p>We'll again use the color photograph of <em>Small Pear Tree in Blossom</em> as the base image of the sliding overlay.</p>
 
 <p>Then we'll add the alphascale versions of the bromine, chromium, and zinc element maps included in the sample images.</p>
+
+<blockquote>
+  <p>Alphascale is a term we use to refer to a grayscale image converted such that the transparency of each pixel (<em>the alpha channel</em>) is proportional to how black or white the original grayscale pixel is. Details <a href="#what-is-alphascale">here</a>. Use the <a href="#where-is-butterfly-registrator">alphascale creator</a> in Butterfly Registrator to convert your own grayscale maps to alphascale.</p>
+  
+  <p><br> </p>
+  
+  <p><img src="images/tutorial/alphascale.png" alt="Gradient bar from white to black in grayscale, white alphascale, and red alphacale." /></p>
+</blockquote>
 
 <p>Individually click and drag these files into the creator, and then click Create:</p>
 
@@ -560,21 +569,48 @@ butterfly_viewer    </h1>
 
 <p><img src="images/viewer_alphascale_overlay.gif" alt="Animated screencapture of the Butterfly Viewer showing a sliding overlay with four alphascale element maps being panned and zoomed." /></p>
 
-<p>The Viewer can handle multiple simultaneous image windows with individual images and sliding overlays, all while synchronizing panning and zooming. But if you want, you turn off the sync (unsync) of the windows.</p>
+<p>The Viewer can handle multiple simultaneous image windows with individual images and sliding overlays, all while synchronizing panning and zooming.</p>
 
-<p>Can you create a set of image windows like this?</p>
+<p>Try out other handy features of the Viewer:</p>
+
+<ul>
+<li>Toggle sync on/off with <img src="images/tutorial/sync_button.png" alt="Sync toggle button" />.</li>
+<li>Go fullscreen by pressing the <code>F</code> key or with <img src="images/tutorial/fullscreen_button.png" alt="Fullscreen button" />.</li>
+<li>Copy a screenshot to your clipboard with Ctrl·C or save it as an image with <img src="images/tutorial/screenshot_button.png" alt="Save screenshot button" />.</li>
+<li>Explore other settings and tools by right-clicking an image window.</li>
+</ul>
+
+<p>Lastly, can you create a set of image windows like this?</p>
 
 <p><img src="images/tutorial/viewer_multi.jpg" alt="Screenshot showing multiple image windows open in the Viewer." /></p>
 
 <p><img src="images/tutorial/viewer_multi_unsync.jpg" alt="Screenshot showing multiple image windows at various zoom and positions." /></p>
 
-<p>Once finished, close the Viewer.</p>
+<p>Once finished, close the Viewer — or explore it further using your own images!</p>
 
 <hr />
 
-<h1 id="help">Help!</h1>
+<h1 id="common-questions">Common questions</h1>
 
-<h2 id="my-images-are-unequally-zoomed-with-sync-enabled">My images are unequally zoomed with sync enabled</h2>
+<h2 id="report-a-bug">Report a bug?</h2>
+
+<p>You can submit a <a href="https://github.com/olive-groves/butterfly_viewer/issues/new/choose">bug report<sup>↗</sup></a> as an issue on the Viewer's GitHub.</p>
+
+<h2 id="request-new-feature">Request new feature?</h2>
+
+<p>You can submit a <a href="https://github.com/olive-groves/butterfly_viewer/issues/new/choose">feature request<sup>↗</sup></a> as an issue on the Viewer's GitHub.</p>
+
+<p><img src="images/tutorial/bug_feature_issue.jpg" alt="GitHub New Issue page showing bug report and feature request options." /></p>
+
+<h2 id="seeing-pixelated-images">Seeing pixelated images?</h2>
+
+<p><img src="images/tutorial/upsample_rightclick.jpg" alt="Screenshot showing upsample smoothing options in the right-click menu." /></p>
+
+<p>By default, the Viewer does not smooth the pixels of images when you overzoom them. Smoothing is turned off to show you precisely where individual pixels are, which is otherwise difficult to do with it on. As a result, this can cause images to appear pixelated — which is true, because you're seeing the exact pixels.</p>
+
+<p>You can toggle smoothing (<em>upsampling</em>) through the right-click menu on any image window.</p>
+
+<h2 id="unequal-zoom-with-sync-enabled">Unequal zoom with sync enabled?</h2>
 
 <p><img src="images/tutorial/unregistered.jpg" alt="Screenshot showing an unregistered zinc element map compared to the color and raking light images along with their respective dimensions." /></p>
 
@@ -582,7 +618,21 @@ butterfly_viewer    </h1>
 
 <p>When synced, the zoom level in all image windows is set such that the size of a given pixel is the same  across all images. In other words, if you sync an Image A of 1000px × 1000px with an Image B of 500px × 500px, Image B will then appear smaller compared to A because B is half its size. This can give the impression that B is "zoomed out" compared to A.</p>
 
-<p><strong>Remember: Images must be registered</strong> to properly compare them with synchronous features and sliding overlays in the Viewer. This means the images must have identical resolutions with their features aligned. You can use the <a href="https://olive-groves.github.io/butterfly_registrator">Butterfly Registrator<sup>↗</sup></a> to register images to one another.</p>
+<p><strong>Remember: Images must be registered</strong> to properly compare them with synchronous features and sliding overlays in the Viewer. This means the images must have identical resolutions with their features aligned. You can use the <a href="#where-is-butterfly-registrator">Butterfly Registrator<sup>↗</sup></a> to register images to one another.</p>
+
+<h2 id="where-is-butterfly-registrator">Where is Butterfly Registrator?</h2>
+
+<p>Butterfly Registrator will be released by mid-October 2023.</p>
+
+<h2 id="what-is-alphascale">What is alphascale?</h2>
+
+<p>Alphascale is a term we use to refer to a grayscale image converted such that the transparency of each pixel (<em>the alpha channel</em>) is proportional to how black or white the original grayscale pixel is. The color of each pixel in the alphascale image is then set to the same color, like white or red.</p>
+
+<p><img src="images/tutorial/alphascale.png" alt="Gradient bar from white to black in grayscale, white alphascale, and red alphacale." /></p>
+
+<p>For grayscale XRF maps converted to alphascale, this means the transparency represents the presence of an element: an opaque (non-transparent) pixel indicates the highest relative presence, whereas a see-through (transparent) pixel indicates the lowest relative presence. In other words, where in an 8-bit grayscale map white is high (255) and black is low (0), in its alphascale counterpart fully opaque is high (alpha=255) and fully transparent is low (alpha=0).</p>
+
+<p>If you want to create alphascale versions of your own grayscale maps, check out <a href="#where-is-butterfly-registrator">Butterfly Registrator<sup>↗</sup></a>.</p>
 
 <hr />
 
