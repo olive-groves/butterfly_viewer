@@ -183,7 +183,9 @@ pdoc C:\butterfly_viewer\butterfly_viewer -t ../docs/_templates --docformat goog
 
 # Credits
 
-Butterfly Viewer uses elements of [@tpgit<sup>↗</sup>](https://github.com/tpgit)'s *PyQt MDI Image Viewer* [changes made], which is made available under the Creative Commons Attribution 3.0 license.
+Butterfly Viewer is by Lars Maxfield.
+
+Butterfly Viewer uses elements of [@tpgit<sup>↗</sup>](https://github.com/tpgit)'s *PyQt MDI Image Viewer* (with changes made), which is made available under the Creative Commons Attribution 3.0 license.
 
 
 # License
