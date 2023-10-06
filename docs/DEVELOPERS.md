@@ -191,4 +191,4 @@ Butterfly Viewer uses elements of [@tpgit<sup>↗</sup>](https://github.com/tpgi
 # License
 <!--- If you're not sure which open license to use see https://choosealicense.com/--->
 
-Butterfly Viewer is made available under the [GNU GPL v3.0<sup>↗</sup>](https://www.gnu.org/licenses/gpl-3.0.en.html) license or later. For the full-text, see the `LICENSE` file in the root directory of the Viewer's GitHub [repo<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer).
+Butterfly Viewer is made available under the [GNU GPL v3.0<sup>↗</sup>](https://www.gnu.org/licenses/gpl-3.0.en.html) license or later. For the full-text, see the `LICENSE.txt` file in the root directory of the Viewer's GitHub [repo<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer).
