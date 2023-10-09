@@ -18,7 +18,7 @@ import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from aux_labels import FilenameLabel
-
+from aux_exif import get_exif_rotation_angle
 
 
 class ImageLabel(QtWidgets.QLabel):
@@ -368,6 +368,10 @@ class DragDropImageLabel(QtWidgets.QWidget):
         if pixmap.depth() is 0:
             self.display_loading_grayout(False)
             return False
+        
+        angle = get_exif_rotation_angle(file_path)
+        if angle:
+            pixmap = pixmap.transformed(QtGui.QTransform().rotate(angle))
 
         self.set_image(pixmap)
         self.set_filename_label(file_path)
