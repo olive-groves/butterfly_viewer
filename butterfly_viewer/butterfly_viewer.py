@@ -30,6 +30,7 @@ from aux_trackers import EventTrackerSplitBypassInterface
 from aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitViewManager
 from aux_mdi import QMdiAreaWithCustomSignals
 from aux_layouts import GridLayoutFloatingShadow
+from aux_exif import get_exif_rotation_angle
 import icons_rc
 
 
@@ -1151,6 +1152,22 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             self.updateRecentFileActions()
             self.display_loading_grayout(False)
             return
+        
+        angle = get_exif_rotation_angle(filename_main_topleft)
+        if angle:
+            pixmap = pixmap.transformed(QtGui.QTransform().rotate(angle))
+        
+        angle = get_exif_rotation_angle(filename_topright)
+        if angle:
+            pixmap_topright = pixmap_topright.transformed(QtGui.QTransform().rotate(angle))
+
+        angle = get_exif_rotation_angle(filename_bottomright)
+        if angle:
+            pixmap_bottomright = pixmap_bottomright.transformed(QtGui.QTransform().rotate(angle))
+
+        angle = get_exif_rotation_angle(filename_bottomleft)
+        if angle:
+            pixmap_bottomleft = pixmap_bottomleft.transformed(QtGui.QTransform().rotate(angle))
 
         child = self.createMdiChild(pixmap, filename_main_topleft, pixmap_topright, pixmap_bottomleft, pixmap_bottomright, transform_mode_smooth)
 
