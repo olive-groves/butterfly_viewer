@@ -181,6 +181,23 @@ set PYTHONPATH=.
 pdoc C:\butterfly_viewer\butterfly_viewer -t ../docs/_templates --docformat google --logo https://olive-groves.github.io/butterfly_viewer/images/viewer_logo.png --logo-link https://olive-groves.github.io/butterfly_viewer/ --favicon https://olive-groves.github.io/butterfly_viewer/images/viewer_logo.png -o ../docs
 ```
 
+## Updating packages in `environment.yml` 
+
+If you change the environment in order to an fix issue, add a feature, or simply reduce a dependency, you can update the packages in the `environment.yml` of the root by exporting the new environment while it is activated and then replacing that existing YML in the root:
+
+```
+conda activate NAME_OF_ENV
+
+conda install/remove PACKAGE_1
+conda install/remove PACKAGE_2
+...
+conda install/remove PACKAGE_N
+
+conda env export > environment.yml
+```
+
+> Take care to update both `environment.yml` and `environment_docs.yml` in the branch `docs`. If unable to do so, please create a GitHub issue requesting it be updated. 
+
 # Credits
 
 Butterfly Viewer is by Lars Maxfield.

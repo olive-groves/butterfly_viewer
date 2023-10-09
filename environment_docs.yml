@@ -1,16 +1,17 @@
-name: viewer_docs
+name: C:\art\github\butterfly_viewer\env_docs
 channels:
   - defaults
   - conda-forge
 dependencies:
   - bzip2=1.0.8=he774522_0
-  - ca-certificates=2023.05.30=haa95532_0
+  - ca-certificates=2023.08.22=haa95532_0
   - certifi=2022.12.7=py37haa95532_0
   - icu=58.2=ha925a31_3
   - jpeg=9e=h2bbff1b_1
   - libffi=3.4.2=hd77b12b_6
   - libpng=1.6.39=h8cc25b3_0
-  - openssl=1.1.1v=h2bbff1b_0
+  - openssl=1.1.1w=h2bbff1b_0
+  - piexif=1.1.3=py_2
   - pip=21.2.2=py37haa95532_0
   - pyqt=5.9.2=py37h6538335_2
   - python=3.7.16=h6244533_0
@@ -33,3 +34,4 @@ dependencies:
       - pdoc==13.1.1
       - pygments==2.16.1
       - six==1.16.0
+prefix: C:\art\github\butterfly_viewer\env_docs

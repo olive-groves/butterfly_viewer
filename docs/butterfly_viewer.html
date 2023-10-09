@@ -51,6 +51,7 @@
     <li><a href="#contributing-to-butterfly_viewer">Contributing to <code>butterfly_viewer</code></a></li>
     <li><a href="#creating-the-executable-and-setup-installer">Creating the executable and setup installer</a></li>
     <li><a href="#generating-documentation-with-pdoc">Generating documentation with pdoc</a></li>
+    <li><a href="#updating-packages-in-environmentyml">Updating packages in <code>environment.yml</code></a></li>
   </ul></li>
   <li><a href="#credits">Credits</a></li>
   <li><a href="#license">License</a></li>
@@ -64,6 +65,7 @@
                         <li><a href="butterfly_viewer/aux_comments.html">aux_comments</a></li>
                         <li><a href="butterfly_viewer/aux_dialogs.html">aux_dialogs</a></li>
                         <li><a href="butterfly_viewer/aux_dragdrop.html">aux_dragdrop</a></li>
+                        <li><a href="butterfly_viewer/aux_exif.html">aux_exif</a></li>
                         <li><a href="butterfly_viewer/aux_functions.html">aux_functions</a></li>
                         <li><a href="butterfly_viewer/aux_interfaces.html">aux_interfaces</a></li>
                         <li><a href="butterfly_viewer/aux_labels.html">aux_labels</a></li>
@@ -820,6 +822,24 @@ cd butterfly_viewer
 set PYTHONPATH=.
 pdoc C:\butterfly_viewer\butterfly_viewer -t ../docs/_templates --docformat google --logo https://olive-groves.github.io/butterfly_viewer/images/viewer_logo.png --logo-link https://olive-groves.github.io/butterfly_viewer/ --favicon https://olive-groves.github.io/butterfly_viewer/images/viewer_logo.png -o ../docs
 </code></pre>
+
+<h2 id="updating-packages-in-environmentyml">Updating packages in <code>environment.yml</code></h2>
+
+<p>If you change the environment in order to an fix issue, add a feature, or simply reduce a dependency, you can update the packages in the <code>environment.yml</code> of the root by exporting the new environment while it is activated and then replacing that existing YML in the root:</p>
+
+<pre><code>conda activate NAME_OF_ENV
+
+conda install/remove PACKAGE_1
+conda install/remove PACKAGE_2
+...
+conda install/remove PACKAGE_N
+
+conda env export &gt; environment.yml
+</code></pre>
+
+<blockquote>
+  <p>Take care to update both <code>environment.yml</code> and <code>environment_docs.yml</code> in the branch <code>docs</code>. If unable to do so, please create a GitHub issue requesting it be updated. </p>
+</blockquote>
 
 <h1 id="credits">Credits</h1>
 
