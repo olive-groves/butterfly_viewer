@@ -5,6 +5,8 @@
         <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#download-and-install">Download</a>
         ·
         <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#tutorial">Tutorial</a>
+        ·
+        <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#where-is-butterfly-registrator">Butterfly Registrator</a>
       </h2>
     </summary>
   </ul>
@@ -17,13 +19,13 @@
 <p align="center">
   <img src="https://olive-groves.github.io/butterfly_viewer/images/viewer_sliding_overlay.gif" alt="Animated screencapture of the Butterfly Viewer showing a sliding overlay with three images being panned and zoomed.">
   <br />
-  <i>Sliding overlays</i>
+  <i>Sliding overlays¹</i>
 </p>
 
 <p align="center">
   <img src="https://olive-groves.github.io/butterfly_viewer/images/viewer_dragdrop_sync.gif" alt="Animated screencapture of the Butterfly Viewer showing image files loaded via drag-and-drop and then synchronously panned and zoomed.">
   <br />
-  <i>Synchronized pan and zoom</i>
+  <i>Synchronized pan and zoom¹</i>
 </p>
 
 Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
@@ -32,7 +34,9 @@ The Viewer runs as an [installable Windows executable](https://olive-groves.gith
 
 Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
 
-To accurately compare images with synchronous movement and sliding overlays in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned. This alignment is referred to as *registration*, and you can use [Butterfly Registrator](https://olive-groves.github.io/butterfly_registrator) to create registered copies of your images.
+[Butterfly Registrator](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#where-is-butterfly-registrator) can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
+
+<sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh (Van Gogh Museum, Amsterdam)</sup>
 
 ## How-to's
 
