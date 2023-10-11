@@ -11,13 +11,13 @@
 <p align="center">
   <img src="images/viewer_sliding_overlay.gif" alt="Animated screencapture of the Butterfly Viewer showing a sliding overlay with three images being panned and zoomed.">
   <br />
-  <i>Sliding overlays</i>
+  <i>Sliding overlays¹</i>
 </p>
 
 <p align="center">
   <img src="images/viewer_dragdrop_sync.gif" alt="Animated screencapture of the Butterfly Viewer showing image files loaded via drag-and-drop and then synchronously panned and zoomed.">
   <br />
-  <i>Synchronized pan and zoom</i>
+  <i>Synchronized pan and zoom¹</i>
 </p>
 
 Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
@@ -26,7 +26,9 @@ The Viewer runs as an [installable Windows executable](#windows-executable) or d
 
 Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
 
-To accurately compare images with synchronous movement and sliding overlays in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned. This alignment is referred to as *registration*, and you can use [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator) to create registered copies of your images.
+[Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator) can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
+
+<sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh (Van Gogh Museum, Amsterdam)</sup>
 
 # Download and install
 
@@ -38,7 +40,7 @@ You can download and install Butterfly Viewer to run:
 
 > Download: [`butterfly_viewer_v1.y.z_win64_setup.exe.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_viewer/releases/latest)
 >
-> <sup> **Restart after install recommended** · **Uses 106 MB storage**</sup>
+> <sup> **Restart recommended** · **110 MB installed**</sup>
 
 For Windows, Butterfly Viewer installs to your computer with an executable (.exe) installer similar to how other programs install on your computer. The Viewer will be added to your list of programs and optionally to your desktop as a shortcut.
 
