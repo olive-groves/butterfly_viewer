@@ -5,6 +5,8 @@
     <a href="#tutorial">Tutorial</a>
     ·
     <a href="https://github.com/olive-groves/butterfly_viewer">GitHub↗</a>
+    ·
+    <a href="#where-is-butterfly-registrator">Butterfly Registrator↗</a>
   </big>
 </p>
 
