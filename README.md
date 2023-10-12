@@ -38,6 +38,12 @@ Most types of PNG, JPEG, and TIFF can be loaded into the Viewer.
 
 <sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh (Van Gogh Museum, Amsterdam)</sup>
 
+<p align="center">
+  <img src="https://olive-groves.github.io/butterfly_viewer/images/viewer_eindhoven.jpg" alt="Screenshot of the Butterfly Viewer showing six photographs arranged automatically as a grid.">
+  <br />
+  <i>Auto-arranging side-by-side image windows</i>
+</p>
+
 ## How-to's
 
 Our [Butterfly Viewer page](https://olive-groves.github.io/butterfly_viewer) documents how to install and use the Viewer, as well how contribute to it as a developer. 
