@@ -207,7 +207,7 @@ There are a couple ways to run the Viewer with Python. Here's one way using cond
 
 > Sample images: [`VGM_Datapackage_2023000_Butterfly_Images_V20231003.zip`<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA)
 >
-> <sup>Credits: Van Gogh Museum, Amsterdam</sup>
+> <sup>**Credits: Van Gogh Museum, Amsterdam** · **133 MB extracted**</sup>
 
 This tutorial guides you through the Butterfly Viewer's main features using a stack of sample technical images of Vincent van Gogh's *Small Pear Tree in Blossom*.
 
