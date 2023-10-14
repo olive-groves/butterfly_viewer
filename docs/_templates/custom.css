@@ -8,9 +8,37 @@ Override it in your custom template to provide additional CSS rules.
 } 
 
 .pdoc h1, .pdoc h2, .pdoc h3, .pdoc h4 {
-    font-weight: 400;
     margin: .3em 0;
     padding: .2em 0;
+    margin-left: -1px;
+}
+
+.pdoc h1 {
+    font-weight: 300;
+    margin-top: 1.2em;
+    font-size:calc(1.75rem + 2vw)
+}
+
+@media (min-width:1200px){
+    .pdoc h1{font-size:3.25rem}
+}
+
+.pdoc h2 {
+    font-weight: 600;
+}
+
+.pdoc h3 {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.pdoc h4 {
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.pdoc h2.nav {
+    font-weight: 300;
 }
 
 .pdoc a:hover {

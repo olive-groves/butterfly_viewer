@@ -5,12 +5,12 @@
 {% block nav_index %}
     {% set index = module.docstring | to_markdown | to_html | attr("toc_html") %}
     {% if index %}
-        <h2>Butterfly Viewer</h2>
+        <h2 class="nav">Butterfly Viewer</h2>
         {{ index | safe }}
     {% endif %}
 {% endblock %}
 {# Rename Submodules block in navigation bar to Modules. #}
-{% block nav_submodules_title %}<h2>Modules</h2>{% endblock %}
+{% block nav_submodules_title %}<h2 class="nav">Modules</h2>{% endblock %}
 {# Rearrange list of modules in navigation bar to show main script at top. #}
 {% block nav_submodules_list %}
     <ul>

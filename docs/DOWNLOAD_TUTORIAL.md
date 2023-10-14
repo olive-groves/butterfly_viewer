@@ -5,7 +5,7 @@
     <a href="#tutorial">Tutorial</a>
     ·
     <a href="https://github.com/olive-groves/butterfly_viewer">GitHub↗</a>
-    ·
+    <br>
     <a href="#where-is-butterfly-registrator">Butterfly Registrator↗</a>
   </big>
 </p>
@@ -86,16 +86,14 @@ Extract `butterfly_viewer_v1.y.z_win64_setup.exe` from the ZIP:
 
 ### Run installer
 
-**Before attempting to run the installer…**
-
-Your computer might block you from running the installer via double-click if you’re using a work computer or otherwise don’t have admin privileges:
+**Note:** Your computer might block you from running the installer via double-click if you’re using a work computer or otherwise don’t have admin privileges:
 
 - If you have no admin privileges, skip to [Option 2](#option-2-without-admin-privileges). 
 - If you indeed have admin privileges, just follow [Option 1](#option-1-with-admin-privileges).
 
 >*Why is it unrecognized and blocked?  In short, it’s because this installer has no certificate. If an installer's certificate isn't found by Windows when double-clicked, Windows will block it from immediately running.*
 
-#### Option 1: With admin privileges
+#### Installer option 1: With admin privileges
 
 If you have admin privileges, run the installer by double-clicking on `butterfly_viewer_v1.y.z_win64_setup.exe`:
 
@@ -108,7 +106,7 @@ If you have admin privileges, run the installer by double-clicking on `butterfly
 
 ![Sequence of screenshots showing how to run the Butterfly Viewer installer by double-clicking it.](images/install/install_admin.jpg)
 
-#### Option 2: Without admin privileges
+#### Installer option 2: Without admin privileges
 
 If double-clicking the installer doesn’t work, run the installer via the command prompt.
 
@@ -207,8 +205,6 @@ There are a couple ways to run the Viewer with Python. Here's one way using cond
     python butterfly_viewer.py
     ```
 
----
-
 # Tutorial
 
 > Sample images: [`VGM_Datapackage_2023000_Butterfly_Images_V20231003.zip`<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA)
@@ -216,6 +212,7 @@ There are a couple ways to run the Viewer with Python. Here's one way using cond
 > <sup>**Credits: Van Gogh Museum, Amsterdam** · **133 MB extracted**</sup>
 
 This tutorial guides you through the Butterfly Viewer's main features using a stack of sample technical images of Vincent van Gogh's *Small Pear Tree in Blossom*.
+
 
 ## Download sample Van Gogh images
 
@@ -396,6 +393,7 @@ Clear the tiles of the sliding overlay creator with their respective X.
 
 ![Screenshots showing the sliding overlay image window being closed and the tiles of the creator being cleared.](images/tutorial/close_window_clear_creator.jpg)
 
+
 ## Alphascale maps with sliding overlays
 
 <p align="center">
@@ -460,7 +458,6 @@ Lastly, can you create a set of image windows like this?
 
 Once finished, close the Viewer — or explore it further using your own images!
 
----
 
 # Common questions
 
@@ -491,7 +488,7 @@ The Viewer is working as intended!
 
 When synced, the zoom level in all image windows is set such that the size of a given pixel is the same  across all images. In other words, if you sync an Image A of 1000px × 1000px with an Image B of 500px × 500px, Image B will then appear smaller compared to A because B is half its size. This can give the impression that B is "zoomed out" compared to A.
 
-**Remember: Images must be registered** to properly compare them with synchronous features and sliding overlays in the Viewer. This means the images must have identical resolutions with their features aligned. You can use the [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator) to register images to one another.
+**Remember: Images must be registered** to properly compare them with synchronous features and sliding overlays in the Viewer. This means their heights and widths must match and the features within those images must be aligned. You can use the [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator) to register images to one another.
 
 ## Where is Butterfly Registrator?
 
@@ -506,5 +503,3 @@ Alphascale is a term we use to refer to a grayscale image converted such that th
 For grayscale XRF maps converted to alphascale, this means the transparency represents the presence of an element: an opaque (non-transparent) pixel indicates the highest relative presence, whereas a see-through (transparent) pixel indicates the lowest relative presence. In other words, where in an 8-bit grayscale map white is high (255) and black is low (0), in its alphascale counterpart fully opaque is high (alpha=255) and fully transparent is low (alpha=0).
 
 If you want to create alphascale versions of your own grayscale maps, check out [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator).
-
----
