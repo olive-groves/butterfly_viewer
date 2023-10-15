@@ -5,8 +5,8 @@
         <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#download-and-install">Download</a>
         ·
         <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#tutorial">Tutorial</a>
-        ·
-        <a href="https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#where-is-butterfly-registrator">Butterfly Registrator</a>
+        <br>
+        <a href="https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html">Butterfly Registrator</a>
       </h2>
     </summary>
   </ul>
@@ -34,7 +34,7 @@ The Viewer runs as an [installable Windows executable](https://olive-groves.gith
 
 Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
 
-[Butterfly Registrator](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#where-is-butterfly-registrator) can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
+[Butterfly Registrator](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html) can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
 
 <sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh (Van Gogh Museum, Amsterdam)</sup>
 
