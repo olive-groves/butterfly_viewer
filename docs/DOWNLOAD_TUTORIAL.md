@@ -6,7 +6,7 @@
     ·
     <a href="https://github.com/olive-groves/butterfly_viewer">GitHub↗</a>
     <br>
-    <a href="#where-is-butterfly-registrator">Butterfly Registrator↗</a>
+    <a href="https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html"">Butterfly Registrator↗</a>
   </big>
 </p>
 
@@ -28,7 +28,7 @@ The Viewer runs as an [installable Windows executable](#windows-executable) or d
 
 Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
 
-[Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator) can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
+[Butterfly Registrator<sup>↗</sup>](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html") can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
 
 <sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh (Van Gogh Museum, Amsterdam)</sup>
 
@@ -337,7 +337,7 @@ Individually click and drag these files into the creator:
 
 > To accurately compare images with a sliding overlay in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned.
 > 
-> The sample images here are already registered. If you want to easily create registered copies of your own images, check out [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator).
+> The sample images here are already registered. If you want to easily create registered copies of your own images, check out [Butterfly Registrator<sup>↗</sup>](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html").
 
 ![Screenshot indicating where in the sliding overlay creator to click and drag the raking light photo (top-right) and zinc element map (bottom-right).](images/tutorial/creator_topright_bottomright.jpg)
 
@@ -412,7 +412,7 @@ We'll again use the color photograph of *Small Pear Tree in Blossom* as the base
 
 Then we'll add the alphascale versions of the bromine, chromium, and zinc element maps included in the sample images.
 
-> Alphascale is a term we use to refer to a grayscale image converted such that the transparency of each pixel (*the alpha channel*) is proportional to how black or white the original grayscale pixel is. Details [here](#what-is-alphascale). Use the [alphascale creator](#where-is-butterfly-registrator) in Butterfly Registrator to convert your own grayscale maps to alphascale.
+> Alphascale is a term we use to refer to a grayscale image converted such that the transparency of each pixel (*the alpha channel*) is proportional to how black or white the original grayscale pixel is. Details [here](#what-is-alphascale). Use the [alphascale creator](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html") in Butterfly Registrator to convert your own grayscale maps to alphascale.
 >
 > <br> 
 >
@@ -488,11 +488,7 @@ The Viewer is working as intended!
 
 When synced, the zoom level in all image windows is set such that the size of a given pixel is the same  across all images. In other words, if you sync an Image A of 1000px × 1000px with an Image B of 500px × 500px, Image B will then appear smaller compared to A because B is half its size. This can give the impression that B is "zoomed out" compared to A.
 
-**Remember: Images must be registered** to properly compare them with synchronous features and sliding overlays in the Viewer. This means their heights and widths must match and the features within those images must be aligned. You can use the [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator) to register images to one another.
-
-## Where is Butterfly Registrator?
-
-Butterfly Registrator will be released by mid-October 2023.
+**Remember: Images must be registered** to properly compare them with synchronous features and sliding overlays in the Viewer. This means their heights and widths must match and the features within those images must be aligned. You can use the [Butterfly Registrator<sup>↗</sup>](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html") to register images to one another.
 
 ## What is alphascale?
 
@@ -502,4 +498,4 @@ Alphascale is a term we use to refer to a grayscale image converted such that th
 
 For grayscale XRF maps converted to alphascale, this means the transparency represents the presence of an element: an opaque (non-transparent) pixel indicates the highest relative presence, whereas a see-through (transparent) pixel indicates the lowest relative presence. In other words, where in an 8-bit grayscale map white is high (255) and black is low (0), in its alphascale counterpart fully opaque is high (alpha=255) and fully transparent is low (alpha=0).
 
-If you want to create alphascale versions of your own grayscale maps, check out [Butterfly Registrator<sup>↗</sup>](#where-is-butterfly-registrator).
+If you want to create alphascale versions of your own grayscale maps, check out [Butterfly Registrator<sup>↗</sup>](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html").
