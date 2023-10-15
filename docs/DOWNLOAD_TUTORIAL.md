@@ -98,11 +98,12 @@ Extract `butterfly_viewer_v1.y.z_win64_setup.exe` from the ZIP:
 If you have admin privileges, run the installer by double-clicking on `butterfly_viewer_v1.y.z_win64_setup.exe`:
 
 1. Double-click on `butterfly_viewer_v1.y.z_win64_setup.exe`.
-2. Select **More info**.
-3. Select **Run anyway**.
+2. Windows Defender SmartScreen may show a pop-up. If not, skip to step 5.
+3. Select **More info**.
+4. Select **Run anyway**.
   <br>
   <sup>No **Run anyway**? Select **Don't run** and [try Option 2.](#option-2-without-admin-privileges)</sup>
-4. Wait for the installer to load. This may take a few seconds.
+5. Wait for the installer to load. This may take a few seconds.
 
 ![Sequence of screenshots showing how to run the Butterfly Viewer installer by double-clicking it.](images/install/install_admin.jpg)
 
@@ -130,11 +131,12 @@ You can find various ways online on how to run an executable (EXE) via the comma
 
 Once the installer loads, follow the onscreen steps to install the Viewer:
 - Accept the agreement. The license is [GNU GPL v3.0<sup>↗</sup>](https://www.gnu.org/licenses/gpl-3.0.en.html) or later.
-- Choose to create a desktop shortcut. This can be useful to have.
 - Choose the install folder. The default should be ok.
   <br>
   > *Updating with a newer version? First [uninstall the old version](#uninstall) and then re-run the new installer.
 
+- Choose the Start Menu folder. The default should be ok, but you don't need to create a Start Menu folder to use the app.
+- Choose to create a desktop shortcut. This can be useful to have.
 - Install.
 - Restart. **Restart recommended** to avoid issues with drag-and-drop not working.
 
