@@ -30,7 +30,7 @@ Most types of PNG, JPEG, and TIFF can be loaded into the Viewer.
 
 [Butterfly Registrator<sup>↗</sup>](https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html) can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or *register*) images to a given reference image such that their heights and widths match and the features within those images line up.
 
-<sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh (Van Gogh Museum, Amsterdam)</sup>
+<sup>¹*Small Pear Tree in Blossom* by Vincent van Gogh. Credits: Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation)</sup>
 
 <p align="center">
   <img src="images/viewer_eindhoven.jpg" alt="Screenshot of the Butterfly Viewer showing six photographs arranged automatically as a grid.">
@@ -211,14 +211,14 @@ There are a couple ways to run the Viewer with Python. Here's one way using cond
 
 > Sample images: [`VGM_Datapackage_2023000_Butterfly_Images_V20231003.zip`<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA)
 >
-> <sup>**Credits: Van Gogh Museum, Amsterdam** · **133 MB extracted**</sup>
+> <sup>**Credits: Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation)** · **133 MB extracted**</sup>
 
 This tutorial guides you through the Butterfly Viewer's main features using a stack of sample technical images of Vincent van Gogh's *Small Pear Tree in Blossom*.
 
 
 ## Download sample Van Gogh images
 
-Download the [ZIP of sample technical images<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA) of *Small Pear Tree in Blossom* by Vincent van Gogh, with credits to the Van Gogh Museum, Amsterdam.
+Download the [ZIP of sample technical images<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA) of *Small Pear Tree in Blossom* by Vincent van Gogh, with credits to the Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation).
 
 ![Screenshot of the download button for the tutorial's sample images.](images/tutorial/download_images.jpg)
 
