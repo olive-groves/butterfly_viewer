@@ -50,6 +50,8 @@ Our [Butterfly Viewer page](https://olive-groves.github.io/butterfly_viewer) doc
 
 ### Install as [Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable)
 
+### Test the macOS app beta by [signing up here](https://forms.gle/y9QeT6MLgHszU1su5)
+
 ### Run on [Python](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python)
 
 ### [Tutorial](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#tutorial) of main features
