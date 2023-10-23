@@ -25,6 +25,7 @@
 Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
 
 The Viewer runs as an [installable Windows executable](#windows-executable) or directly on its [Python source code](#python).
+Use a Mac? Sign up to [beta test the macOS version](#macos-app).
 
 Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
 
@@ -43,6 +44,8 @@ Most types of PNG, JPEG, and TIFF can be loaded into the Viewer.
 You can download and install Butterfly Viewer to run:
 - as a [Windows executable](#windows-executable); or 
 - directly with [Python](#python).
+
+If you use a MacBook or iMac, you can sign up to [beta test the macOS version](#macos-app).
 
 ## Windows executable
 
@@ -154,6 +157,16 @@ To run the Viewer, search for **Butterfly Viewer** in the Start menu (`⊞ Win`)
 ### Uninstall
 
 You can uninstall the Viewer executable from Windows by going to **Add or remove programs** via the Start menu, selecting **Butterfly Viewer**, and then selecting **Uninstall**. 
+
+---
+
+## macOS app
+
+![Screenshot of Butterfly Viewer on macOS.](images/install/macOS.png)
+
+Sign up to [beta test the macOS version<sup>↗<sup>](https://forms.gle/y9QeT6MLgHszU1su5) of Butterfly Viewer on your MacBook or iMac. The download link will be sent within 24 hours.
+
+With your help, we can get a working macOS app for both the Butterfly Viewer and Butterfly Registrator.
 
 ---
 
