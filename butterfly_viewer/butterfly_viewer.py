@@ -202,7 +202,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.centralwidget_during_fullscreen.setLayout(self.centralwidget_during_fullscreen_layout)
 
 
-        self.fullscreen_pushbutton = QtWidgets.QPushButton("⛶")
+        self.fullscreen_pushbutton = QtWidgets.QPushButton("⇲")
         self.fullscreen_pushbutton.setToolTip("Fullscreen on/off (F)")
         self.fullscreen_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.fullscreen_pushbutton.setMouseTracking(True)
@@ -244,7 +244,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.fullscreen_pushbutton.toggled.connect(self.set_fullscreen)
         self.is_fullscreen = False
 
-        self.interface_toggle_pushbutton = QtWidgets.QPushButton("👁")
+        self.interface_toggle_pushbutton = QtWidgets.QPushButton("≼")
         self.interface_toggle_pushbutton.setToolTip("Hide interface (H)")
         self.interface_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.interface_toggle_pushbutton.setMouseTracking(True)
@@ -309,7 +309,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_global_transform_mode_smooth = False
         self.scene_background_color = None
 
-        self.close_all_pushbutton = QtWidgets.QPushButton("⨷")
+        self.close_all_pushbutton = QtWidgets.QPushButton("⦻")
         self.close_all_pushbutton.setToolTip("Close all image windows")
         self.close_all_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.close_all_pushbutton.setMouseTracking(True)
@@ -333,7 +333,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             """)
         self.close_all_pushbutton.clicked.connect(self._mdiArea.closeAllSubWindows)
 
-        self.tile_default_pushbutton = QtWidgets.QPushButton("⊞")
+        self.tile_default_pushbutton = QtWidgets.QPushButton("⦺")
         self.tile_default_pushbutton.setToolTip("Grid arrange windows")
         self.tile_default_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_default_pushbutton.setMouseTracking(True)
@@ -361,7 +361,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_default_pushbutton.clicked.connect(self.fit_to_window)
         self.tile_default_pushbutton.clicked.connect(self.refreshPan)
 
-        self.tile_horizontally_pushbutton = QtWidgets.QPushButton("▥")
+        self.tile_horizontally_pushbutton = QtWidgets.QPushButton("⦶")
         self.tile_horizontally_pushbutton.setToolTip("Horizontally arrange windows in a single row")
         self.tile_horizontally_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_horizontally_pushbutton.setMouseTracking(True)
@@ -389,7 +389,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_horizontally_pushbutton.clicked.connect(self.fit_to_window)
         self.tile_horizontally_pushbutton.clicked.connect(self.refreshPan)
 
-        self.tile_vertically_pushbutton = QtWidgets.QPushButton("▤")
+        self.tile_vertically_pushbutton = QtWidgets.QPushButton("⦵")
         self.tile_vertically_pushbutton.setToolTip("Vertically arrange windows in a single column")
         self.tile_vertically_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_vertically_pushbutton.setMouseTracking(True)
@@ -417,7 +417,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_vertically_pushbutton.clicked.connect(self.fit_to_window)
         self.tile_vertically_pushbutton.clicked.connect(self.refreshPan)
 
-        self.fit_to_window_pushbutton = QtWidgets.QPushButton("⯐")
+        self.fit_to_window_pushbutton = QtWidgets.QPushButton("⦾")
         self.fit_to_window_pushbutton.setToolTip("Fit and center image in active window (affects all if synced)")
         self.fit_to_window_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.fit_to_window_pushbutton.setMouseTracking(True)
@@ -443,7 +443,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             """)
         self.fit_to_window_pushbutton.clicked.connect(self.fit_to_window)
 
-        self.info_pushbutton = QtWidgets.QPushButton("🛈")
+        self.info_pushbutton = QtWidgets.QPushButton("ℹ︎")
         self.info_pushbutton.setToolTip("Info...")
         self.info_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.info_pushbutton.setMouseTracking(True)
@@ -526,7 +526,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             """)
         self.stopsync_toggle_slash_label.setVisible(False)
 
-        self.save_view_pushbutton = QtWidgets.QPushButton("⭳")
+        self.save_view_pushbutton = QtWidgets.QPushButton("⤓")
         self.save_view_pushbutton.setToolTip("Save a screenshot of the viewer... | Copy screenshot to clipboard (Ctrl·C)")
         self.save_view_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.save_view_pushbutton.setMouseTracking(True)
