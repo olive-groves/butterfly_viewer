@@ -47,10 +47,10 @@ sip.setapi('QTextStream', 2)
 sip.setapi('QVariant', 2)
 sip.setapi('QString', 2)
 
-__version__ = "1.0"
 COMPANY = "No company provided"
 DOMAIN = "No domain provided"
-APPNAME = "Butterfly Viewer" + " " + __version__
+__version__ = "1.0.3"
+APPNAME = "Butterfly Viewer"
 
 SETTING_RECENTFILELIST = "recentfilelist"
 SETTING_FILEOPEN = "fileOpenDialog"
