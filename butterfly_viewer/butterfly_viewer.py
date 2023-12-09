@@ -47,9 +47,9 @@ sip.setapi('QTextStream', 2)
 sip.setapi('QVariant', 2)
 sip.setapi('QString', 2)
 
-COMPANY = "No company provided"
-DOMAIN = "No domain provided"
 __version__ = "1.0.3"
+COMPANY = "Butterfly Apps"
+DOMAIN = "https://github.com/olive-groves/butterfly_viewer/"
 APPNAME = "Butterfly Viewer"
 
 SETTING_RECENTFILELIST = "recentfilelist"
