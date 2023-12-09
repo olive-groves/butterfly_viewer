@@ -549,7 +549,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 background-color: rgba(127, 127, 255, 255);
             }
             """)
-        self.save_view_pushbutton.clicked.connect(self.refreshPan)
         self.save_view_pushbutton.clicked.connect(self.save_view)
 
         self.buffer_label = QtWidgets.QPushButton()
