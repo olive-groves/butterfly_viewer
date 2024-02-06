@@ -2152,7 +2152,11 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                              list
         :param bool delete: if True then filename_main_topleft removed, otherwise added"""
         settings = QtCore.QSettings()
-        files = list(settings.value(SETTING_RECENTFILELIST, []))
+        
+        try:
+            files = list(settings.value(SETTING_RECENTFILELIST, []))
+        except TypeError:
+            files = []
 
         try:
             files.remove(filename_main_topleft)
