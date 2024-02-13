@@ -1908,6 +1908,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         windows = self._mdiArea.subWindowList()
         for window in windows:
             if window != changedWindow:
+                # TODO: Relative zoom sync (sync by aspect ratio) can be implemented here:
+                # Simply zoom the receiver by multiplying the sender's zoom factor with 
+                # the dimension of the sender divided by the dimension of the receiver.
+                # For example, if the receiver is 100px and the sender is 200px, 
+                # then the zoom factor is multiplied by 200px/100px.
+                # ("Zoom this smaller image twice as much, because it needs to be twice as a big on the screen.)
+                # SPTB: b to xrf > *5.528
                 window.widget().zoomFactor = newZoomFactor
                 window.widget().resize_scene()
         self.refreshPan()
