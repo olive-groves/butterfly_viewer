@@ -222,7 +222,7 @@ There are a couple ways to run the Viewer with Python. Here's one way using cond
 
 # Tutorial
 
-> Sample images: [`VGM_Datapackage_2023000_Butterfly_Images_V20231003.zip`<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA)
+> Sample images: [`butterfly_images-1.0.zip`<sup>↗</sup>](https://github.com/olive-groves/butterfly_images/archive/refs/tags/v1.0.zip) · **121 MB**
 >
 > <sup>**Credits: Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation)** · **133 MB extracted**</sup>
 
@@ -231,9 +231,7 @@ This tutorial guides you through the Butterfly Viewer's main features using a st
 
 ## Download sample Van Gogh images
 
-Download the [ZIP of sample technical images<sup>↗</sup>](https://vgm.data.surfsara.nl/index.php/s/S3b4dnayUDKHtLA) of *Small Pear Tree in Blossom* by Vincent van Gogh, with credits to the Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation).
-
-![Screenshot of the download button for the tutorial's sample images.](images/tutorial/download_images.jpg)
+Download the [ZIP of sample technical images<sup>↗</sup>](https://github.com/olive-groves/butterfly_images/archive/refs/tags/v1.0.zip) (**121 MB**) of *Small Pear Tree in Blossom* by Vincent van Gogh, with credits to the Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation).
 
 Extract the ZIP and open the folder of images. <sup>How to: [Extract a ZIP](#extract-zip)</sup>
 
