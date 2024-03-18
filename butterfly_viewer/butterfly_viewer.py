@@ -47,10 +47,10 @@ sip.setapi('QTextStream', 2)
 sip.setapi('QVariant', 2)
 sip.setapi('QString', 2)
 
-__version__ = "1.0"
-COMPANY = "No company provided"
-DOMAIN = "No domain provided"
-APPNAME = "Butterfly Viewer" + " " + __version__
+__version__ = "1.0.3"
+COMPANY = "Butterfly Apps"
+DOMAIN = "https://github.com/olive-groves/butterfly_viewer/"
+APPNAME = "Butterfly Viewer"
 
 SETTING_RECENTFILELIST = "recentfilelist"
 SETTING_FILEOPEN = "fileOpenDialog"
@@ -549,7 +549,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 background-color: rgba(127, 127, 255, 255);
             }
             """)
-        self.save_view_pushbutton.clicked.connect(self.refreshPan)
         self.save_view_pushbutton.clicked.connect(self.save_view)
 
         self.buffer_label = QtWidgets.QPushButton()
