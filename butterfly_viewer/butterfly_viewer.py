@@ -1904,19 +1904,54 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         if not fromViewer:
             return
         newZoomFactor = fromViewer.zoomFactor
+
+        # TODO: Check why "width" doesn't work if sender is tall.
+        # TODO: Start of make function to get the sender zoom sync dimension.
+        syncBy = "height"
+
+        senderWidth = fromViewer.imageWidth
+        senderHeight = fromViewer.imageHeight
+
+        if syncBy == "width":
+            senderDimension = senderWidth
+        if syncBy == "height":
+            senderDimension = senderHeight
+        elif syncBy == "pixel":
+            senderDimension = None
+        else: # "box"
+            # Tall image means the height dictates the size of the zoom box.
+            # Wide image means the width dictates the size of the zoom box.
+            if senderHeight >= senderWidth:
+                senderDimension = senderHeight
+            else:
+                senderDimension = senderWidth
+        # TODO: End of make function.
+
         changedWindow = fromViewer.parent()
         windows = self._mdiArea.subWindowList()
         for window in windows:
             if window != changedWindow:
-                # TODO: Relative zoom sync (sync by aspect ratio) can be implemented here:
-                # Simply zoom the receiver by multiplying the sender's zoom factor with 
-                # the dimension of the sender divided by the dimension of the receiver.
-                # For example, if the receiver is 100px and the sender is 200px, 
-                # then the zoom factor is multiplied by 200px/100px.
-                # ("Zoom this smaller image twice as much, because it needs to be twice as a big on the screen.)
-                # SPTB: b to xrf > *5.528
-                window.widget().zoomFactor = newZoomFactor
-                window.widget().resize_scene()
+                receiver = window.widget()
+
+                # TODO: Start of make function to get adjustment factor.
+                receiverWidth = receiver.imageWidth
+                receiverHeight = receiver.imageHeight
+
+                if syncBy == "width":
+                    adjustFactor = senderDimension/receiverWidth
+                elif syncBy == "height":
+                    adjustFactor = senderDimension/receiverHeight
+                elif syncBy == "pixel":
+                    adjustFactor = 1.0
+                else: # "box"
+                    if receiverWidth >= receiverHeight:
+                        adjustFactor = senderDimension/receiverWidth
+                    else:
+                        adjustFactor = senderDimension/receiverHeight
+                # TODO: End of make function.
+
+                receiver.zoomFactor = newZoomFactor*adjustFactor
+                receiver.resize_scene()
         self.refreshPan()
 
     def refreshPan(self):
