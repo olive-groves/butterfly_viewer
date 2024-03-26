@@ -498,8 +498,8 @@ class SplitView(QtWidgets.QFrame):
             y = y_percent*self.height()
             point_of_split_on_widget = QtCore.QPoint(x, y)
         else:
-            width_pixmap_main_topleft = self._pixmapItem_main_topleft.pixmap().width()
-            height_pixmap_main_topleft = self._pixmapItem_main_topleft.pixmap().height()
+            width_pixmap_main_topleft = self.imageWidth
+            height_pixmap_main_topleft = self.imageHeight
 
             x = x_percent*width_pixmap_main_topleft
             y = y_percent*height_pixmap_main_topleft
@@ -1034,8 +1034,8 @@ class SplitView(QtWidgets.QFrame):
         width_viewport = (width_viewport_window - peek_margin_x)/scene_to_viewport_factor # This is the size of the viewport on the screen
         height_viewport = (height_viewport_window - peek_margin_y)/scene_to_viewport_factor
         
-        width_pixmap = self._pixmapItem_main_topleft.pixmap().width()
-        height_pixmap = self._pixmapItem_main_topleft.pixmap().height()
+        width_pixmap = self.imageWidth
+        height_pixmap = self.imageHeight
         
         width_scene = 2.0*(width_viewport + width_pixmap/2.0) # The scene spans twice the viewport plus the pixmap
         height_scene = 2.0*(height_viewport + height_pixmap/2.0)
@@ -1242,7 +1242,7 @@ class SplitView(QtWidgets.QFrame):
         viewport_rect = self._view_main_topleft.viewport().rect().adjusted(padding_margin, padding_margin,
                                                          -padding_margin, -padding_margin)
         aspect_ratio_viewport = viewport_rect.width()/viewport_rect.height()
-        aspect_ratio_pixmap   = self._pixmapItem_main_topleft.pixmap().width()/self._pixmapItem_main_topleft.pixmap().height()
+        aspect_ratio_pixmap   = self.imageWidth/self.imageHeight
         if aspect_ratio_viewport > aspect_ratio_pixmap:
             self.fitHeight()
         else:
@@ -1258,7 +1258,7 @@ class SplitView(QtWidgets.QFrame):
         padding_margin = 2
         viewRect = self._view_main_topleft.viewport().rect().adjusted(padding_margin, padding_margin,
                                                          -padding_margin, -padding_margin)
-        factor = viewRect.width() / self._pixmapItem_main_topleft.pixmap().width()
+        factor = viewRect.width() / self.imageWidth
         self.scaleImage(factor, combine=False)
         self._view_main_topleft.centerView()
     
@@ -1270,9 +1270,19 @@ class SplitView(QtWidgets.QFrame):
         padding_margin = 2
         viewRect = self._view_main_topleft.viewport().rect().adjusted(padding_margin, padding_margin,
                                                          -padding_margin, -padding_margin)
-        factor = viewRect.height() / self._pixmapItem_main_topleft.pixmap().height()
+        factor = viewRect.height() / self.imageHeight
         self.scaleImage(factor, combine=False)
         self._view_main_topleft.centerView()
+
+    @property
+    def imageWidth(self):
+        """int: Width of base (main) image pixmap."""
+        return self._pixmapItem_main_topleft.pixmap().width()
+    
+    @property
+    def imageHeight(self):
+        """int: Height of base (main) image pixmap."""
+        return self._pixmapItem_main_topleft.pixmap().height()
 
     def handleWheelNotches(self, notches):
         """Handle wheel notch event from underlying |QGraphicsView|.
