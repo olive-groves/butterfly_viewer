@@ -1905,16 +1905,15 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             return
         newZoomFactor = fromViewer.zoomFactor
 
-        # TODO: Check why "width" doesn't work if sender is tall.
         # TODO: Start of make function to get the sender zoom sync dimension.
-        syncBy = "height"
+        syncBy = "width"
 
         senderWidth = fromViewer.imageWidth
         senderHeight = fromViewer.imageHeight
 
         if syncBy == "width":
             senderDimension = senderWidth
-        if syncBy == "height":
+        elif syncBy == "height":
             senderDimension = senderHeight
         elif syncBy == "pixel":
             senderDimension = None
