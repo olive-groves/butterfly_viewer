@@ -1897,6 +1897,37 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self._handlingScrollChangedSignal = False
 
+    def getSyncSenderDimension(self,
+                               width: int,
+                               height: int,
+                               sync_by: str="box"):
+        """Get the dimension of the sender image with which to synchronize zoom.
+        
+        Args:
+            width (int): Width of sender in pixels.
+            height (int): Height of sender in pixels.
+            sync_by (str): Method by which to sync zoom ("box", "width", "height", "pixel").
+
+        Returns:
+            dimension (int, None): Dimension with which to synchronize zoom (None if sync by pixel).
+        """
+
+        if sync_by == "width":
+            dimension = width
+        elif sync_by == "height":
+            dimension = height
+        elif sync_by == "pixel":
+            dimension = None
+        else:  # Equivalent to sync_by == "box"
+            # Tall image means the height dictates the size of the zoom box.
+            # Wide image means the width dictates the size of the zoom box.
+            if height >= width:
+                dimension = height
+            else:
+                dimension = width
+
+        return dimension
+
     def synchZoom(self, fromViewer):
         """Synch zoom of all subwindowws to the same as *fromViewer*.
 
@@ -1905,26 +1936,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             return
         newZoomFactor = fromViewer.zoomFactor
 
-        # TODO: Start of make function to get the sender zoom sync dimension.
-        syncBy = "width"
-
-        senderWidth = fromViewer.imageWidth
-        senderHeight = fromViewer.imageHeight
-
-        if syncBy == "width":
-            senderDimension = senderWidth
-        elif syncBy == "height":
-            senderDimension = senderHeight
-        elif syncBy == "pixel":
-            senderDimension = None
-        else: # "box"
-            # Tall image means the height dictates the size of the zoom box.
-            # Wide image means the width dictates the size of the zoom box.
-            if senderHeight >= senderWidth:
-                senderDimension = senderHeight
-            else:
-                senderDimension = senderWidth
-        # TODO: End of make function.
+        sync_by = "width"
+        sender_dimension = self.getSyncSenderDimension(fromViewer.imageWidth,
+                                                       fromViewer.imageHeight,
+                                                       sync_by)
 
         changedWindow = fromViewer.parent()
         windows = self._mdiArea.subWindowList()
@@ -1936,17 +1951,17 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 receiverWidth = receiver.imageWidth
                 receiverHeight = receiver.imageHeight
 
-                if syncBy == "width":
-                    adjustFactor = senderDimension/receiverWidth
-                elif syncBy == "height":
-                    adjustFactor = senderDimension/receiverHeight
-                elif syncBy == "pixel":
+                if sync_by == "width":
+                    adjustFactor = sender_dimension/receiverWidth
+                elif sync_by == "height":
+                    adjustFactor = sender_dimension/receiverHeight
+                elif sync_by == "pixel":
                     adjustFactor = 1.0
                 else: # "box"
                     if receiverWidth >= receiverHeight:
-                        adjustFactor = senderDimension/receiverWidth
+                        adjustFactor = sender_dimension/receiverWidth
                     else:
-                        adjustFactor = senderDimension/receiverHeight
+                        adjustFactor = sender_dimension/receiverHeight
                 # TODO: End of make function.
 
                 receiver.zoomFactor = newZoomFactor*adjustFactor
