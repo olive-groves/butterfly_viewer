@@ -84,6 +84,28 @@ class SplitViewMdiChild(SplitView):
         self.toggle_lock_split_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Shift+X"), self)
         self.toggle_lock_split_shortcut.activated.connect(self.toggle_lock_split)
 
+        self._sync_this_zoom = True
+        self._sync_this_pan = True
+    
+    @property
+    def sync_this_zoom(self):
+        """bool: Setting of whether to sync this by zoom (or not)."""
+        return self._sync_this_zoom
+    
+    @sync_this_zoom.setter
+    def sync_this_zoom(self, bool: bool):
+        """bool: Set whether to sync this by zoom (or not)."""
+        self._sync_this_zoom = bool
+
+    @property
+    def sync_this_pan(self):
+        """bool: Setting of whether to sync this by pan (or not)."""
+        return self._sync_this_pan
+    
+    @sync_this_pan.setter
+    def sync_this_pan(self, bool: bool):
+        """bool: Set whether to sync this by pan (or not)."""
+        self._sync_this_pan = bool
 
     # Control the split of the sliding overlay
 
@@ -1223,6 +1245,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                          transform_mode_smooth)
 
         child.enableScrollBars(self._showScrollbarsAct.isChecked())
+
+        child.sync_this_zoom = True
+        child.sync_this_pan = True
         
         self._mdiArea.addSubWindow(child, QtCore.Qt.FramelessWindowHint) # LVM: No frame, starts fitted
 
@@ -1892,8 +1917,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         windows = self._mdiArea.subWindowList()
         for window in windows:
             if window != changedWindow:
-                window.widget().scrollState = newState
-                window.widget().resize_scene()
+                if window.widget().sync_this_pan:
+                    window.widget().scrollState = newState
+                    window.widget().resize_scene()
 
         self._handlingScrollChangedSignal = False
 
