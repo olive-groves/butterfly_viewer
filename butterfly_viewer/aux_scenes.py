@@ -47,6 +47,12 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
                                   ["Black", 0, 0, 0]]
         self._background_color = self.background_colors[0]
 
+        self._sync_zoom_options = [["Fit in a box (default)", "box"],
+                                  ["Width", "width"],
+                                  ["Height", "height"],
+                                  ["Pixel (relative size)", "pixel"]]
+        self._sync_zoom_option = self._sync_zoom_options[0]
+
         self.disable_right_click = False
 
     right_click_comment = QtCore.pyqtSignal(QtCore.QPointF)
@@ -228,6 +234,14 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
                 action_set_background.triggered.connect(lambda value, color=color: self.background_color_lambda(color))
                 if color == self.background_color:
                     action_set_background.setEnabled(False)
+
+            menu.addSeparator()
+
+            menu_sync_zoom_by = QtWidgets.QMenu("Sync zoom by...")
+            menu_sync_zoom_by.setToolTipsVisible(True)
+            menu.addMenu(menu_sync_zoom_by)
+
+
 
         menu.exec(event.screenPos())
 
