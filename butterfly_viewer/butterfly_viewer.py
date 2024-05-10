@@ -1897,7 +1897,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self._handlingScrollChangedSignal = False
 
-    def getSyncSenderDimension(self,
+    def determineSyncSenderDimension(self,
                                width: int,
                                height: int,
                                sync_by: str="box"):
@@ -1927,6 +1927,37 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 dimension = width
 
         return dimension
+    
+    def determineSyncAdjustmentFactor(self,
+                                      sync_by: str,
+                                      sender_dimension: int,
+                                      receiver_width: int,
+                                      receiver_height: int):
+        """Get the factor with which to multiply the zoom of the sender before giving it to the receiver to synchronize them.
+        
+        Args:
+            sync_by (str): Method by which to sync zoom ("box", "width", "height", "pixel").
+            sender_dimension (int): Dimension of sender in pixels, as determined by determineSyncSenderDimension().
+            receiver_width (int): Width of receiver in pixels.
+            receiver_height (int): Height of sender in pixels.
+
+        Returns:
+            adjustment_factor (float): Factor with which to multiply the sender zoom to sync the receiver.
+        """
+
+        if sync_by == "width":
+            adjustment_factor = sender_dimension/receiver_width
+        elif sync_by == "height":
+            adjustment_factor = sender_dimension/receiver_height
+        elif sync_by == "pixel":
+            adjustment_factor = 1.0
+        else: # "box"
+            if receiver_width >= receiver_height:
+                adjustment_factor = sender_dimension/receiver_width
+            else:
+                adjustment_factor = sender_dimension/receiver_height
+        
+        return adjustment_factor
 
     def synchZoom(self, fromViewer):
         """Synch zoom of all subwindowws to the same as *fromViewer*.
@@ -1936,36 +1967,25 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             return
         newZoomFactor = fromViewer.zoomFactor
 
-        sync_by = "width"
-        sender_dimension = self.getSyncSenderDimension(fromViewer.imageWidth,
-                                                       fromViewer.imageHeight,
-                                                       sync_by)
+        sync_by = "box" # TODO: This should be grabbed from global setting, which is set via right-click menu.
+
+        sender_dimension = self.determineSyncSenderDimension(fromViewer.imageWidth,
+                                                             fromViewer.imageHeight,
+                                                             sync_by)
 
         changedWindow = fromViewer.parent()
         windows = self._mdiArea.subWindowList()
         for window in windows:
             if window != changedWindow:
                 receiver = window.widget()
+                if receiver.sync_this_zoom:
+                    adjustment_factor = self.determineSyncAdjustmentFactor(sync_by,
+                                                                        sender_dimension,
+                                                                        receiver.imageWidth,
+                                                                        receiver.imageHeight)
 
-                # TODO: Start of make function to get adjustment factor.
-                receiverWidth = receiver.imageWidth
-                receiverHeight = receiver.imageHeight
-
-                if sync_by == "width":
-                    adjustFactor = sender_dimension/receiverWidth
-                elif sync_by == "height":
-                    adjustFactor = sender_dimension/receiverHeight
-                elif sync_by == "pixel":
-                    adjustFactor = 1.0
-                else: # "box"
-                    if receiverWidth >= receiverHeight:
-                        adjustFactor = sender_dimension/receiverWidth
-                    else:
-                        adjustFactor = sender_dimension/receiverHeight
-                # TODO: End of make function.
-
-                receiver.zoomFactor = newZoomFactor*adjustFactor
-                receiver.resize_scene()
+                    receiver.zoomFactor = newZoomFactor*adjustment_factor
+                    receiver.resize_scene()
         self.refreshPan()
 
     def refreshPan(self):
