@@ -47,6 +47,17 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
                                   ["Black", 0, 0, 0]]
         self._background_color = self.background_colors[0]
 
+        self.sync_zoom_options = [["Fit in a box (default)", 
+                                    "Scale images to equally sized square boxes"],
+                                   ["Width",
+                                    "Scale images to be equally wide"],
+                                   ["Height",
+                                    "Scale images to be equally tall"],
+                                   ["Pixel (relative size)",
+                                    "Do not scale images (show with same pixel size)"]]
+        self.sync_zoom_bys = ["box", "width", "height", "pixel"]
+        self._sync_zoom_by = self.sync_zoom_bys[0]
+
         self.disable_right_click = False
 
     right_click_comment = QtCore.pyqtSignal(QtCore.QPointF)
@@ -58,6 +69,7 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
     right_click_single_transform_mode_smooth = QtCore.pyqtSignal(bool)
     right_click_all_transform_mode_smooth = QtCore.pyqtSignal(bool)
     right_click_background_color = QtCore.pyqtSignal(list)
+    right_click_sync_zoom_by = QtCore.pyqtSignal(str)
     position_changed_qgraphicsitem = QtCore.pyqtSignal()
     
     def contextMenuEvent(self, event):
@@ -160,17 +172,19 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
 
             menu_ruler.addSeparator()
 
-            action_set_relative_origin_position_topleft = menu_ruler.addAction("Switch relative origin to top-left")
+            action_set_relative_origin_position_topleft = menu_ruler.addAction("Relative origin at top-left")
             action_set_relative_origin_position_topleft.triggered.connect(lambda: self.right_click_relative_origin_position.emit("topleft"))
             action_set_relative_origin_position_topleft.triggered.connect(lambda: self.set_relative_origin_position("topleft"))
-            action_set_relative_origin_position_bottomleft = menu_ruler.addAction("Switch relative origin to bottom-left")
+            action_set_relative_origin_position_bottomleft = menu_ruler.addAction("Relative origin at bottom-left")
             action_set_relative_origin_position_bottomleft.triggered.connect(lambda: self.right_click_relative_origin_position.emit("bottomleft"))
             action_set_relative_origin_position_bottomleft.triggered.connect(lambda: self.set_relative_origin_position("bottomleft"))
 
             if self.relative_origin_position == "bottomleft":
-                action_set_relative_origin_position_bottomleft.setEnabled(False)
+                action_set_relative_origin_position_bottomleft.setCheckable(True)
+                action_set_relative_origin_position_bottomleft.setChecked(True)
             elif self.relative_origin_position == "topleft": 
-                action_set_relative_origin_position_topleft.setEnabled(False)
+                action_set_relative_origin_position_topleft.setCheckable(True)
+                action_set_relative_origin_position_topleft.setChecked(True)
             
             menu.addSeparator()
 
@@ -185,32 +199,34 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
             menu_transform.setToolTipsVisible(True)
             menu.addMenu(menu_transform)
 
-            transform_on_tooltip_str = "Pixels are interpolated when zoomed in, thus rendering a smooth appearance"
-            transform_off_tooltip_str = "Pixels are unchanged when zoomed in, thus rendering a true-to-pixel appearance"
+            transform_on_tooltip_str = "Pixels are interpolated when zoomed in, rendering a smooth appearance"
+            transform_off_tooltip_str = "Pixels are unchanged when zoomed in, rendering a true-to-pixel appearance"
 
-            action_set_single_transform_mode_smooth_on = menu_transform.addAction("Switch on")
+            action_set_single_transform_mode_smooth_on = menu_transform.addAction("On")
             action_set_single_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str)
             action_set_single_transform_mode_smooth_on.triggered.connect(lambda: self.right_click_single_transform_mode_smooth.emit(True))
             action_set_single_transform_mode_smooth_on.triggered.connect(lambda: self.set_single_transform_mode_smooth(True))
 
-            action_set_single_transform_mode_smooth_off = menu_transform.addAction("Switch off")
+            action_set_single_transform_mode_smooth_off = menu_transform.addAction("Off")
             action_set_single_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str)
             action_set_single_transform_mode_smooth_off.triggered.connect(lambda: self.right_click_single_transform_mode_smooth.emit(False))
             action_set_single_transform_mode_smooth_off.triggered.connect(lambda: self.set_single_transform_mode_smooth(False))
 
             if self.single_transform_mode_smooth:
-                action_set_single_transform_mode_smooth_on.setEnabled(False)
+                action_set_single_transform_mode_smooth_on.setCheckable(True)
+                action_set_single_transform_mode_smooth_on.setChecked(True)
             else:
-                action_set_single_transform_mode_smooth_off.setEnabled(False)
+                action_set_single_transform_mode_smooth_off.setCheckable(True)
+                action_set_single_transform_mode_smooth_off.setChecked(True)
 
             menu_transform.addSeparator()
 
-            action_set_all_transform_mode_smooth_on = menu_transform.addAction("Switch on (all windows)")
-            action_set_all_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str+" (applies to all current and new image windows)")
+            action_set_all_transform_mode_smooth_on = menu_transform.addAction("Switch all on")
+            action_set_all_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str+" (applies to all windows)")
             action_set_all_transform_mode_smooth_on.triggered.connect(lambda: self.right_click_all_transform_mode_smooth.emit(True))
     
-            action_set_all_transform_mode_smooth_off = menu_transform.addAction("Switch off (all windows)")
-            action_set_all_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str+" (applies to all current and new image windows)")
+            action_set_all_transform_mode_smooth_off = menu_transform.addAction("Switch all off")
+            action_set_all_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str+" (applies to all windows)")
             action_set_all_transform_mode_smooth_off.triggered.connect(lambda: self.right_click_all_transform_mode_smooth.emit(False))
 
             menu.addSeparator()
@@ -227,7 +243,28 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
                 action_set_background.triggered.connect(lambda value, color=color: self.right_click_background_color.emit(color))
                 action_set_background.triggered.connect(lambda value, color=color: self.background_color_lambda(color))
                 if color == self.background_color:
-                    action_set_background.setEnabled(False)
+                    action_set_background.setCheckable(True)
+                    action_set_background.setChecked(True)
+
+            menu.addSeparator()
+
+            menu_sync_zoom_by = QtWidgets.QMenu("Sync zoom by...")
+            menu_sync_zoom_by.setToolTipsVisible(True)
+            menu.addMenu(menu_sync_zoom_by)
+
+            for i, option in enumerate(self.sync_zoom_options):
+                descriptor = option[0]
+                tooltip = option[1]
+                by = self.sync_zoom_bys[i]
+                action_sync_zoom_by = menu_sync_zoom_by.addAction(descriptor)
+                action_sync_zoom_by.setToolTip(tooltip)
+                action_sync_zoom_by.triggered.connect(lambda value, by=by: self.right_click_sync_zoom_by.emit(by))
+                action_sync_zoom_by.triggered.connect(lambda value, by=by: self.sync_zoom_by_lambda(by))
+                if by == self.sync_zoom_by:
+                    action_sync_zoom_by.setCheckable(True)
+                    action_sync_zoom_by.setChecked(True)
+
+
 
         menu.exec(event.screenPos())
 
@@ -286,5 +323,19 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
 
     @property
     def background_rgb(self):
-        """Current background color RGB."""
+        """Current background color RGB [int, int, int]."""
         return self._background_color[1:4]
+    
+    @property
+    def sync_zoom_by(self):
+        """Current sync zoom by."""
+        return self._sync_zoom_by
+    
+    @sync_zoom_by.setter
+    def sync_zoom_by(self, by):
+        """Set sync zoom by as str."""
+        self._sync_zoom_by = by
+
+    def sync_zoom_by_lambda(self, by):
+        """Within lambda, set sync zoom by str."""
+        self.sync_zoom_by = by

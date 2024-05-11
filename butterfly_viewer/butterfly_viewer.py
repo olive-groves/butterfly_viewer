@@ -84,6 +84,28 @@ class SplitViewMdiChild(SplitView):
         self.toggle_lock_split_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Shift+X"), self)
         self.toggle_lock_split_shortcut.activated.connect(self.toggle_lock_split)
 
+        self._sync_this_zoom = True
+        self._sync_this_pan = True
+    
+    @property
+    def sync_this_zoom(self):
+        """bool: Setting of whether to sync this by zoom (or not)."""
+        return self._sync_this_zoom
+    
+    @sync_this_zoom.setter
+    def sync_this_zoom(self, bool: bool):
+        """bool: Set whether to sync this by zoom (or not)."""
+        self._sync_this_zoom = bool
+
+    @property
+    def sync_this_pan(self):
+        """bool: Setting of whether to sync this by pan (or not)."""
+        return self._sync_this_pan
+    
+    @sync_this_pan.setter
+    def sync_this_pan(self, bool: bool):
+        """bool: Set whether to sync this by pan (or not)."""
+        self._sync_this_pan = bool
 
     # Control the split of the sliding overlay
 
@@ -308,6 +330,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_quiet_mode = False
         self.is_global_transform_mode_smooth = False
         self.scene_background_color = None
+        self.sync_zoom_by = "box"
 
         self.close_all_pushbutton = QtWidgets.QPushButton("⦻")
         self.close_all_pushbutton.setToolTip("Close all image windows")
@@ -1099,6 +1122,16 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             window.widget().set_scene_background_color(color)
         self.scene_background_color = color
 
+    def set_all_sync_zoom_by(self, by: str):
+        """[str] Set the method by which to sync zoom all windows."""
+        if self._mdiArea.activeSubWindow() is None:
+            return
+        windows = self._mdiArea.subWindowList()
+        for window in windows:
+            window.widget().update_sync_zoom_by(by)
+        self.sync_zoom_by = by
+        self.refreshZoom()
+
     def info_button_clicked(self):
         """Trigger when info button is clicked."""
         self.show_about()
@@ -1223,6 +1256,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                          transform_mode_smooth)
 
         child.enableScrollBars(self._showScrollbarsAct.isChecked())
+
+        child.sync_this_zoom = True
+        child.sync_this_pan = True
         
         self._mdiArea.addSubWindow(child, QtCore.Qt.FramelessWindowHint) # LVM: No frame, starts fitted
 
@@ -1240,6 +1276,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         child.signal_display_loading_grayout.connect(self.display_loading_grayout)
         child.was_set_global_transform_mode.connect(self.set_all_window_transform_mode_smooth)
         child.was_set_scene_background_color.connect(self.set_all_background_color)
+        child.was_set_sync_zoom_by.connect(self.set_all_sync_zoom_by)
 
         return child
 
@@ -1892,10 +1929,73 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         windows = self._mdiArea.subWindowList()
         for window in windows:
             if window != changedWindow:
-                window.widget().scrollState = newState
-                window.widget().resize_scene()
+                if window.widget().sync_this_pan:
+                    window.widget().scrollState = newState
+                    window.widget().resize_scene()
 
         self._handlingScrollChangedSignal = False
+
+    def determineSyncSenderDimension(self,
+                               width: int,
+                               height: int,
+                               sync_by: str="box"):
+        """Get the dimension of the sender image with which to synchronize zoom.
+        
+        Args:
+            width (int): Width of sender in pixels.
+            height (int): Height of sender in pixels.
+            sync_by (str): Method by which to sync zoom ("box", "width", "height", "pixel").
+
+        Returns:
+            dimension (int, None): Dimension with which to synchronize zoom (None if sync by pixel).
+        """
+
+        if sync_by == "width":
+            dimension = width
+        elif sync_by == "height":
+            dimension = height
+        elif sync_by == "pixel":
+            dimension = None
+        else:  # Equivalent to sync_by == "box"
+            # Tall image means the height dictates the size of the zoom box.
+            # Wide image means the width dictates the size of the zoom box.
+            if height >= width:
+                dimension = height
+            else:
+                dimension = width
+
+        return dimension
+    
+    def determineSyncAdjustmentFactor(self,
+                                      sync_by: str,
+                                      sender_dimension: int,
+                                      receiver_width: int,
+                                      receiver_height: int):
+        """Get the factor with which to multiply the zoom of the sender before giving it to the receiver to synchronize them.
+        
+        Args:
+            sync_by (str): Method by which to sync zoom ("box", "width", "height", "pixel").
+            sender_dimension (int): Dimension of sender in pixels, as determined by determineSyncSenderDimension().
+            receiver_width (int): Width of receiver in pixels.
+            receiver_height (int): Height of sender in pixels.
+
+        Returns:
+            adjustment_factor (float): Factor with which to multiply the sender zoom to sync the receiver.
+        """
+
+        if sync_by == "width":
+            adjustment_factor = sender_dimension/receiver_width
+        elif sync_by == "height":
+            adjustment_factor = sender_dimension/receiver_height
+        elif sync_by == "pixel":
+            adjustment_factor = 1.0
+        else: # "box"
+            if receiver_width >= receiver_height:
+                adjustment_factor = sender_dimension/receiver_width
+            else:
+                adjustment_factor = sender_dimension/receiver_height
+        
+        return adjustment_factor
 
     def synchZoom(self, fromViewer):
         """Synch zoom of all subwindowws to the same as *fromViewer*.
@@ -1904,12 +2004,26 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         if not fromViewer:
             return
         newZoomFactor = fromViewer.zoomFactor
+
+        sync_by = self.sync_zoom_by
+
+        sender_dimension = self.determineSyncSenderDimension(fromViewer.imageWidth,
+                                                             fromViewer.imageHeight,
+                                                             sync_by)
+
         changedWindow = fromViewer.parent()
         windows = self._mdiArea.subWindowList()
         for window in windows:
             if window != changedWindow:
-                window.widget().zoomFactor = newZoomFactor
-                window.widget().resize_scene()
+                receiver = window.widget()
+                if receiver.sync_this_zoom:
+                    adjustment_factor = self.determineSyncAdjustmentFactor(sync_by,
+                                                                        sender_dimension,
+                                                                        receiver.imageWidth,
+                                                                        receiver.imageHeight)
+
+                    receiver.zoomFactor = newZoomFactor*adjustment_factor
+                    receiver.resize_scene()
         self.refreshPan()
 
     def refreshPan(self):
@@ -1918,6 +2032,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     def refreshPanDelayed(self, ms=0):
         QtCore.QTimer.singleShot(ms, self.refreshPan)
+
+    def refreshZoom(self):
+        if self.activeMdiChild:
+            self.synchZoom(self.activeMdiChild)
 
 
     # Methods from PyQt MDI Image Viewer left unaltered
@@ -2152,7 +2270,11 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                              list
         :param bool delete: if True then filename_main_topleft removed, otherwise added"""
         settings = QtCore.QSettings()
-        files = list(settings.value(SETTING_RECENTFILELIST, []))
+        
+        try:
+            files = list(settings.value(SETTING_RECENTFILELIST, []))
+        except TypeError:
+            files = []
 
         try:
             files.remove(filename_main_topleft)
