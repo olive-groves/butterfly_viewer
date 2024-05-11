@@ -166,17 +166,19 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
 
             menu_ruler.addSeparator()
 
-            action_set_relative_origin_position_topleft = menu_ruler.addAction("Switch relative origin to top-left")
+            action_set_relative_origin_position_topleft = menu_ruler.addAction("Relative origin at top-left")
             action_set_relative_origin_position_topleft.triggered.connect(lambda: self.right_click_relative_origin_position.emit("topleft"))
             action_set_relative_origin_position_topleft.triggered.connect(lambda: self.set_relative_origin_position("topleft"))
-            action_set_relative_origin_position_bottomleft = menu_ruler.addAction("Switch relative origin to bottom-left")
+            action_set_relative_origin_position_bottomleft = menu_ruler.addAction("Relative origin at bottom-left")
             action_set_relative_origin_position_bottomleft.triggered.connect(lambda: self.right_click_relative_origin_position.emit("bottomleft"))
             action_set_relative_origin_position_bottomleft.triggered.connect(lambda: self.set_relative_origin_position("bottomleft"))
 
             if self.relative_origin_position == "bottomleft":
-                action_set_relative_origin_position_bottomleft.setEnabled(False)
+                action_set_relative_origin_position_bottomleft.setCheckable(True)
+                action_set_relative_origin_position_bottomleft.setChecked(True)
             elif self.relative_origin_position == "topleft": 
-                action_set_relative_origin_position_topleft.setEnabled(False)
+                action_set_relative_origin_position_topleft.setCheckable(True)
+                action_set_relative_origin_position_topleft.setChecked(True)
             
             menu.addSeparator()
 
@@ -191,32 +193,34 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
             menu_transform.setToolTipsVisible(True)
             menu.addMenu(menu_transform)
 
-            transform_on_tooltip_str = "Pixels are interpolated when zoomed in, thus rendering a smooth appearance"
-            transform_off_tooltip_str = "Pixels are unchanged when zoomed in, thus rendering a true-to-pixel appearance"
+            transform_on_tooltip_str = "Pixels are interpolated when zoomed in, rendering a smooth appearance"
+            transform_off_tooltip_str = "Pixels are unchanged when zoomed in, rendering a true-to-pixel appearance"
 
-            action_set_single_transform_mode_smooth_on = menu_transform.addAction("Switch on")
+            action_set_single_transform_mode_smooth_on = menu_transform.addAction("On")
             action_set_single_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str)
             action_set_single_transform_mode_smooth_on.triggered.connect(lambda: self.right_click_single_transform_mode_smooth.emit(True))
             action_set_single_transform_mode_smooth_on.triggered.connect(lambda: self.set_single_transform_mode_smooth(True))
 
-            action_set_single_transform_mode_smooth_off = menu_transform.addAction("Switch off")
+            action_set_single_transform_mode_smooth_off = menu_transform.addAction("Off")
             action_set_single_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str)
             action_set_single_transform_mode_smooth_off.triggered.connect(lambda: self.right_click_single_transform_mode_smooth.emit(False))
             action_set_single_transform_mode_smooth_off.triggered.connect(lambda: self.set_single_transform_mode_smooth(False))
 
             if self.single_transform_mode_smooth:
-                action_set_single_transform_mode_smooth_on.setEnabled(False)
+                action_set_single_transform_mode_smooth_on.setCheckable(True)
+                action_set_single_transform_mode_smooth_on.setChecked(True)
             else:
-                action_set_single_transform_mode_smooth_off.setEnabled(False)
+                action_set_single_transform_mode_smooth_off.setCheckable(True)
+                action_set_single_transform_mode_smooth_off.setChecked(True)
 
             menu_transform.addSeparator()
 
-            action_set_all_transform_mode_smooth_on = menu_transform.addAction("Switch on (all windows)")
-            action_set_all_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str+" (applies to all current and new image windows)")
+            action_set_all_transform_mode_smooth_on = menu_transform.addAction("Switch all on")
+            action_set_all_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str+" (applies to all windows)")
             action_set_all_transform_mode_smooth_on.triggered.connect(lambda: self.right_click_all_transform_mode_smooth.emit(True))
     
-            action_set_all_transform_mode_smooth_off = menu_transform.addAction("Switch off (all windows)")
-            action_set_all_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str+" (applies to all current and new image windows)")
+            action_set_all_transform_mode_smooth_off = menu_transform.addAction("Switch all off")
+            action_set_all_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str+" (applies to all windows)")
             action_set_all_transform_mode_smooth_off.triggered.connect(lambda: self.right_click_all_transform_mode_smooth.emit(False))
 
             menu.addSeparator()
@@ -233,7 +237,8 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
                 action_set_background.triggered.connect(lambda value, color=color: self.right_click_background_color.emit(color))
                 action_set_background.triggered.connect(lambda value, color=color: self.background_color_lambda(color))
                 if color == self.background_color:
-                    action_set_background.setEnabled(False)
+                    action_set_background.setCheckable(True)
+                    action_set_background.setChecked(True)
 
             menu.addSeparator()
 
