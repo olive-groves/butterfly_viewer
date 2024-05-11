@@ -330,6 +330,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_quiet_mode = False
         self.is_global_transform_mode_smooth = False
         self.scene_background_color = None
+        self.sync_zoom_by = "box"
 
         self.close_all_pushbutton = QtWidgets.QPushButton("⦻")
         self.close_all_pushbutton.setToolTip("Close all image windows")
@@ -1121,6 +1122,16 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             window.widget().set_scene_background_color(color)
         self.scene_background_color = color
 
+    def set_all_sync_zoom_by(self, by: str):
+        """[str] Set the method by which to sync zoom all windows."""
+        if self._mdiArea.activeSubWindow() is None:
+            return
+        windows = self._mdiArea.subWindowList()
+        for window in windows:
+            window.widget().update_sync_zoom_by(by)
+        self.sync_zoom_by = by
+        self.refreshZoom()
+
     def info_button_clicked(self):
         """Trigger when info button is clicked."""
         self.show_about()
@@ -1265,6 +1276,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         child.signal_display_loading_grayout.connect(self.display_loading_grayout)
         child.was_set_global_transform_mode.connect(self.set_all_window_transform_mode_smooth)
         child.was_set_scene_background_color.connect(self.set_all_background_color)
+        child.was_set_sync_zoom_by.connect(self.set_all_sync_zoom_by)
 
         return child
 
@@ -1993,7 +2005,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             return
         newZoomFactor = fromViewer.zoomFactor
 
-        sync_by = "box" # TODO: This should be grabbed from global setting, which is set via right-click menu.
+        sync_by = self.sync_zoom_by
 
         sender_dimension = self.determineSyncSenderDimension(fromViewer.imageWidth,
                                                              fromViewer.imageHeight,
@@ -2020,6 +2032,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     def refreshPanDelayed(self, ms=0):
         QtCore.QTimer.singleShot(ms, self.refreshPan)
+
+    def refreshZoom(self):
+        if self.activeMdiChild:
+            self.synchZoom(self.activeMdiChild)
 
 
     # Methods from PyQt MDI Image Viewer left unaltered
