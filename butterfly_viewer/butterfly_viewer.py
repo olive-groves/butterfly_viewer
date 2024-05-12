@@ -25,7 +25,7 @@ from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from aux_splitview import SplitView
-from aux_functions import strippedName, toBool
+from aux_functions import strippedName, toBool, determineSyncSenderDimension, determineSyncAdjustmentFactor
 from aux_trackers import EventTrackerSplitBypassInterface
 from aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitViewManager
 from aux_mdi import QMdiAreaWithCustomSignals
@@ -1935,68 +1935,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self._handlingScrollChangedSignal = False
 
-    def determineSyncSenderDimension(self,
-                               width: int,
-                               height: int,
-                               sync_by: str="box"):
-        """Get the dimension of the sender image with which to synchronize zoom.
-        
-        Args:
-            width (int): Width of sender in pixels.
-            height (int): Height of sender in pixels.
-            sync_by (str): Method by which to sync zoom ("box", "width", "height", "pixel").
-
-        Returns:
-            dimension (int, None): Dimension with which to synchronize zoom (None if sync by pixel).
-        """
-
-        if sync_by == "width":
-            dimension = width
-        elif sync_by == "height":
-            dimension = height
-        elif sync_by == "pixel":
-            dimension = None
-        else:  # Equivalent to sync_by == "box"
-            # Tall image means the height dictates the size of the zoom box.
-            # Wide image means the width dictates the size of the zoom box.
-            if height >= width:
-                dimension = height
-            else:
-                dimension = width
-
-        return dimension
-    
-    def determineSyncAdjustmentFactor(self,
-                                      sync_by: str,
-                                      sender_dimension: int,
-                                      receiver_width: int,
-                                      receiver_height: int):
-        """Get the factor with which to multiply the zoom of the sender before giving it to the receiver to synchronize them.
-        
-        Args:
-            sync_by (str): Method by which to sync zoom ("box", "width", "height", "pixel").
-            sender_dimension (int): Dimension of sender in pixels, as determined by determineSyncSenderDimension().
-            receiver_width (int): Width of receiver in pixels.
-            receiver_height (int): Height of sender in pixels.
-
-        Returns:
-            adjustment_factor (float): Factor with which to multiply the sender zoom to sync the receiver.
-        """
-
-        if sync_by == "width":
-            adjustment_factor = sender_dimension/receiver_width
-        elif sync_by == "height":
-            adjustment_factor = sender_dimension/receiver_height
-        elif sync_by == "pixel":
-            adjustment_factor = 1.0
-        else: # "box"
-            if receiver_width >= receiver_height:
-                adjustment_factor = sender_dimension/receiver_width
-            else:
-                adjustment_factor = sender_dimension/receiver_height
-        
-        return adjustment_factor
-
     def synchZoom(self, fromViewer):
         """Synch zoom of all subwindowws to the same as *fromViewer*.
 
@@ -2007,9 +1945,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         sync_by = self.sync_zoom_by
 
-        sender_dimension = self.determineSyncSenderDimension(fromViewer.imageWidth,
-                                                             fromViewer.imageHeight,
-                                                             sync_by)
+        sender_dimension = determineSyncSenderDimension(fromViewer.imageWidth,
+                                                        fromViewer.imageHeight,
+                                                        sync_by)
 
         changedWindow = fromViewer.parent()
         windows = self._mdiArea.subWindowList()
@@ -2017,10 +1955,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             if window != changedWindow:
                 receiver = window.widget()
                 if receiver.sync_this_zoom:
-                    adjustment_factor = self.determineSyncAdjustmentFactor(sync_by,
-                                                                        sender_dimension,
-                                                                        receiver.imageWidth,
-                                                                        receiver.imageHeight)
+                    adjustment_factor = determineSyncAdjustmentFactor(sync_by,
+                                                                      sender_dimension,
+                                                                      receiver.imageWidth,
+                                                                      receiver.imageHeight)
 
                     receiver.zoomFactor = newZoomFactor*adjustment_factor
                     receiver.resize_scene()
