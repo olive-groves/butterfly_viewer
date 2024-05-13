@@ -31,6 +31,7 @@ from aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitView
 from aux_mdi import QMdiAreaWithCustomSignals
 from aux_layouts import GridLayoutFloatingShadow
 from aux_exif import get_exif_rotation_angle
+from aux_buttons import ViewerButton
 import icons_rc
 
 
@@ -223,6 +224,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.centralwidget_during_fullscreen = QtWidgets.QWidget()
         self.centralwidget_during_fullscreen.setLayout(self.centralwidget_during_fullscreen_layout)
 
+        self.svg_pushbutton = ViewerButton()
+        self.svg_pushbutton.setIcon(r"./icons/card-layout-svgrepo-com.svg")
+        self.svg_pushbutton.setCheckable(True)
+        self.svg_pushbutton.setChecked(True)
 
         self.fullscreen_pushbutton = QtWidgets.QPushButton("⇲")
         self.fullscreen_pushbutton.setToolTip("Fullscreen on/off (F)")
@@ -607,6 +612,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.label_mdiarea.setAlignment(QtCore.Qt.AlignCenter)
 
         layout_mdiarea_bottomright_vertical = GridLayoutFloatingShadow()
+        layout_mdiarea_bottomright_vertical.addWidget(self.svg_pushbutton, 6, 0)
         layout_mdiarea_bottomright_vertical.addWidget(self.fullscreen_pushbutton, 5, 0)
         layout_mdiarea_bottomright_vertical.addWidget(self.tile_default_pushbutton, 4, 0)
         layout_mdiarea_bottomright_vertical.addWidget(self.tile_horizontally_pushbutton, 3, 0)
