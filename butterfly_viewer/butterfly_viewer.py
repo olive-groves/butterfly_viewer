@@ -227,7 +227,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.svg_pushbutton = ViewerButton()
         self.svg_pushbutton.setIcon(r"./icons/card-layout-svgrepo-com.svg")
         self.svg_pushbutton.setCheckable(True)
-        self.svg_pushbutton.setChecked(True)
 
         self.fullscreen_pushbutton = QtWidgets.QPushButton("⇲")
         self.fullscreen_pushbutton.setToolTip("Fullscreen on/off (F)")

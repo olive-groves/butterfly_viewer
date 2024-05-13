@@ -61,9 +61,9 @@ class SvgAbstractButton(QAbstractButton):
         self.__background_color_default = 'transparent'
 
     def __initColorDefault(self):
-        self.__hover_color_default = '#DDDDDD'
-        self.__pressed_color_default = '#FFFFFF'
         self.__checked_color_default = '#CCCCCC'
+        self.__hover_color_default = self.__getHoverColor(QColor(self.__checked_color_default))
+        self.__pressed_color_default = self.__getPressedColor(QColor(self.__checked_color_default))
         self.__text_color_default = '#AAAAAA'
 
     def __initColorByBaseWidget(self):
@@ -83,12 +83,12 @@ class SvgAbstractButton(QAbstractButton):
         return color
 
     def __getHoverColor(self, base_color):
-        hover_factor = 120
+        hover_factor = 130
         hover_color = self.__getColorByFactor(base_color, hover_factor)
         return hover_color.name()
 
     def __getPressedColor(self, base_color):
-        pressed_factor = 130
+        pressed_factor = 150
         pressed_color = self.__getColorByFactor(base_color, pressed_factor)
         return pressed_color.name()
 
@@ -110,7 +110,9 @@ class SvgAbstractButton(QAbstractButton):
         self.__btn_style = f'''
         QAbstractButton
         {{
-        border: 0;
+        border-width: 1px;
+        border-style: solid;
+        border-color: transparent;
         width: {self.__size};
         height: {self.__size};
         image: url({self.__icon});
@@ -133,11 +135,11 @@ class SvgAbstractButton(QAbstractButton):
         }}
         QAbstractButton:checked:hover
         {{
-        background-color: {QColor(self.__checked_color).lighter(130).name()};
+        background-color: {self.__getHoverColor(QColor(self.__checked_color))};
         }}
         QAbstractButton:checked:pressed
         {{
-        background-color: {QColor(self.__checked_color).lighter(150).name()};
+        background-color: {self.__getPressedColor(QColor(self.__checked_color))};
         }}
         '''
 
@@ -272,9 +274,9 @@ class ViewerButton(QPushButton, SvgAbstractButton):
     """Extend SvgButton with setters for hover, pressed, and checked."""
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)  
-        self.setHoverColor("#BBBBBB")
-        self.setPressedColor("#DDDDDD")
-        self.setCheckedColor("#ff00ff")
+        # self.setHoverColor("auto")
+        # self.setPressedColor("auto")
+        self.setCheckedColor("#3F3FBF")
 
 
 class ToggleViewerButton(ViewerButton):
