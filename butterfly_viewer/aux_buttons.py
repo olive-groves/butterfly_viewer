@@ -45,6 +45,8 @@ class SvgAbstractButton(QAbstractButton):
         self.__initBackgroundDefault()
         self.__background_color = self.__background_color_default
         self.__icon = ''
+        self.__checked_icon = ''
+        self.__checked_icon_css = ''
         self.__animation = ''
         self.installEventFilter(self)
         if self.__baseWidget:
@@ -132,6 +134,8 @@ class SvgAbstractButton(QAbstractButton):
         QAbstractButton:checked
         {{
         background-color: {self.__checked_color};
+        {self.__checked_icon_css}
+        border-color: {QColor(self.__checked_color).lighter(220).name()}
         }}
         QAbstractButton:checked:hover
         {{
@@ -147,6 +151,14 @@ class SvgAbstractButton(QAbstractButton):
 
     def setIcon(self, icon: str):
         self.__icon = getabsres(icon)
+        self.__styleInit()
+
+    def setCheckedIcon(self, icon: str=None):
+        self.__checked_icon = getabsres(icon)
+        if self.__checked_icon:
+            self.__checked_icon_css = f'image: url({self.__checked_icon});'
+        else:
+            self.__checked_icon_css = ''
         self.__styleInit()
 
     def eventFilter(self, obj, e):
@@ -205,10 +217,12 @@ class SvgAbstractButton(QAbstractButton):
         self.__size = dpi // 4
         self.__styleInit()
 
-    def setHoverColor(self, color=None):
+    def setHoverColor(self, color=None, auto=False):
         """Set color when hovered ('#XXXXXX', '#XXX', '<color>', 'transparent', None)
         """
-        if color:
+        if auto:
+            self.__hover_color = self.__getHoverColor(QColor(self.__checked_color))
+        elif color:
             self.__hover_color = color
         elif self.__baseWidget:
             self.__hover_color = self.__getHoverColor(self.__base_color)
@@ -216,10 +230,12 @@ class SvgAbstractButton(QAbstractButton):
             self.__hover_color = self.__hover_color_default
         self.__styleInit()
 
-    def setPressedColor(self, color=None):
+    def setPressedColor(self, color=None, auto=False):
         """Set color when pressed ('#XXXXXX', '#XXX', '<color>', 'transparent', None)
         """
-        if color:
+        if auto:
+            self.__pressed_color = self.__getPressedColor(QColor(self.__checked_color))
+        elif color:
             self.__pressed_color = color
         elif self.__baseWidget:
             self.__pressed_color = self.__getPressedColor(self.__base_color)
@@ -270,29 +286,35 @@ class SvgToolButton(QToolButton, SvgAbstractButton):
         super().__init__(base_widget, *args, **kwargs)
 
 
-class ViewerButton(QPushButton, SvgAbstractButton):
-    """Extend SvgButton with setters for hover, pressed, and checked."""
-    def __init__(self, base_widget: QWidget = None, *args, **kwargs):
-        super().__init__(base_widget, *args, **kwargs)  
-        # self.setHoverColor("auto")
-        # self.setPressedColor("auto")
-        self.setCheckedColor("#3F3FBF")
-
-
-class ToggleViewerButton(ViewerButton):
+class ViewerButton(SvgToolButton):
     """Toggle-style ViewerButton.
     
     Styled for buttons which toggle states."""
-    def __init__(self, base_widget: QWidget = None, *args, **kwargs):
+    def __init__(self, base_widget: QWidget = None, style: str="default", *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)
-        # Set toggled icon, color, and override toggle event to switch icon?
+        self.setStyle(style)
 
+    def setStyle(self, style: str="default"):
+        if "trigger" in style:
+            if "severe" in style:
+                self.setCheckedColor("#CC0000")
+                self.setBackground("rgba(0, 0, 0, 63)")
+            elif "transparent" in style:
+                self.setCheckedColor("#BBBBBB")
+                self.setBackground("transparent")
+            else:
+                self.setCheckedColor("#BBBBBB")
+                self.setBackground("rgba(0, 0, 0, 63)")
+        elif "invisible" in style:
+            self.setCheckedColor("transparent")
+            self.setBackground("transparent")
+        else:
+            if "green-yellow" in style:
+                self.setCheckedColor("#FFA500")
+                self.setBackground("#008000")
+            else:
+                self.setCheckedColor("#313191")
+                self.setBackground("rgba(0, 0, 0, 63)")
 
-class TriggerViewerButton(ViewerButton):
-    """Trigger-style ViewerButton.
-    
-    Styled for buttons which trigger events."""
-    def __init__(self, base_widget: QWidget = None, *args, **kwargs):
-        super().__init__(base_widget, *args, **kwargs)
-
-    # Method to set as a "This is a pretty severe trigger" aka "No take-backs trigger", like closing all windows
+        self.setHoverColor(auto=True)
+        self.setPressedColor(auto=True)

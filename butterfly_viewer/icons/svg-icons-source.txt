@@ -1,0 +1,3 @@
+https://www.svgrepo.com/collection/industrial-sharp-ui-icons/
+
+Fill color modified from #000000 (black) to #fafafa (white)
