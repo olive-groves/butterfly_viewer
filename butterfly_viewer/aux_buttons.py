@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+
+"""Button widgets whose icons can be "truly" set to SVG image files.
+
+Not intended as a script. Used in Butterfly Viewer.
+
+Credits:
+    SvgButton, SvgToolButton, SvgAbstractButton, geabsres: Copyright (c) 2022 Jung Gyu Yoon (https://github.com/yjg30737)
+        with changes and additions to SvgAbstractButton.
+"""
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
+
 from PyQt5.QtGui import QColor, QPalette, qGray
 from PyQt5.QtWidgets import QAbstractButton, QGraphicsColorizeEffect, QWidget, qApp, QPushButton, QToolButton
 
