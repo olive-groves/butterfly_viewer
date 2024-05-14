@@ -128,7 +128,7 @@ class SvgAbstractButton(QAbstractButton):
         self.__btn_style = f'''
         QAbstractButton
         {{
-        border-width: 1px;
+        border-width: 2px;
         border-style: solid;
         border-color: transparent;
         width: {self.__size};
