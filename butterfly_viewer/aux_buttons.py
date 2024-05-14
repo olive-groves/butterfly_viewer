@@ -81,6 +81,7 @@ class SvgAbstractButton(QAbstractButton):
         self.__hover_color_default = self.__getHoverColor(QColor(self.__checked_color_default))
         self.__pressed_color_default = self.__getPressedColor(QColor(self.__checked_color_default))
         self.__text_color_default = '#AAAAAA'
+        self.__checked_border_factor = 220
 
     def __initColorByBaseWidget(self):
         self.__base_color = self.__baseWidget.palette().color(QPalette.Base)
@@ -88,6 +89,7 @@ class SvgAbstractButton(QAbstractButton):
         self.__pressed_color = self.__getPressedColor(self.__base_color)
         self.__checked_color = self.__getPressedColor(self.__base_color)
         self.__text_color = self.__getButtonTextColor(self.__base_color)
+        self.__checked_border_factor = 100
 
     def __getColorByFactor(self, base_color, factor):
         r, g, b = base_color.red(), base_color.green(), base_color.blue()
@@ -149,7 +151,7 @@ class SvgAbstractButton(QAbstractButton):
         {{
         background-color: {self.__checked_color};
         {self.__checked_icon_css}
-        border-color: {QColor(self.__checked_color).lighter(220).name()}
+        border-color: {QColor(self.__checked_color).lighter(self.__checked_border_factor).name()}
         }}
         QAbstractButton:checked:hover
         {{
@@ -279,9 +281,15 @@ class SvgAbstractButton(QAbstractButton):
             self.__text_color = self.__text_color_default
         self.__styleInit()
 
+    def setCheckedBorderFactor(self, factor: int=220):
+        """[int 0-inf] Set lighten factor for checked border color.
+        """
+        self.__checked_border_factor = factor
+        self.__styleInit()
+
 
 class SvgButton(QPushButton, SvgAbstractButton):
-    """
+    """QPushButton which supports SVG icon.
     
     Copyright (c) 2022 Jung Gyu Yoon
 
@@ -325,6 +333,7 @@ class ViewerButton(SvgToolButton):
         else:
             if "green-yellow" in style:
                 self.setCheckedColor("#FFA500")
+                self.setCheckedBorderFactor(170)
                 self.setBackground("#008000")
             else:
                 self.setCheckedColor("#313191")
