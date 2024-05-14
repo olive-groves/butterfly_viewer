@@ -22,11 +22,12 @@ import posixpath
 
 
 def getabsres(res: str):
-    """
+    """Get absolute resource path of exterior package.
     
     Copyright (c) 2022 Jung Gyu Yoon
 
-    From https://github.com/yjg30737/absresgetter/"""
+    From https://github.com/yjg30737/absresgetter/
+    """
     stack_lst = inspect.stack()
     res_frame_idx = 0
     for i in range(len(stack_lst)):
@@ -40,10 +41,16 @@ def getabsres(res: str):
 
 
 class SvgAbstractButton(QAbstractButton):
-    """Modified SvgAbstractButton with color defaults and setters.
+    """QAbstractButton whose icon can be truly set to an SVG image file.
+    
+    Changes made to original SvgAbstractButton:
+    - Color setters
+    - Auto colors
+    - Default colors
     
     Original SvgAbstractButton: Copyright (c) 2022 Jung Gyu Yoon
-    From https://github.com/yjg30737/pyqt-svg-abstractbutton"""
+    From https://github.com/yjg30737/pyqt-svg-abstractbutton
+    """
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__baseWidget = base_widget
@@ -293,25 +300,25 @@ class SvgButton(QPushButton, SvgAbstractButton):
     
     Copyright (c) 2022 Jung Gyu Yoon
 
-    From https://github.com/yjg30737/pyqt-svg-button/"""
+    From https://github.com/yjg30737/pyqt-svg-button/
+    """
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)
 
 
 class SvgToolButton(QToolButton, SvgAbstractButton):
-    """
+    """QToolButton which supports SVG icon
     
     Copyright (c) 2022 Jung Gyu Yoon
 
-    From https://github.com/yjg30737/pyqt-svg-toolbutton/blob/main/pyqt_svg_toolbutton/svgToolButton.py"""
+    From https://github.com/yjg30737/pyqt-svg-toolbutton/blob/main/pyqt_svg_toolbutton/svgToolButton.py
+    """
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)
 
 
-class ViewerButton(SvgToolButton):
-    """Toggle-style ViewerButton.
-    
-    Styled for buttons which toggle states."""
+class ViewerButton(SvgButton):
+    """SvgButton with styles for Butterfly Viewer main interface."""
     def __init__(self, base_widget: QWidget = None, style: str="default", *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)
         self.setStyle(style)
