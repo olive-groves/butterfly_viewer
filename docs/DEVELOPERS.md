@@ -227,7 +227,7 @@ The underlying slider functionality is a commonly used method for comparing imag
 ['Multi-model overlays' (demo)](https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer/vangogh.html) (2011) with [other demos](https://iipimage.sourceforge.io/demo) 
 
 #### Georeferencer
-[Mouse-follow 'Swipe' mode (demo)](https://uu.oldmapsonline.org/compare#map/631781111740) and described in this [documentation](https://www.davidrumsey.com/view/georeferencer) (2017) 
+[Mouse-follow 'Swipe' mode (demo)](https://davidrumsey.oldmapsonline.org/compare#194959910714) and described in this [documentation](https://www.davidrumsey.com/view/georeferencer) (2017) 
 
 #### Leaflet.Sync plugin for Leaflet
 ['Offset' mode (demo)](https://jieter.github.io/Leaflet.Sync/examples/multiple_offset.html) with [animation](https://raw.githubusercontent.com/jieter/Leaflet.Sync/HEAD/offset_animation.gif) and available in its [GitHub repo](https://github.com/jieter/Leaflet.Sync) (2013) 
@@ -244,10 +244,8 @@ The underlying slider functionality is a commonly used method for comparing imag
 #### MapBrowser
 ['Comparison' tool (video)](https://www.youtube.com/watch?v=pcmfn5fjPXw&t=97s) 
 
-#### 'Swipe' in ArcGIS and related apps
-['Swipe' tool (documentation)](https://www.esri.com/news/arcuser/0705/91faster.html) (2005) 
-
-[Compilation (blog post)](https://www.esri.com/arcgis-blog/products/arcgis-online/mapping/swipe-compare-apps/#landsat) with numerous screenshots and links (Bern Szukalski, 2021–2023): 
+#### 'Swipe' in various ArcGIS apps
+[Minimal no-border 'Swipe' tool (video)](https://youtu.be/tX826pH_OJY?si=Opbx18PdI9oICpxm&t=27) (GIS Coordinated, 2018) with [documentation](https://www.esri.com/news/arcuser/0705/91faster.html) (2005) and a [compilation of apps](https://www.esri.com/arcgis-blog/products/arcgis-online/mapping/swipe-compare-apps/#landsat) with screenshots and links (Bern Szukalski, 2021–2023): 
 - ArcGIS Instant Apps (Media Map, Imagery Viewer, Atlas, Portfolio, Exhibit, Compare)
 - App builders (Experience Builder, Web AppBuilder)
 - Imagery apps (World Imagery Wayback, Sentinel-2 Land Cover Explorer, Landsat Explorer, Sentinel Explorer)
@@ -266,19 +264,13 @@ The underlying slider functionality is a commonly used method for comparing imag
 ['Compare' window (blog)](https://www.imagingtips.com/faststone/controlbar/compare/0compare.shtml) (Joe Holler, 2009) 
 
 #### Georeferencer
-['Grid' mode (demo)](https://davidrumsey.oldmapsonline.org/compare#686492204670) 
-
-Described in this [documentation](https://www.davidrumsey.com/view/georeferencer) (2017) 
+['Grid' mode (demo)](https://davidrumsey.oldmapsonline.org/compare#686492204670) and [documented here](https://www.davidrumsey.com/view/georeferencer) (2017) 
 
 #### Leaflet.Sync plugin for Leaflet
-['Dual' mode (demo)](https://jieter.github.io/Leaflet.Sync/examples/dual.html) (2013) 
-
-[GitHub repo](https://github.com/jieter/Leaflet.Sync) 
+['Dual' mode (demo)](https://jieter.github.io/Leaflet.Sync/examples/dual.html) (2013) and available in its [GitHub repo](https://github.com/jieter/Leaflet.Sync) 
 
 #### IIPMooViewer 2.0
-['Dual synchronized streamed viewing' (demo)](https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer-2.0/synchro.html) (2011) 
-
-[Other demos](https://iipimage.sourceforge.io/demo) 
+['Dual synchronized streamed viewing' (demo)](https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer-2.0/synchro.html) (2011) with [other demos](https://iipimage.sourceforge.io/demo) 
 
 #### GeTeach.com
 [Default design (demo)](https://geteach.com/) 
