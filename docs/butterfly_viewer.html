@@ -53,7 +53,10 @@
     <li><a href="#generating-documentation-with-pdoc">Generating documentation with pdoc</a></li>
     <li><a href="#updating-packages-in-environmentyml">Updating packages in <code>environment.yml</code></a></li>
   </ul></li>
-  <li><a href="#credits">Credits</a></li>
+  <li><a href="#credits">Credits</a>
+  <ul>
+    <li><a href="#techniques-and-inspiration">Techniques and inspiration</a></li>
+  </ul></li>
   <li><a href="#license">License</a></li>
 </ul>
 
@@ -857,6 +860,129 @@ conda env export &gt; environment.yml
 <p>Butterfly Viewer is by Lars Maxfield.</p>
 
 <p>Butterfly Viewer uses elements of <a href="https://github.com/tpgit">@tpgit<sup>↗</sup></a>'s <em>PyQt MDI Image Viewer</em> (with changes made), which is made available under the Creative Commons Attribution 3.0 license.</p>
+
+<h2 id="techniques-and-inspiration">Techniques and inspiration</h2>
+
+<p>Butterfly Viewer uses well-known image comparison techniques found in both commercial and free software, some of which helped inspire the Viewer itself.</p>
+
+<h3 id="sliders-and-overlays">Sliders and overlays</h3>
+
+<p>A sliding overlay is simply a before-and-after image slider in two-dimensions where the top-left image persists while the other three images are layed over it, hence the name "sliding overlay". </p>
+
+<p>The underlying slider functionality is a commonly used method for comparing images as well as maps, videos, and other spatial information.</p>
+
+<h4 id="adobe-lightroom">Adobe Lightroom</h4>
+
+<p><a href="https://www.youtube.com/watch?v=sBP2Xe21t18&t=101s">'Before and After' mode (video)</a> (David Mark Erickson, 2016) and described in this <a href="https://www.tipsquirrel.com/comparing-before-and-after-views-in-lightroom/">blog post</a> (Ashu Mittal, 2009) </p>
+
+<h4 id="openseadragon">OpenSeadragon</h4>
+
+<p><a href="https://codepen.io/imoskvin/pen/yOXqvO">Programmable slider (demo)</a> (Illya Moskvin, 2016 &amp; 2021) </p>
+
+<h4 id="iipmooviewer-20">IIPMooViewer 2.0</h4>
+
+<p><a href="https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer/vangogh.html">'Multi-model overlays' (demo)</a> (2011) with <a href="https://iipimage.sourceforge.io/demo">other demos</a> </p>
+
+<h4 id="georeferencer">Georeferencer</h4>
+
+<p><a href="https://uu.oldmapsonline.org/compare#map/631781111740">Mouse-follow 'Swipe' mode (demo)</a> and described in this <a href="https://www.davidrumsey.com/view/georeferencer">documentation</a> (2017) </p>
+
+<h4 id="leafletsync-plugin-for-leaflet">Leaflet.Sync plugin for Leaflet</h4>
+
+<p><a href="https://jieter.github.io/Leaflet.Sync/examples/multiple_offset.html">'Offset' mode (demo)</a> with <a href="https://raw.githubusercontent.com/jieter/Leaflet.Sync/HEAD/offset_animation.gif">animation</a> and available in its <a href="https://github.com/jieter/Leaflet.Sync">GitHub repo</a> (2013) </p>
+
+<h4 id="the-new-york-times">The New York Times</h4>
+
+<p><a href="https://www.instagram.com/reel/C30XT07O5UK/">Visual technique (video)</a> (Steven Kurutz et al., 2024) </p>
+
+<h4 id="affinity-designer">Affinity Designer</h4>
+
+<p><a href="https://design.tutsplus.com/courses/affinity-designer-quick-start/lessons/split-screen-view-with-slider">'Split-Screen View' mode (video)</a> (Kezz Bracey, 2017) </p>
+
+<h4 id="3dvista">3DVista</h4>
+
+<p><a href="https://youtu.be/udQHKP1Da-I?si=8_Xz2ofyiB-NEHiG&t=9">'Dual Viewer' tool (video)</a> </p>
+
+<h4 id="mapbrowser">MapBrowser</h4>
+
+<p><a href="https://www.youtube.com/watch?v=pcmfn5fjPXw&t=97s">'Comparison' tool (video)</a> </p>
+
+<h4 id="swipe-in-arcgis-and-related-apps">'Swipe' in ArcGIS and related apps</h4>
+
+<p><a href="https://www.esri.com/news/arcuser/0705/91faster.html">'Swipe' tool (documentation)</a> (2005) </p>
+
+<p><a href="https://www.esri.com/arcgis-blog/products/arcgis-online/mapping/swipe-compare-apps/#landsat">Compilation (blog post)</a> with numerous screenshots and links (Bern Szukalski, 2021–2023): </p>
+
+<ul>
+<li>ArcGIS Instant Apps (Media Map, Imagery Viewer, Atlas, Portfolio, Exhibit, Compare)</li>
+<li>App builders (Experience Builder, Web AppBuilder)</li>
+<li>Imagery apps (World Imagery Wayback, Sentinel-2 Land Cover Explorer, Landsat Explorer, Sentinel Explorer)</li>
+<li>ArcGIS StoryMaps</li>
+</ul>
+
+<h3 id="synchronized-panning-and-zooming">Synchronized panning and zooming</h3>
+
+<h4 id="adobe-lightroom-2">Adobe Lightroom</h4>
+
+<p><a href="#adobe-lightroom">'Before and After' mode</a> </p>
+
+<h4 id="openseadragon-2">OpenSeadragon</h4>
+
+<p><a href="https://codepen.io/iangilman/pen/BpwBJe">Programmable syncing (demo)</a> (Ian Gilman, 2017) </p>
+
+<h4 id="faststone-image-viewer">FastStone Image Viewer</h4>
+
+<p><a href="https://www.imagingtips.com/faststone/controlbar/compare/0compare.shtml">'Compare' window (blog)</a> (Joe Holler, 2009) </p>
+
+<h4 id="georeferencer-2">Georeferencer</h4>
+
+<p><a href="https://davidrumsey.oldmapsonline.org/compare#686492204670">'Grid' mode (demo)</a> </p>
+
+<p>Described in this <a href="https://www.davidrumsey.com/view/georeferencer">documentation</a> (2017) </p>
+
+<h4 id="leafletsync-plugin-for-leaflet-2">Leaflet.Sync plugin for Leaflet</h4>
+
+<p><a href="https://jieter.github.io/Leaflet.Sync/examples/dual.html">'Dual' mode (demo)</a> (2013) </p>
+
+<p><a href="https://github.com/jieter/Leaflet.Sync">GitHub repo</a> </p>
+
+<h4 id="iipmooviewer-20-2">IIPMooViewer 2.0</h4>
+
+<p><a href="https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer-2.0/synchro.html">'Dual synchronized streamed viewing' (demo)</a> (2011) </p>
+
+<p><a href="https://iipimage.sourceforge.io/demo">Other demos</a> </p>
+
+<h4 id="geteachcom">GeTeach.com</h4>
+
+<p><a href="https://geteach.com/">Default design (demo)</a> </p>
+
+<h4 id="breezebrowser-pro">BreezeBrowser Pro</h4>
+
+<p><a href="https://www.breezesys.com/BreezeBrowser/prohelp/index.html?overview2.htm">'Compare images' window (documentation)</a> </p>
+
+<h4 id="xnviewmp">XnViewMP</h4>
+
+<p><a href="https://forum.xnview.com/viewtopic.php?t=22667">'Compare' tool (forum)</a> (2011) with <a href="https://1.img-dpreview.com/files/p/TS560x560~forums/66402366/b2c30e2518ab482b8ae0e11ea5b36d3d">screenshot</a> </p>
+
+<h3 id="constrain-panning">Constrain panning</h3>
+
+<h4 id="openseadragon-3">OpenSeadragon</h4>
+
+<p><a href="https://openseadragon.github.io/examples/ui-zoom-and-pan/"><code>visibilityRatio</code> option (demo)</a> </p>
+
+<h3 id="general-user-experience">General user experience</h3>
+
+<h4 id="openseadragon-blender-adobe-lightroom-iipmooviewer">OpenSeadragon, Blender, Adobe Lightroom, IIPMooViewer</h4>
+
+<p>Minimal and unobstructed viewport appearance with dark background and overall theme </p>
+
+<h4 id="windows-10">Windows 10</h4>
+
+<p>Glowing square buttons in the Start menu </p>
+
+<h4 id="microsoft-teams">Microsoft Teams</h4>
+
+<p>Outline around video panel to indicate who is talking during a call </p>
 
 <h1 id="license">License</h1>
 

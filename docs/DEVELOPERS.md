@@ -198,11 +198,114 @@ conda env export > environment.yml
 
 > Take care to update both `environment.yml` and `environment_docs.yml` in the branch `docs`. If unable to do so, please create a GitHub issue requesting it be updated. 
 
+
 # Credits
 
 Butterfly Viewer is by Lars Maxfield.
 
 Butterfly Viewer uses elements of [@tpgit<sup>↗</sup>](https://github.com/tpgit)'s *PyQt MDI Image Viewer* (with changes made), which is made available under the Creative Commons Attribution 3.0 license.
+
+
+## Techniques and inspiration
+
+Butterfly Viewer uses well-known image comparison techniques found in both commercial and free software, some of which helped inspire the Viewer itself.
+
+
+### Sliders and overlays
+
+A sliding overlay is simply a before-and-after image slider in two-dimensions where the top-left image persists while the other three images are layed over it, hence the name "sliding overlay". 
+
+The underlying slider functionality is a commonly used method for comparing images as well as maps, videos, and other spatial information.
+
+#### Adobe Lightroom
+['Before and After' mode (video)](https://www.youtube.com/watch?v=sBP2Xe21t18&t=101s) (David Mark Erickson, 2016) and described in this [blog post](https://www.tipsquirrel.com/comparing-before-and-after-views-in-lightroom/) (Ashu Mittal, 2009) 
+
+#### OpenSeadragon
+[Programmable slider (demo)](https://codepen.io/imoskvin/pen/yOXqvO) (Illya Moskvin, 2016 & 2021) 
+
+#### IIPMooViewer 2.0
+['Multi-model overlays' (demo)](https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer/vangogh.html) (2011) with [other demos](https://iipimage.sourceforge.io/demo) 
+
+#### Georeferencer
+[Mouse-follow 'Swipe' mode (demo)](https://uu.oldmapsonline.org/compare#map/631781111740) and described in this [documentation](https://www.davidrumsey.com/view/georeferencer) (2017) 
+
+#### Leaflet.Sync plugin for Leaflet
+['Offset' mode (demo)](https://jieter.github.io/Leaflet.Sync/examples/multiple_offset.html) with [animation](https://raw.githubusercontent.com/jieter/Leaflet.Sync/HEAD/offset_animation.gif) and available in its [GitHub repo](https://github.com/jieter/Leaflet.Sync) (2013) 
+
+#### The New York Times
+[Visual technique (video)](https://www.instagram.com/reel/C30XT07O5UK/) (Steven Kurutz et al., 2024) 
+
+#### Affinity Designer
+['Split-Screen View' mode (video)](https://design.tutsplus.com/courses/affinity-designer-quick-start/lessons/split-screen-view-with-slider) (Kezz Bracey, 2017) 
+
+#### 3DVista
+['Dual Viewer' tool (video)](https://youtu.be/udQHKP1Da-I?si=8_Xz2ofyiB-NEHiG&t=9) 
+
+#### MapBrowser
+['Comparison' tool (video)](https://www.youtube.com/watch?v=pcmfn5fjPXw&t=97s) 
+
+#### 'Swipe' in ArcGIS and related apps
+['Swipe' tool (documentation)](https://www.esri.com/news/arcuser/0705/91faster.html) (2005) 
+
+[Compilation (blog post)](https://www.esri.com/arcgis-blog/products/arcgis-online/mapping/swipe-compare-apps/#landsat) with numerous screenshots and links (Bern Szukalski, 2021–2023): 
+- ArcGIS Instant Apps (Media Map, Imagery Viewer, Atlas, Portfolio, Exhibit, Compare)
+- App builders (Experience Builder, Web AppBuilder)
+- Imagery apps (World Imagery Wayback, Sentinel-2 Land Cover Explorer, Landsat Explorer, Sentinel Explorer)
+- ArcGIS StoryMaps
+
+
+### Synchronized panning and zooming
+
+#### Adobe Lightroom
+['Before and After' mode](#adobe-lightroom) 
+
+#### OpenSeadragon
+[Programmable syncing (demo)](https://codepen.io/iangilman/pen/BpwBJe) (Ian Gilman, 2017) 
+
+#### FastStone Image Viewer
+['Compare' window (blog)](https://www.imagingtips.com/faststone/controlbar/compare/0compare.shtml) (Joe Holler, 2009) 
+
+#### Georeferencer
+['Grid' mode (demo)](https://davidrumsey.oldmapsonline.org/compare#686492204670) 
+
+Described in this [documentation](https://www.davidrumsey.com/view/georeferencer) (2017) 
+
+#### Leaflet.Sync plugin for Leaflet
+['Dual' mode (demo)](https://jieter.github.io/Leaflet.Sync/examples/dual.html) (2013) 
+
+[GitHub repo](https://github.com/jieter/Leaflet.Sync) 
+
+#### IIPMooViewer 2.0
+['Dual synchronized streamed viewing' (demo)](https://merovingio.c2rmf.cnrs.fr/iipimage/iipmooviewer-2.0/synchro.html) (2011) 
+
+[Other demos](https://iipimage.sourceforge.io/demo) 
+
+#### GeTeach.com
+[Default design (demo)](https://geteach.com/) 
+
+#### BreezeBrowser Pro
+['Compare images' window (documentation)](https://www.breezesys.com/BreezeBrowser/prohelp/index.html?overview2.htm) 
+
+#### XnViewMP
+['Compare' tool (forum)](https://forum.xnview.com/viewtopic.php?t=22667) (2011) with [screenshot](https://1.img-dpreview.com/files/p/TS560x560~forums/66402366/b2c30e2518ab482b8ae0e11ea5b36d3d) 
+
+
+### Constrain panning
+
+#### OpenSeadragon
+[`visibilityRatio` option (demo)](https://openseadragon.github.io/examples/ui-zoom-and-pan/) 
+
+
+### General user experience
+
+#### OpenSeadragon, Blender, Adobe Lightroom, IIPMooViewer
+Minimal and unobstructed viewport appearance with dark background and overall theme 
+
+#### Windows 10
+Glowing square buttons in the Start menu 
+
+#### Microsoft Teams
+Outline around video panel to indicate who is talking during a call 
 
 
 # License
