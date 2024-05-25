@@ -487,10 +487,10 @@ class SlidersOpacitySplitViews(QtWidgets.QFrame):
 
 
 class PushbuttonSplitViewSet(ViewerButton):
-    """Custom QPushButton for buttons in SplitViewManager to set the position of the split in a SplitView.
+    """Custom ViewerButton for buttons in SplitViewManager to set the position of the split in a SplitView.
     
     Args:
-        text (str): The text icon of the split shortcut.
+        url (str): The SVG icon of the split shortcut.
         x (float): The position of the split (0-1) of which is to be "shortcutted" as a proportion of the base image's horizontal resolution.
         y (float): The position of the split (0-1) of which is to be "shortcutted" as a proportion of the base image's vertical resolution.
     """
