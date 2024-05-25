@@ -1,0 +1,8 @@
+Industrial Sharp UI Icons
+by Siemens
+licensed with MIT License
+acquired from SVG Repo at https://www.svgrepo.com/collection/industrial-sharp-ui-icons/
+
+Changes made:
+- Fill color modified from #000000 (black) to #fafafa (white)
+- 'up-left', 'up-right', 'down-left', 'down-right' are derivatives of 'up'

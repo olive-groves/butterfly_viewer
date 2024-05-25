@@ -31,6 +31,7 @@ from aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitView
 from aux_mdi import QMdiAreaWithCustomSignals
 from aux_layouts import GridLayoutFloatingShadow
 from aux_exif import get_exif_rotation_angle
+from aux_buttons import ViewerButton
 import icons_rc
 
 
@@ -223,108 +224,25 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.centralwidget_during_fullscreen = QtWidgets.QWidget()
         self.centralwidget_during_fullscreen.setLayout(self.centralwidget_during_fullscreen_layout)
 
-
-        self.fullscreen_pushbutton = QtWidgets.QPushButton("⇲")
+        self.fullscreen_pushbutton = ViewerButton()
+        self.fullscreen_pushbutton.setIcon(r"./icons/full-screen-svgrepo-com.svg")
+        self.fullscreen_pushbutton.setCheckedIcon(r"./icons/full-screen-exit-svgrepo-com.svg")
         self.fullscreen_pushbutton.setToolTip("Fullscreen on/off (F)")
         self.fullscreen_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.fullscreen_pushbutton.setMouseTracking(True)
-        self.fullscreen_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 255, 223);
-            }
-            QPushButton:pressed {
-                color: white;
-                background-color: rgba(127, 127, 255, 255);
-            }
-            QPushButton:checked {
-                color: white;
-                background-color: rgba(63, 63, 191, 191);
-                border-color: rgba(127, 127, 255, 255);
-            }
-            QPushButton:checked:hover {
-                color: white;
-                background-color: rgba(95, 95, 223, 223);
-                border-color: rgba(127, 127, 255, 255);
-            }
-            QPushButton:checked:pressed {
-                color: white;
-                background-color: rgba(127, 127, 255, 255);
-                border-color: rgba(127, 127, 255, 255);
-            }
-            """)
         self.fullscreen_pushbutton.setCheckable(True)
         self.fullscreen_pushbutton.toggled.connect(self.set_fullscreen)
         self.is_fullscreen = False
 
-        self.interface_toggle_pushbutton = QtWidgets.QPushButton("≼")
+        self.interface_toggle_pushbutton = ViewerButton()
+        self.interface_toggle_pushbutton.setCheckedIcon(r"./icons/eye-svgrepo-com.svg")
+        self.interface_toggle_pushbutton.setIcon(r"./icons/eye-cancelled-svgrepo-com.svg")
         self.interface_toggle_pushbutton.setToolTip("Hide interface (H)")
         self.interface_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.interface_toggle_pushbutton.setMouseTracking(True)
-        self.interface_toggle_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: rgba(127, 127, 255, 255);
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 255, 223);
-            }
-            QPushButton:pressed {
-                color: white;
-                background-color: rgba(127, 127, 255, 255);
-            }
-            QPushButton:checked {
-                color: white;
-                background-color: rgba(63, 63, 191, 191);
-                border-color: rgba(127, 127, 255, 255);
-            }
-            QPushButton:checked:hover {
-                color: white;
-                background-color: rgba(95, 95, 223, 223);
-                border-color: rgba(127, 127, 255, 255);
-            }
-            QPushButton:checked:pressed {
-                color: white;
-                background-color: rgba(127, 127, 255, 255);
-                border-color: rgba(127, 127, 255, 255);
-            }
-            """)
         self.interface_toggle_pushbutton.setCheckable(True)
         self.interface_toggle_pushbutton.setChecked(True)
         self.interface_toggle_pushbutton.clicked.connect(self.show_interface)
-
-        self.interface_toggle_slash_label = QtWidgets.QLabel("/")
-        self.interface_toggle_slash_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.interface_toggle_slash_label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        self.interface_toggle_slash_label.setMouseTracking(True)
-        self.interface_toggle_slash_label.setStyleSheet("""
-            QLabel {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 0);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: rgba(0, 0, 0, 0);
-                font-size: 22pt;
-            }
-            """)
-        self.interface_toggle_slash_label.setVisible(False)
 
         self.is_interface_showing = True
         self.is_quiet_mode = False
@@ -332,264 +250,81 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.scene_background_color = None
         self.sync_zoom_by = "box"
 
-        self.close_all_pushbutton = QtWidgets.QPushButton("⦻")
+        self.close_all_pushbutton = ViewerButton(style="trigger-severe")
+        self.close_all_pushbutton.setIcon(r"./icons/clear-svgrepo-com.svg")
         self.close_all_pushbutton.setToolTip("Close all image windows")
         self.close_all_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.close_all_pushbutton.setMouseTracking(True)
-        self.close_all_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1.03em;
-                height: 1.03em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63); 
-                border: 0px black;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                color: white;
-                background-color: rgba(223, 0, 0, 223);
-            }
-            QPushButton:pressed {
-                color: white;
-                background-color: rgba(255, 0, 0, 255);
-            }
-            """)
         self.close_all_pushbutton.clicked.connect(self._mdiArea.closeAllSubWindows)
 
-        self.tile_default_pushbutton = QtWidgets.QPushButton("⦺")
+        self.tile_default_pushbutton = ViewerButton(style="trigger")
+        self.tile_default_pushbutton.setIcon(r"./icons/capacity-svgrepo-com.svg")
         self.tile_default_pushbutton.setToolTip("Grid arrange windows")
         self.tile_default_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_default_pushbutton.setMouseTracking(True)
-        self.tile_default_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 91, 223);
-                border-color: transparent;
-            }
-            QPushButton:pressed {
-                background-color: rgba(116, 116, 116, 255);
-                border-color: transparent;
-            }
-            """)
         self.tile_default_pushbutton.clicked.connect(self._mdiArea.tileSubWindows)
         self.tile_default_pushbutton.clicked.connect(self.fit_to_window)
         self.tile_default_pushbutton.clicked.connect(self.refreshPan)
 
-        self.tile_horizontally_pushbutton = QtWidgets.QPushButton("⦶")
+        self.tile_horizontally_pushbutton = ViewerButton(style="trigger")
+        self.tile_horizontally_pushbutton.setIcon(r"./icons/split-vertically-svgrepo-com.svg")
         self.tile_horizontally_pushbutton.setToolTip("Horizontally arrange windows in a single row")
         self.tile_horizontally_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_horizontally_pushbutton.setMouseTracking(True)
-        self.tile_horizontally_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 91, 223);
-                border-color: transparent;
-            }
-            QPushButton:pressed {
-                background-color: rgba(116, 116, 116, 255);
-                border-color: transparent;
-            }
-            """)
         self.tile_horizontally_pushbutton.clicked.connect(self._mdiArea.tile_subwindows_horizontally)
         self.tile_horizontally_pushbutton.clicked.connect(self.fit_to_window)
         self.tile_horizontally_pushbutton.clicked.connect(self.refreshPan)
 
-        self.tile_vertically_pushbutton = QtWidgets.QPushButton("⦵")
+        self.tile_vertically_pushbutton = ViewerButton(style="trigger")
+        self.tile_vertically_pushbutton.setIcon(r"./icons/split-horizontally-svgrepo-com.svg")
         self.tile_vertically_pushbutton.setToolTip("Vertically arrange windows in a single column")
         self.tile_vertically_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_vertically_pushbutton.setMouseTracking(True)
-        self.tile_vertically_pushbutton.setStyleSheet("""
-            QPushButton {
-                min-width: 1em;
-                min-height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 91, 223);
-                border-color: transparent;
-            }
-            QPushButton:pressed {
-                background-color: rgba(116, 116, 116, 255);
-                border-color: transparent;
-            }
-            """)
         self.tile_vertically_pushbutton.clicked.connect(self._mdiArea.tile_subwindows_vertically)
         self.tile_vertically_pushbutton.clicked.connect(self.fit_to_window)
         self.tile_vertically_pushbutton.clicked.connect(self.refreshPan)
 
-        self.fit_to_window_pushbutton = QtWidgets.QPushButton("⦾")
+        self.fit_to_window_pushbutton = ViewerButton(style="trigger")
+        self.fit_to_window_pushbutton.setIcon(r"./icons/pan-svgrepo-com.svg")
         self.fit_to_window_pushbutton.setToolTip("Fit and center image in active window (affects all if synced)")
         self.fit_to_window_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.fit_to_window_pushbutton.setMouseTracking(True)
-        self.fit_to_window_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em; 
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 91, 223);
-                border-color: transparent;
-            }
-            QPushButton:pressed {
-                background-color: rgba(116, 116, 116, 255);
-                border-color: transparent;
-            }
-            """)
         self.fit_to_window_pushbutton.clicked.connect(self.fit_to_window)
 
-        self.info_pushbutton = QtWidgets.QPushButton("ℹ︎")
-        self.info_pushbutton.setToolTip("Info...")
+        self.info_pushbutton = ViewerButton(style="trigger-transparent")
+        self.info_pushbutton.setIcon(r"./icons/about-svgrepo-com.svg")
+        self.info_pushbutton.setToolTip("About...")
         self.info_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.info_pushbutton.setMouseTracking(True)
-        self.info_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 0);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 91, 223);
-                border-color: transparent;
-            }
-            QPushButton:pressed {
-                background-color: rgba(116, 116, 116, 255);
-                border-color: transparent;
-            }
-            """)
         self.info_pushbutton.clicked.connect(self.info_button_clicked)
 
-        self.stopsync_toggle_pushbutton = QtWidgets.QPushButton("⇆")
+        self.stopsync_toggle_pushbutton = ViewerButton(style="green-yellow")
+        self.stopsync_toggle_pushbutton.setIcon(r"./icons/refresh-svgrepo-com.svg")
+        self.stopsync_toggle_pushbutton.setCheckedIcon(r"./icons/refresh-cancelled-svgrepo-com.svg")
         self.stopsync_toggle_pushbutton.setToolTip("Unsynchronize zoom and pan (currently synced)")
         self.stopsync_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.stopsync_toggle_pushbutton.setMouseTracking(True)
-        self.stopsync_toggle_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(67, 176, 42, 191);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: rgba(80, 211, 50, 255);
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(77, 187, 51, 223);
-                border-color: rgba(80, 211, 50, 255);
-            }
-            QPushButton:pressed {
-                background-color: rgba(93, 187, 31, 255);
-                border-color: rgba(80, 211, 50, 255);
-            }
-            QPushButton:checked {
-                background-color: rgba(191, 151, 0, 191);
-                border-color: rgba(255, 181, 0, 255);
-            }
-            QPushButton:checked:hover {
-                background-color: rgba(223, 166, 0, 223);
-                border-color: rgba(255, 181, 0, 255);
-            }
-            QPushButton:checked:pressed {
-                background-color: rgba(255, 181, 0, 255);
-                border-color: rgba(255, 181, 0, 255);
-            }
-            """)
         self.stopsync_toggle_pushbutton.setCheckable(True)
         self.stopsync_toggle_pushbutton.toggled.connect(self.set_stopsync_pushbutton)
 
-        self.stopsync_toggle_slash_label = QtWidgets.QLabel("/")
-        self.stopsync_toggle_slash_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.stopsync_toggle_slash_label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        self.stopsync_toggle_slash_label.setMouseTracking(True)
-        self.stopsync_toggle_slash_label.setStyleSheet("""
-            QLabel {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 0);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: rgba(0, 0, 0, 0);
-                font-size: 22pt;
-            }
-            """)
-        self.stopsync_toggle_slash_label.setVisible(False)
-
-        self.save_view_pushbutton = QtWidgets.QPushButton("⤓")
+        self.save_view_pushbutton = ViewerButton()
+        self.save_view_pushbutton.setIcon(r"./icons/download-svgrepo-com.svg")
         self.save_view_pushbutton.setToolTip("Save a screenshot of the viewer... | Copy screenshot to clipboard (Ctrl·C)")
         self.save_view_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.save_view_pushbutton.setMouseTracking(True)
-        self.save_view_pushbutton.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: transparent;
-                font-size: 23pt;
-            }
-            QPushButton:hover {
-                background-color: rgba(91, 91, 255, 223);
-            }
-            QPushButton:pressed {
-                color: white;
-                background-color: rgba(127, 127, 255, 255);
-            }
-            """)
         self.save_view_pushbutton.clicked.connect(self.save_view)
 
-        self.buffer_label = QtWidgets.QPushButton()
+        self.open_new_pushbutton = ViewerButton()
+        self.open_new_pushbutton.setIcon(r"./icons/open-file-svgrepo-com.svg")
+        self.open_new_pushbutton.setToolTip("Open image(s) as single windows...")
+        self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.open_new_pushbutton.setMouseTracking(True)
+        self.open_new_pushbutton.clicked.connect(self.open)
+
+        self.buffer_label = ViewerButton(style="invisible")
         self.buffer_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.buffer_label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.buffer_label.setMouseTracking(True)
-        self.buffer_label.setStyleSheet("""
-            QPushButton {
-                width: 1em;
-                height: 1em;
-                color: transparent;
-                background-color: rgba(0, 0, 0, 0);
-                border-width: 0.03em;
-                border-style: solid;
-                border-color: rgba(0, 0, 0, 0);
-                font-size: 23pt;
-            }
-            """)
 
         self.label_mdiarea = QtWidgets.QLabel()
         self.label_mdiarea.setText("Drag images directly to create individual image windows\n\n—\n\nCreate sliding overlays to compare images directly over each other\n\n—\n\nRight-click image windows to change settings and add tools")
@@ -620,13 +355,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         tracker_interface_mdiarea_bottomright_vertical.mouse_position_changed.connect(self.update_split)
 
         layout_mdiarea_bottomright_horizontal = GridLayoutFloatingShadow()
-        layout_mdiarea_bottomright_horizontal.addWidget(self.buffer_label, 0, 5)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.interface_toggle_pushbutton, 0, 4)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.interface_toggle_slash_label, 0, 4)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.close_all_pushbutton, 0, 3)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.stopsync_toggle_pushbutton, 0, 2)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.stopsync_toggle_slash_label, 0, 2)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.save_view_pushbutton, 0, 1)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.buffer_label, 0, 6)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.interface_toggle_pushbutton, 0, 5)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.close_all_pushbutton, 0, 4)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.stopsync_toggle_pushbutton, 0, 3)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.save_view_pushbutton, 0, 2)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.open_new_pushbutton, 0, 1)
         layout_mdiarea_bottomright_horizontal.setContentsMargins(0,0,0,16)
         self.interface_mdiarea_bottomright_horizontal = QtWidgets.QWidget()
         self.interface_mdiarea_bottomright_horizontal.setLayout(layout_mdiarea_bottomright_horizontal)
@@ -832,7 +566,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.set_window_mouse_rect_visible(self._mdiArea.activeSubWindow(), True)
         self.interface_mdiarea_topleft.setVisible(True)
         self.interface_mdiarea_bottomleft.setVisible(True)
-        self.interface_toggle_slash_label.setVisible(False)
 
         self.interface_toggle_pushbutton.setToolTip("Hide interface (studio mode)")
 
@@ -853,7 +586,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.set_window_mouse_rect_visible(self._mdiArea.activeSubWindow(), False)
         self.interface_mdiarea_topleft.setVisible(False)
         self.interface_mdiarea_bottomleft.setVisible(False)
-        self.interface_toggle_slash_label.setVisible(True)
 
         self.interface_toggle_pushbutton.setToolTip("Show interface (H)")
 
@@ -882,13 +614,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 self.activeMdiChild.fitToWindow()
 
         if boolean:
-            self.stopsync_toggle_pushbutton.setText("⇆")
             self.stopsync_toggle_pushbutton.setToolTip("Synchronize zoom and pan (currently unsynced)")
-            self.stopsync_toggle_slash_label.show()
         else:
-            self.stopsync_toggle_pushbutton.setText("⇆")
             self.stopsync_toggle_pushbutton.setToolTip("Unsynchronize zoom and pan (currently synced)")
-            self.stopsync_toggle_slash_label.hide()
 
     def toggle_fullscreen(self):
         """Toggle fullscreen state of app."""
@@ -1997,8 +1725,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         """Handle the open action."""
         fileDialog = QtWidgets.QFileDialog(self)
         settings = QtCore.QSettings()
-        fileDialog.setNameFilters(["Image Files (*.jpg *.png *.tif)",
-                                   "All Files (*)"])
+        fileDialog.setNameFilters([
+            "Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg)",
+            "All files (*)",
+            "JPEG image files (*.jpeg *.jpg)", 
+            "PNG image files (*.png)", 
+            "TIFF image files (*.tiff *.tif)", 
+            "BMP (*.bmp)"])
         if not settings.contains(SETTING_FILEOPEN + "/state"):
             fileDialog.setDirectory(".")
         else:

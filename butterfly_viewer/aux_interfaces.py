@@ -18,6 +18,7 @@ import time
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from aux_dragdrop import FourDragDropImageLabel
+from aux_buttons import ViewerButton
 
 
 
@@ -485,11 +486,11 @@ class SlidersOpacitySplitViews(QtWidgets.QFrame):
 
 
 
-class PushbuttonSplitViewSet(QtWidgets.QPushButton):
-    """Custom QPushButton for buttons in SplitViewManager to set the position of the split in a SplitView.
+class PushbuttonSplitViewSet(ViewerButton):
+    """Custom ViewerButton for buttons in SplitViewManager to set the position of the split in a SplitView.
     
     Args:
-        text (str): The text icon of the split shortcut.
+        url (str): The SVG icon of the split shortcut.
         x (float): The position of the split (0-1) of which is to be "shortcutted" as a proportion of the base image's horizontal resolution.
         y (float): The position of the split (0-1) of which is to be "shortcutted" as a proportion of the base image's vertical resolution.
     """
@@ -497,32 +498,14 @@ class PushbuttonSplitViewSet(QtWidgets.QPushButton):
     hovered_xy = QtCore.pyqtSignal(float,float)
     clicked_xy = QtCore.pyqtSignal(float,float)
 
-    def __init__(self, parent=None, text=None, x=None, y=None):
-        super().__init__()
-        self.setText(text)
+    def __init__(self, parent=None, url: str=None, x=None, y=None):
+        super().__init__(style="trigger-split")
+        if url: self.setIcon(url)
         self.x = x
         self.y = y
         self.clicked.connect(self.on_clicked)
 
         self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        self.setStyleSheet("""
-            QPushButton {
-                width: 0.85em;
-                height: 0.85em;
-                color: white;
-                background-color: rgba(0, 0, 0, 63);
-                border: 0px black;
-                font-size: 20pt;
-                border-radius: 0.06em;
-            }
-            QPushButton:hover {
-                background-color: rgba(223, 166, 0, 223);
-            }
-            QPushButton:pressed {
-                color: white;
-                background-color: rgba(255, 181, 0, 255);
-            }
-            """)
             
     def enterEvent(self, event):
         """Override enterEvent to signal the shortcutted position of the button when hovered by the mouse.
@@ -613,47 +596,47 @@ class SplitViewManager(QtWidgets.QWidget):
         layout_buttons.setRowStretch(0,1)
         layout_buttons.setColumnStretch(0,1)
 
-        self.topleft_pushbutton = PushbuttonSplitViewSet(text="⇖", x=0.0, y=0.0)
+        self.topleft_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-up-left-svgrepo-com.svg", x=0.0, y=0.0)
         self.topleft_pushbutton.setToolTip("Top left of sliding overlay (move and lock)")
         self.topleft_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.topleft_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
 
-        self.topcenter_pushbutton = PushbuttonSplitViewSet(text="⥣", x=0.5, y=0.0)
+        self.topcenter_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-up-svgrepo-com.svg", x=0.5, y=0.0)
         self.topcenter_pushbutton.setToolTip("Top center of sliding overlay (move and lock)")
         self.topcenter_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.topcenter_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.topright_pushbutton = PushbuttonSplitViewSet(text="⇗", x=1.0, y=0.0)
+        self.topright_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-up-right-svgrepo-com.svg", x=1.0, y=0.0)
         self.topright_pushbutton.setToolTip("Top right of sliding overlay (move and lock)")
         self.topright_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.topright_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.middleleft_pushbutton = PushbuttonSplitViewSet(text="⥢", x=0.0, y=0.5)
+        self.middleleft_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-left-svgrepo-com.svg", x=0.0, y=0.5)
         self.middleleft_pushbutton.setToolTip("Middle left of sliding overlay (move and lock)")
         self.middleleft_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.middleleft_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.middlecenter_pushbutton = PushbuttonSplitViewSet(text="⧾", x=0.5, y=0.5)
+        self.middlecenter_pushbutton = PushbuttonSplitViewSet(url=r"./icons/plus-svgrepo-com.svg", x=0.5, y=0.5)
         self.middlecenter_pushbutton.setToolTip("Middle center of sliding overlay (move and lock)")
         self.middlecenter_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.middlecenter_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.middleright_pushbutton = PushbuttonSplitViewSet(text="⥤", x=1.0, y=0.5)
+        self.middleright_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-right-svgrepo-com.svg", x=1.0, y=0.5)
         self.middleright_pushbutton.setToolTip("Middle right of sliding overlay (move and lock)")
         self.middleright_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.middleright_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.bottomleft_pushbutton = PushbuttonSplitViewSet(text="⇙", x=0.0, y=1.0)
+        self.bottomleft_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-down-left-svgrepo-com.svg", x=0.0, y=1.0)
         self.bottomleft_pushbutton.setToolTip("Bottom left of sliding overlay (move and lock)")
         self.bottomleft_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.bottomleft_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.bottomcenter_pushbutton = PushbuttonSplitViewSet(text="⥥", x=0.5, y=1.0)
+        self.bottomcenter_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-down-svgrepo-com.svg", x=0.5, y=1.0)
         self.bottomcenter_pushbutton.setToolTip("Bottom center of sliding overlay (move and lock)")
         self.bottomcenter_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.bottomcenter_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.bottomright_pushbutton = PushbuttonSplitViewSet(text="⇘", x=1.0, y=1.0)
+        self.bottomright_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-down-right-svgrepo-com.svg", x=1.0, y=1.0)
         self.bottomright_pushbutton.setToolTip("Bottom right of sliding overlay (move and lock)")
         self.bottomright_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.bottomright_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)

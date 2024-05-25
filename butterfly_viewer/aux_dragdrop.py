@@ -200,10 +200,12 @@ class DragDropImageLabel(QtWidgets.QWidget):
 
         self.image_filetypes = [
             ".jpeg", ".jpg", ".jpe", ".jif", ".jfif", ".jfi", ".pjpeg", ".pjp",
-            ".png",
+            ".png", ".apng",
             ".tiff", ".tif",
             ".bmp",
+            ".gif",
             ".webp",
+            ".svg",
             ".ico", ".cur"]
         
         self.setAcceptDrops(True)
@@ -384,7 +386,7 @@ class DragDropImageLabel(QtWidgets.QWidget):
         file_dialog = QtWidgets.QFileDialog(self)
         
         file_dialog.setNameFilters([
-            "All supported image files (*.jpeg *.jpg  *.png *.tiff *.tif *.gif *.bmp)",
+            "Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg)",
             "All files (*)",
             "JPEG image files (*.jpeg *.jpg)", 
             "PNG image files (*.png)", 
@@ -456,10 +458,12 @@ class FourDragDropImageLabel(QtWidgets.QFrame):
 
         self.image_filetypes = [
             ".jpeg", ".jpg", ".jpe", ".jif", ".jfif", ".jfi", ".pjpeg", ".pjp",
-            ".png",
+            ".png", ".apng",
             ".tiff", ".tif",
             ".bmp",
+            ".gif",
             ".webp",
+            ".svg",
             ".ico", ".cur"]
 
         self.setAcceptDrops(True)
