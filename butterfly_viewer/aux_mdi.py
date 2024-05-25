@@ -55,6 +55,8 @@ class QMdiAreaWithCustomSignals(QtWidgets.QMdiArea):
         self.ctrl_c_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+c"), self)
         self.ctrl_c_shortcut.activated.connect(self.shortcut_ctrl_c_was_activated)
 
+        self.tile_subwindows_horizontally()
+
     def tile_subwindows_vertically(self, button_input=None):
         """Arrange subwindows vertically as a single column.
 
