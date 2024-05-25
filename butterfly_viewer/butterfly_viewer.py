@@ -314,6 +314,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.save_view_pushbutton.setMouseTracking(True)
         self.save_view_pushbutton.clicked.connect(self.save_view)
 
+        self.open_new_pushbutton = ViewerButton()
+        self.open_new_pushbutton.setIcon(r"./icons/open-file-svgrepo-com.svg")
+        self.open_new_pushbutton.setToolTip("Open image(s) as single windows...")
+        self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.open_new_pushbutton.setMouseTracking(True)
+        self.open_new_pushbutton.clicked.connect(self.open)
+
         self.buffer_label = ViewerButton(style="invisible")
         self.buffer_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.buffer_label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -348,11 +355,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         tracker_interface_mdiarea_bottomright_vertical.mouse_position_changed.connect(self.update_split)
 
         layout_mdiarea_bottomright_horizontal = GridLayoutFloatingShadow()
-        layout_mdiarea_bottomright_horizontal.addWidget(self.buffer_label, 0, 5)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.interface_toggle_pushbutton, 0, 4)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.close_all_pushbutton, 0, 3)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.stopsync_toggle_pushbutton, 0, 2)
-        layout_mdiarea_bottomright_horizontal.addWidget(self.save_view_pushbutton, 0, 1)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.buffer_label, 0, 6)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.interface_toggle_pushbutton, 0, 5)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.close_all_pushbutton, 0, 4)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.stopsync_toggle_pushbutton, 0, 3)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.save_view_pushbutton, 0, 2)
+        layout_mdiarea_bottomright_horizontal.addWidget(self.open_new_pushbutton, 0, 1)
         layout_mdiarea_bottomright_horizontal.setContentsMargins(0,0,0,16)
         self.interface_mdiarea_bottomright_horizontal = QtWidgets.QWidget()
         self.interface_mdiarea_bottomright_horizontal.setLayout(layout_mdiarea_bottomright_horizontal)
@@ -1717,8 +1725,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         """Handle the open action."""
         fileDialog = QtWidgets.QFileDialog(self)
         settings = QtCore.QSettings()
-        fileDialog.setNameFilters(["Image Files (*.jpg *.png *.tif)",
-                                   "All Files (*)"])
+        fileDialog.setNameFilters([
+            "Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg)",
+            "All files (*)",
+            "JPEG image files (*.jpeg *.jpg)", 
+            "PNG image files (*.png)", 
+            "TIFF image files (*.tiff *.tif)", 
+            "BMP (*.bmp)"])
         if not settings.contains(SETTING_FILEOPEN + "/state"):
             fileDialog.setDirectory(".")
         else:
