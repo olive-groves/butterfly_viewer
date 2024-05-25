@@ -328,6 +328,9 @@ class ViewerButton(SvgButton):
             if "severe" in style:
                 self.setCheckedColor("#CC0000")
                 self.setBackground("rgba(0, 0, 0, 63)")
+            elif "split" in style:
+                self.setCheckedColor("#eaae01")
+                self.setBackground("rgba(0, 0, 0, 63)")
             elif "transparent" in style:
                 self.setCheckedColor("#BBBBBB")
                 self.setBackground("transparent")
