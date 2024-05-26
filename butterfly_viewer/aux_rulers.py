@@ -253,7 +253,7 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
         if "cm" == unit:
             mm_per_unit = 10.0
         elif "m" == unit:
-            mm_per_unit = 100.0
+            mm_per_unit = 1000.0
         elif "in" == unit:
             mm_per_unit = 25.4
         elif "ft" == unit:
