@@ -684,7 +684,7 @@ class SplitView(QtWidgets.QFrame):
 
         pos_p1 = self._view_main_topleft.mapToScene(widget_width*placement_factor, widget_height*placement_factor)
         pos_p2 = self._view_main_topleft.mapToScene(widget_width*(1-placement_factor), widget_height*(1-placement_factor))
-        self._scene_main_topleft.addItem(RulerItem(unit=unit, px_per_unit=px_per_unit, initial_pos_p1=pos_p1, initial_pos_p2=pos_p2, relative_origin_position=relative_origin_position))
+        self._scene_main_topleft.addItem(RulerItem(unit=unit, px_per_mm=px_per_unit, initial_pos_p1=pos_p1, initial_pos_p2=pos_p2, relative_origin_position=relative_origin_position))
 
     def on_changed_px_per_unit(self, unit, px_per_unit):
         """Update the units and pixel-per-unit conversions of all rulers in main scene.
@@ -695,8 +695,7 @@ class SplitView(QtWidgets.QFrame):
         """
         for item in self._scene_main_topleft.items():
             if isinstance(item, RulerItem):
-                if item.unit == unit:
-                    item.set_and_refresh_px_per_unit(px_per_unit)
+                item.set_and_refresh_px_per_unit(px_per_unit)
 
     def on_right_click_save_all_comments(self):
         """Open a dialog window for user to save all existing comments on the main scene to .csv.

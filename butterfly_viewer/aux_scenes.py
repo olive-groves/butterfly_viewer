@@ -146,29 +146,35 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
 
             menu_ruler.addSeparator()
 
-            action_ruler_px = menu_ruler.addAction("Pixel ruler")
-            action_ruler_px.setToolTip("Add a ruler to measure distances in pixels")
-            action_ruler_px.triggered.connect(lambda: self.right_click_ruler.emit(scene_pos, self.relative_origin_position, "px", 1.0))
+            actions = []
 
-            action_ruler_mm = menu_ruler.addAction("Millimeter ruler")
-            action_ruler_mm.setToolTip("Add a ruler to measure distances in millimeters")
-            action_ruler_mm.triggered.connect(lambda: self.right_click_ruler.emit(scene_pos, self.relative_origin_position, "mm", self.px_per_unit))
+            rulers = [
+                ["Pixel", "pixels", "px"],
+                ["Millimeter", "millimeters", "mm"],
+                ["Centimeter", "centimeters", "cm"],
+                ["Meter", "meters", "m"],
+                ["Inch", "inch", "in"],
+                ["Foot", "feet", "ft"],
+                ["Yard", "yards", "yd"],
+            ]
 
-            action_ruler_cm = menu_ruler.addAction("Centimeter ruler")
-            action_ruler_cm.setToolTip("Add a ruler to measure distances in centimeters")
-            action_ruler_cm.triggered.connect(lambda: self.right_click_ruler.emit(scene_pos, self.relative_origin_position, "cm", self.px_per_unit*10))
+            for i, ruler in enumerate(rulers):
+                name = ruler[0]
+                plural = ruler[1]
+                abbv = ruler[2]
+                actions.append(menu_ruler.addAction(f"{name} ruler"))
+                actions[i].setToolTip(f"Add a ruler to measure distances in {plural}")
+                actions[i].triggered.connect(lambda value,
+                                             emitting=[scene_pos, self.relative_origin_position, abbv, self.px_per_unit]:
+                                             self.right_click_ruler.emit(emitting[0], emitting[1], f"{emitting[2]}", emitting[3])) 
             
-            if not self.px_per_unit_conversion_set:
-                text_disclaimer = "(requires conversion to be set before using)"
-                tooltip_disclaimer = "To use this ruler, first set the ruler conversion factor"
+                if not self.px_per_unit_conversion_set and abbv != "px":
+                    text_disclaimer = "(requires conversion to be set before using)"
+                    tooltip_disclaimer = "To use this ruler, first set the ruler conversion factor"
 
-                action_ruler_mm.setEnabled(False)
-                action_ruler_mm.setText(action_ruler_mm.text() + " " + text_disclaimer)
-                action_ruler_mm.setToolTip(tooltip_disclaimer)
-
-                action_ruler_cm.setEnabled(False)
-                action_ruler_cm.setText(action_ruler_cm.text() + " " + text_disclaimer)
-                action_ruler_cm.setToolTip(tooltip_disclaimer)
+                    actions[i].setEnabled(False)
+                    actions[i].setText(actions[i].text() + " " + text_disclaimer)
+                    actions[i].setToolTip(tooltip_disclaimer)
 
             menu_ruler.addSeparator()
 
