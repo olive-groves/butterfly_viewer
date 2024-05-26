@@ -1,8 +1,10 @@
-Industrial Sharp UI Icons
+Siemens Industrial Experience Icons
 by Siemens
-licensed with MIT License
-acquired from SVG Repo at https://www.svgrepo.com/collection/industrial-sharp-ui-icons/
+licensed under MIT License
+available at https://github.com/siemens/ix-icons/
+acquired from SVG Repo 
+at https://www.svgrepo.com/collection/industrial-sharp-ui-icons/.
 
 Changes made:
 - Fill color modified from #000000 (black) to #fafafa (white)
-- 'up-left', 'up-right', 'down-left', 'down-right' are derivatives of 'up'
+- Arrows 'up-left', 'up-right', 'down-right', 'down-left' derived from 'up'
