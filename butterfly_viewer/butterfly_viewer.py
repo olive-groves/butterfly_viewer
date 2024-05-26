@@ -226,8 +226,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.centralwidget_during_fullscreen.setLayout(self.centralwidget_during_fullscreen_layout)
 
         self.fullscreen_pushbutton = ViewerButton()
-        self.fullscreen_pushbutton.setIcon(r"./icons/full-screen-svgrepo-com.svg")
-        self.fullscreen_pushbutton.setCheckedIcon(r"./icons/full-screen-exit-svgrepo-com.svg")
+        self.fullscreen_pushbutton.setIcon(":/icons/full-screen.svg")
+        self.fullscreen_pushbutton.setCheckedIcon(":/icons/full-screen-exit.svg")
         self.fullscreen_pushbutton.setToolTip("Fullscreen on/off (F)")
         self.fullscreen_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.fullscreen_pushbutton.setMouseTracking(True)
@@ -236,8 +236,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_fullscreen = False
 
         self.interface_toggle_pushbutton = ViewerButton()
-        self.interface_toggle_pushbutton.setCheckedIcon(r"./icons/eye-svgrepo-com.svg")
-        self.interface_toggle_pushbutton.setIcon(r"./icons/eye-cancelled-svgrepo-com.svg")
+        self.interface_toggle_pushbutton.setCheckedIcon(":/icons/eye.svg")
+        self.interface_toggle_pushbutton.setIcon(":/icons/eye-cancelled.svg")
         self.interface_toggle_pushbutton.setToolTip("Hide interface (H)")
         self.interface_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.interface_toggle_pushbutton.setMouseTracking(True)
@@ -252,14 +252,14 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.sync_zoom_by = "box"
 
         self.close_all_pushbutton = ViewerButton(style="trigger-severe")
-        self.close_all_pushbutton.setIcon(r"./icons/clear-svgrepo-com.svg")
+        self.close_all_pushbutton.setIcon(":/icons/clear.svg")
         self.close_all_pushbutton.setToolTip("Close all image windows")
         self.close_all_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.close_all_pushbutton.setMouseTracking(True)
         self.close_all_pushbutton.clicked.connect(self._mdiArea.closeAllSubWindows)
 
         self.tile_default_pushbutton = ViewerButton(style="trigger")
-        self.tile_default_pushbutton.setIcon(r"./icons/capacity-svgrepo-com.svg")
+        self.tile_default_pushbutton.setIcon(":/icons/capacity.svg")
         self.tile_default_pushbutton.setToolTip("Grid arrange windows")
         self.tile_default_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_default_pushbutton.setMouseTracking(True)
@@ -268,7 +268,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_default_pushbutton.clicked.connect(self.refreshPan)
 
         self.tile_horizontally_pushbutton = ViewerButton(style="trigger")
-        self.tile_horizontally_pushbutton.setIcon(r"./icons/split-vertically-svgrepo-com.svg")
+        self.tile_horizontally_pushbutton.setIcon(":/icons/split-vertically.svg")
         self.tile_horizontally_pushbutton.setToolTip("Horizontally arrange windows in a single row")
         self.tile_horizontally_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_horizontally_pushbutton.setMouseTracking(True)
@@ -277,7 +277,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_horizontally_pushbutton.clicked.connect(self.refreshPan)
 
         self.tile_vertically_pushbutton = ViewerButton(style="trigger")
-        self.tile_vertically_pushbutton.setIcon(r"./icons/split-horizontally-svgrepo-com.svg")
+        self.tile_vertically_pushbutton.setIcon(":/icons/split-horizontally.svg")
         self.tile_vertically_pushbutton.setToolTip("Vertically arrange windows in a single column")
         self.tile_vertically_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.tile_vertically_pushbutton.setMouseTracking(True)
@@ -286,22 +286,22 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_vertically_pushbutton.clicked.connect(self.refreshPan)
 
         self.fit_to_window_pushbutton = ViewerButton(style="trigger")
-        self.fit_to_window_pushbutton.setIcon(r"./icons/pan-svgrepo-com.svg")
+        self.fit_to_window_pushbutton.setIcon(":/icons/pan.svg")
         self.fit_to_window_pushbutton.setToolTip("Fit and center image in active window (affects all if synced)")
         self.fit_to_window_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.fit_to_window_pushbutton.setMouseTracking(True)
         self.fit_to_window_pushbutton.clicked.connect(self.fit_to_window)
 
         self.info_pushbutton = ViewerButton(style="trigger-transparent")
-        self.info_pushbutton.setIcon(r"./icons/about-svgrepo-com.svg")
+        self.info_pushbutton.setIcon(":/icons/about.svg")
         self.info_pushbutton.setToolTip("About...")
         self.info_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.info_pushbutton.setMouseTracking(True)
         self.info_pushbutton.clicked.connect(self.info_button_clicked)
 
         self.stopsync_toggle_pushbutton = ViewerButton(style="green-yellow")
-        self.stopsync_toggle_pushbutton.setIcon(r"./icons/refresh-svgrepo-com.svg")
-        self.stopsync_toggle_pushbutton.setCheckedIcon(r"./icons/refresh-cancelled-svgrepo-com.svg")
+        self.stopsync_toggle_pushbutton.setIcon(":/icons/refresh.svg")
+        self.stopsync_toggle_pushbutton.setCheckedIcon(":/icons/refresh-cancelled.svg")
         self.stopsync_toggle_pushbutton.setToolTip("Unsynchronize zoom and pan (currently synced)")
         self.stopsync_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.stopsync_toggle_pushbutton.setMouseTracking(True)
@@ -309,14 +309,14 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.stopsync_toggle_pushbutton.toggled.connect(self.set_stopsync_pushbutton)
 
         self.save_view_pushbutton = ViewerButton()
-        self.save_view_pushbutton.setIcon(r"./icons/download-svgrepo-com.svg")
+        self.save_view_pushbutton.setIcon(":/icons/download.svg")
         self.save_view_pushbutton.setToolTip("Save a screenshot of the viewer... | Copy screenshot to clipboard (Ctrl·C)")
         self.save_view_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.save_view_pushbutton.setMouseTracking(True)
         self.save_view_pushbutton.clicked.connect(self.save_view)
 
         self.open_new_pushbutton = ViewerButton()
-        self.open_new_pushbutton.setIcon(r"./icons/open-file-svgrepo-com.svg")
+        self.open_new_pushbutton.setIcon(":/icons/open-file.svg")
         self.open_new_pushbutton.setToolTip("Open image(s) as single windows...")
         self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.open_new_pushbutton.setMouseTracking(True)
@@ -1994,7 +1994,7 @@ def main():
     app.setOrganizationDomain(DOMAIN)
     app.setApplicationName(APPNAME)
     app.setApplicationVersion(VERSION)
-    app.setWindowIcon(QtGui.QIcon(":/icon.png"))
+    app.setWindowIcon(QtGui.QIcon(":/icons/icon.png"))
 
     mainWin = MultiViewMainWindow()
     mainWin.setWindowTitle(APPNAME)

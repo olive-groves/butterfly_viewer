@@ -18,8 +18,8 @@ This program uses modified elements of PyQt MDI Image Viewer, copyright (c)
 tpgit (https://github.com/tpgit), made available under the Creative
 Commons Attribution 3.0 license.
 
-This program uses modified elements of SvgButton, SvgToolButton, 
-SvgAbstractButton, and geabsres, copyright (c) 2022 Jung Gyu Yoon 
+This program uses modified elements of SvgButton, SvgToolButton, and
+SvgAbstractButton, copyright (c) 2022 Jung Gyu Yoon 
 (https://github.com/yjg30737), made available under the MIT License.
 
 This program uses modified icons of Siemens Industrial Experience Icons, 

@@ -5,7 +5,7 @@
 Not intended as a script. Used in Butterfly Viewer.
 
 Credits:
-    SvgButton, SvgToolButton, SvgAbstractButton, geabsres: Copyright (c) 2022 Jung Gyu Yoon (https://github.com/yjg30737)
+    SvgButton, SvgToolButton, SvgAbstractButton: Copyright (c) 2022 Jung Gyu Yoon (https://github.com/yjg30737)
         with changes and additions to SvgAbstractButton.
 """
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -15,29 +15,6 @@ Credits:
 from PyQt5.QtGui import QColor, QPalette, qGray
 from PyQt5.QtWidgets import QAbstractButton, QGraphicsColorizeEffect, QWidget, qApp, QPushButton, QToolButton
 
-import os
-import inspect
-import posixpath
-
-
-
-def getabsres(res: str):
-    """Get absolute resource path of exterior package.
-    
-    Copyright (c) 2022 Jung Gyu Yoon
-
-    From https://github.com/yjg30737/absresgetter/
-    """
-    stack_lst = inspect.stack()
-    res_frame_idx = 0
-    for i in range(len(stack_lst)):
-        context = stack_lst[i].code_context[0]
-        if context.find(res) == -1:
-            pass
-        else:
-            res_frame_idx = i
-    caller_path = os.path.dirname(stack_lst[res_frame_idx].filename)
-    return os.path.join(caller_path, res).replace(os.path.sep, posixpath.sep)
 
 
 class SvgAbstractButton(QAbstractButton):
@@ -173,11 +150,11 @@ class SvgAbstractButton(QAbstractButton):
         self.setStyleSheet(self.__btn_style)
 
     def setIcon(self, icon: str):
-        self.__icon = getabsres(icon)
+        self.__icon = icon
         self.__styleInit()
 
     def setCheckedIcon(self, icon: str=None):
-        self.__checked_icon = getabsres(icon)
+        self.__checked_icon = icon
         if self.__checked_icon:
             self.__checked_icon_css = f'image: url({self.__checked_icon});'
         else:
