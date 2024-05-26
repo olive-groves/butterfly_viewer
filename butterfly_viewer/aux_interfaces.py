@@ -19,6 +19,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 from aux_dragdrop import FourDragDropImageLabel
 from aux_buttons import ViewerButton
+import icons_rc
 
 
 
@@ -596,47 +597,47 @@ class SplitViewManager(QtWidgets.QWidget):
         layout_buttons.setRowStretch(0,1)
         layout_buttons.setColumnStretch(0,1)
 
-        self.topleft_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-up-left-svgrepo-com.svg", x=0.0, y=0.0)
+        self.topleft_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-up-left.svg", x=0.0, y=0.0)
         self.topleft_pushbutton.setToolTip("Top left of sliding overlay (move and lock)")
         self.topleft_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.topleft_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
 
-        self.topcenter_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-up-svgrepo-com.svg", x=0.5, y=0.0)
+        self.topcenter_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-up.svg", x=0.5, y=0.0)
         self.topcenter_pushbutton.setToolTip("Top center of sliding overlay (move and lock)")
         self.topcenter_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.topcenter_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.topright_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-up-right-svgrepo-com.svg", x=1.0, y=0.0)
+        self.topright_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-up-right.svg", x=1.0, y=0.0)
         self.topright_pushbutton.setToolTip("Top right of sliding overlay (move and lock)")
         self.topright_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.topright_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.middleleft_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-left-svgrepo-com.svg", x=0.0, y=0.5)
+        self.middleleft_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-left.svg", x=0.0, y=0.5)
         self.middleleft_pushbutton.setToolTip("Middle left of sliding overlay (move and lock)")
         self.middleleft_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.middleleft_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.middlecenter_pushbutton = PushbuttonSplitViewSet(url=r"./icons/plus-svgrepo-com.svg", x=0.5, y=0.5)
+        self.middlecenter_pushbutton = PushbuttonSplitViewSet(url=":/icons/plus.svg", x=0.5, y=0.5)
         self.middlecenter_pushbutton.setToolTip("Middle center of sliding overlay (move and lock)")
         self.middlecenter_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.middlecenter_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.middleright_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-right-svgrepo-com.svg", x=1.0, y=0.5)
+        self.middleright_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-right.svg", x=1.0, y=0.5)
         self.middleright_pushbutton.setToolTip("Middle right of sliding overlay (move and lock)")
         self.middleright_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.middleright_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.bottomleft_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-down-left-svgrepo-com.svg", x=0.0, y=1.0)
+        self.bottomleft_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-down-left.svg", x=0.0, y=1.0)
         self.bottomleft_pushbutton.setToolTip("Bottom left of sliding overlay (move and lock)")
         self.bottomleft_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.bottomleft_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.bottomcenter_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-down-svgrepo-com.svg", x=0.5, y=1.0)
+        self.bottomcenter_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-down.svg", x=0.5, y=1.0)
         self.bottomcenter_pushbutton.setToolTip("Bottom center of sliding overlay (move and lock)")
         self.bottomcenter_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.bottomcenter_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
         
-        self.bottomright_pushbutton = PushbuttonSplitViewSet(url=r"./icons/arrow-down-right-svgrepo-com.svg", x=1.0, y=1.0)
+        self.bottomright_pushbutton = PushbuttonSplitViewSet(url=":/icons/arrow-down-right.svg", x=1.0, y=1.0)
         self.bottomright_pushbutton.setToolTip("Bottom right of sliding overlay (move and lock)")
         self.bottomright_pushbutton.hovered_xy.connect(self.on_hovered_set_pushbutton)
         self.bottomright_pushbutton.clicked_xy.connect(self.on_clicked_set_pushbutton)
