@@ -48,10 +48,10 @@ sip.setapi('QTextStream', 2)
 sip.setapi('QVariant', 2)
 sip.setapi('QString', 2)
 
-__version__ = "1.0.3"
 COMPANY = "Butterfly Apps"
 DOMAIN = "https://github.com/olive-groves/butterfly_viewer/"
 APPNAME = "Butterfly Viewer"
+VERSION = "1.1"
 
 SETTING_RECENTFILELIST = "recentfilelist"
 SETTING_FILEOPEN = "fileOpenDialog"
@@ -872,7 +872,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         title = "Butterfly Viewer"
         text = "Butterfly Viewer"
         text = text + sp + "Lars Maxfield"
-        text = text + sp + "Version: " + __version__
+        text = text + sp + "Version: " + VERSION
         text = text + sp + "License: <a href='https://www.gnu.org/licenses/gpl-3.0.en.html'>GNU GPL v3</a> or later"
         text = text + sp + "Source: <a href='https://github.com/olive-groves/butterfly_viewer'>github.com/olive-groves/butterfly_viewer</a>"
         text = text + sp + "Tutorial: <a href='https://olive-groves.github.io/butterfly_viewer'>olive-groves.github.io/butterfly_viewer</a>"
