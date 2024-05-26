@@ -1993,6 +1993,7 @@ def main():
     app.setOrganizationName(COMPANY)
     app.setOrganizationDomain(DOMAIN)
     app.setApplicationName(APPNAME)
+    app.setApplicationVersion(VERSION)
     app.setWindowIcon(QtGui.QIcon(":/icon.png"))
 
     mainWin = MultiViewMainWindow()
