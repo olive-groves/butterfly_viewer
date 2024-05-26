@@ -152,6 +152,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self._recentFileActions = []
         self._handlingScrollChangedSignal = False
+        self._last_accessed_fullpath = None
 
         self._mdiArea = QMdiAreaWithCustomSignals()
         self._mdiArea.file_path_dragged.connect(self.display_dragged_grayout)
@@ -954,6 +955,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self.updateRecentFileSettings(filename_main_topleft)
         self.updateRecentFileActions()
+        
+        self._last_accessed_fullpath = filename_main_topleft
 
         self.display_loading_grayout(False)
 
