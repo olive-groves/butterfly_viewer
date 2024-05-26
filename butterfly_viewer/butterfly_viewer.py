@@ -48,10 +48,10 @@ sip.setapi('QTextStream', 2)
 sip.setapi('QVariant', 2)
 sip.setapi('QString', 2)
 
-__version__ = "1.0.3"
 COMPANY = "Butterfly Apps"
 DOMAIN = "https://github.com/olive-groves/butterfly_viewer/"
 APPNAME = "Butterfly Viewer"
+VERSION = "1.1"
 
 SETTING_RECENTFILELIST = "recentfilelist"
 SETTING_FILEOPEN = "fileOpenDialog"
@@ -152,6 +152,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self._recentFileActions = []
         self._handlingScrollChangedSignal = False
+        self._last_accessed_fullpath = None
 
         self._mdiArea = QMdiAreaWithCustomSignals()
         self._mdiArea.file_path_dragged.connect(self.display_dragged_grayout)
@@ -319,7 +320,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.open_new_pushbutton.setToolTip("Open image(s) as single windows...")
         self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.open_new_pushbutton.setMouseTracking(True)
-        self.open_new_pushbutton.clicked.connect(self.open)
+        self.open_new_pushbutton.clicked.connect(self.open_multiple)
 
         self.buffer_label = ViewerButton(style="invisible")
         self.buffer_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
@@ -871,7 +872,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         title = "Butterfly Viewer"
         text = "Butterfly Viewer"
         text = text + sp + "Lars Maxfield"
-        text = text + sp + "Version: " + __version__
+        text = text + sp + "Version: " + VERSION
         text = text + sp + "License: <a href='https://www.gnu.org/licenses/gpl-3.0.en.html'>GNU GPL v3</a> or later"
         text = text + sp + "Source: <a href='https://github.com/olive-groves/butterfly_viewer'>github.com/olive-groves/butterfly_viewer</a>"
         text = text + sp + "Tutorial: <a href='https://olive-groves.github.io/butterfly_viewer'>olive-groves.github.io/butterfly_viewer</a>"
@@ -954,6 +955,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self.updateRecentFileSettings(filename_main_topleft)
         self.updateRecentFileActions()
+        
+        self._last_accessed_fullpath = filename_main_topleft
 
         self.display_loading_grayout(False)
 
@@ -1727,11 +1730,11 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         settings = QtCore.QSettings()
         fileDialog.setNameFilters([
             "Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg)",
-            "All files (*)",
             "JPEG image files (*.jpeg *.jpg)", 
             "PNG image files (*.png)", 
-            "TIFF image files (*.tiff *.tif)", 
-            "BMP (*.bmp)"])
+            "TIFF image files (*.tiff *.tif)",
+            "BMP (*.bmp)",
+            "All files (*)",])
         if not settings.contains(SETTING_FILEOPEN + "/state"):
             fileDialog.setDirectory(".")
         else:
@@ -1743,6 +1746,22 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         filename_main_topleft = fileDialog.selectedFiles()[0]
         self.loadFile(filename_main_topleft, None, None, None)
+
+    def open_multiple(self):
+        """Handle the open multiple action."""
+        last_accessed_fullpath = self._last_accessed_fullpath
+        filters = "\
+            Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg);;\
+            JPEG image files (*.jpeg *.jpg);;\
+            PNG image files (*.png);;\
+            TIFF image files (*.tiff *.tif);;\
+            BMP (*.bmp);;\
+            All files (*)"
+        fullpaths, _ = QtWidgets.QFileDialog.getOpenFileNames(self, "Select image(s) to open", last_accessed_fullpath, filters)
+
+        for fullpath in fullpaths:
+            self.loadFile(fullpath, None, None, None)
+
 
 
     @QtCore.pyqtSlot()
@@ -1974,6 +1993,7 @@ def main():
     app.setOrganizationName(COMPANY)
     app.setOrganizationDomain(DOMAIN)
     app.setApplicationName(APPNAME)
+    app.setApplicationVersion(VERSION)
     app.setWindowIcon(QtGui.QIcon(":/icon.png"))
 
     mainWin = MultiViewMainWindow()

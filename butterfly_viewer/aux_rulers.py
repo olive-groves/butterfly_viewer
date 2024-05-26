@@ -235,8 +235,8 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
 
     Args:
         unit (str): The text for labeling units of ruler values.
-        px_per_unit (float): The conversion for pixels to units. For example, 10 means 10 
-            pixels-per-unit, meaning the ruler value will show 1 when measuring 10 pixels. Set to 
+        px_per_mm (float): The conversion for pixels to millimeters. For example, 10 means 10 
+            pixels-per-mm, meaning the ruler value will show 1 mm when measuring 10 pixels. Set to 
             1.0 if the ruler has units of pixels.
         initial_pos_p1 (QPointF): The position of endpoint 1 on the scene.
         initial_pos_p2 (QPointF): The position of endpoint 2 on the scene.
@@ -244,11 +244,30 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
             ("topleft" or "bottomleft").
     """
 
-    def __init__(self, unit = "px", px_per_unit = None, initial_pos_p1=None, initial_pos_p2=None, relative_origin_position="bottomleft"):
+    def __init__(self, unit = "px", px_per_mm = None, initial_pos_p1=None, initial_pos_p2=None, relative_origin_position="bottomleft"):
         super().__init__()
 
         self.unit = unit
-        self.px_per_unit = px_per_unit
+
+        mm_per_unit = 1.0
+        if "cm" == unit:
+            mm_per_unit = 10.0
+        elif "m" == unit:
+            mm_per_unit = 100.0
+        elif "in" == unit:
+            mm_per_unit = 25.4
+        elif "ft" == unit:
+            mm_per_unit = 304.8
+        elif "yd" == unit:
+            mm_per_unit = 914.4
+        
+        if "px" == unit:
+            self.px_per_unit = 1.0
+        else:
+            self.px_per_unit = px_per_mm * mm_per_unit
+
+        self._mm_per_unit = mm_per_unit
+
         self.relative_origin_position = relative_origin_position
 
         if not initial_pos_p1:
@@ -355,11 +374,14 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
 
     def set_and_refresh_px_per_unit(self, px_per_unit):
         """float: Set and refresh units conversion factor (for example, if the conversion is recalculated)."""
-        self.px_per_unit = px_per_unit
-        self.ellipse_item1.set_px_per_unit(self.px_per_unit)
-        self.ellipse_item2.set_px_per_unit(self.px_per_unit)
-        self.ellipse_item2.refresh_positions()
-        self.ellipse_item1.refresh_positions()
+        unit = self.unit
+        if "px" != unit:
+            mm_per_unit = self._mm_per_unit
+            self.px_per_unit = px_per_unit * mm_per_unit
+            self.ellipse_item1.set_px_per_unit(self.px_per_unit)
+            self.ellipse_item2.set_px_per_unit(self.px_per_unit)
+            self.ellipse_item2.refresh_positions()
+            self.ellipse_item1.refresh_positions()
 
     def set_and_refresh_relative_origin_position(self, relative_origin_position):
         """str: Set and refresh orientation of coordinate system (for example, if the orientation setting is changed)."""
