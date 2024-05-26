@@ -319,7 +319,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.open_new_pushbutton.setToolTip("Open image(s) as single windows...")
         self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.open_new_pushbutton.setMouseTracking(True)
-        self.open_new_pushbutton.clicked.connect(self.open)
+        self.open_new_pushbutton.clicked.connect(self.open_multiple)
 
         self.buffer_label = ViewerButton(style="invisible")
         self.buffer_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
@@ -1727,11 +1727,11 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         settings = QtCore.QSettings()
         fileDialog.setNameFilters([
             "Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg)",
-            "All files (*)",
             "JPEG image files (*.jpeg *.jpg)", 
             "PNG image files (*.png)", 
-            "TIFF image files (*.tiff *.tif)", 
-            "BMP (*.bmp)"])
+            "TIFF image files (*.tiff *.tif)",
+            "BMP (*.bmp)",
+            "All files (*)",])
         if not settings.contains(SETTING_FILEOPEN + "/state"):
             fileDialog.setDirectory(".")
         else:
@@ -1743,6 +1743,22 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         filename_main_topleft = fileDialog.selectedFiles()[0]
         self.loadFile(filename_main_topleft, None, None, None)
+
+    def open_multiple(self):
+        """Handle the open multiple action."""
+        last_accessed_fullpath = self._last_accessed_fullpath
+        filters = "\
+            Common image files (*.jpeg *.jpg  *.png *.tiff *.tif *.bmp *.gif *.webp *.svg);;\
+            JPEG image files (*.jpeg *.jpg);;\
+            PNG image files (*.png);;\
+            TIFF image files (*.tiff *.tif);;\
+            BMP (*.bmp);;\
+            All files (*)"
+        fullpaths, _ = QtWidgets.QFileDialog.getOpenFileNames(self, "Select image(s) to open", last_accessed_fullpath, filters)
+
+        for fullpath in fullpaths:
+            self.loadFile(fullpath, None, None, None)
+
 
 
     @QtCore.pyqtSlot()
