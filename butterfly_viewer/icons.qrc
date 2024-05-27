@@ -1,5 +1,29 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-    <file alias="icon.png">icons/icon.png</file>
-</qresource>
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="icons">
+        <file alias="icon.png">icons/icon.png</file>
+        <file alias="about.svg">icons/siemens/about.svg</file>
+        <file alias="arrow-down.svg">icons/siemens/arrow-down.svg</file>
+        <file alias="arrow-down-left.svg">icons/siemens/arrow-down-left.svg</file>
+        <file alias="arrow-down-right.svg">icons/siemens/arrow-down-right.svg</file>
+        <file alias="arrow-left.svg">icons/siemens/arrow-left.svg</file>
+        <file alias="arrow-right.svg">icons/siemens/arrow-right.svg</file>
+        <file alias="arrow-up.svg">icons/siemens/arrow-up.svg</file>
+        <file alias="arrow-up-left.svg">icons/siemens/arrow-up-left.svg</file>
+        <file alias="arrow-up-right.svg">icons/siemens/arrow-up-right.svg</file>
+        <file alias="capacity.svg">icons/siemens/capacity.svg</file>
+        <file alias="clear.svg">icons/siemens/clear.svg</file>
+        <file alias="download.svg">icons/siemens/download.svg</file>
+        <file alias="eye.svg">icons/siemens/eye.svg</file>
+        <file alias="eye-cancelled.svg">icons/siemens/eye-cancelled.svg</file>
+        <file alias="full-screen.svg">icons/siemens/full-screen.svg</file>
+        <file alias="full-screen-exit.svg">icons/siemens/full-screen-exit.svg</file>
+        <file alias="open-file.svg">icons/siemens/open-file.svg</file>
+        <file alias="pan.svg">icons/siemens/pan.svg</file>
+        <file alias="plus.svg">icons/siemens/plus.svg</file>
+        <file alias="refresh.svg">icons/siemens/refresh.svg</file>
+        <file alias="refresh-cancelled.svg">icons/siemens/refresh-cancelled.svg</file>
+        <file alias="split-horizontally.svg">icons/siemens/split-horizontally.svg</file>
+        <file alias="split-vertically.svg">icons/siemens/split-vertically.svg</file>
+    </qresource>
 </RCC>

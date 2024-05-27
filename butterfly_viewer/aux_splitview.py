@@ -22,7 +22,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from aux_viewing import SynchableGraphicsView
 from aux_trackers import EventTracker, EventTrackerSplitBypassDeadzone
-from aux_functions import strippedName
+from aux_functions import strippedName, determineSyncSenderDimension, determineSyncAdjustmentFactor
 from aux_labels import FilenameLabel
 from aux_scenes import CustomQGraphicsScene
 from aux_comments import CommentItem
@@ -119,6 +119,7 @@ class SplitView(QtWidgets.QFrame):
         self._scene_main_topleft.right_click_all_transform_mode_smooth.connect(self.was_set_global_transform_mode)
         self._scene_main_topleft.right_click_background_color.connect(self.set_scene_background_color)
         self._scene_main_topleft.right_click_background_color.connect(self.was_set_scene_background_color)
+        self._scene_main_topleft.right_click_sync_zoom_by.connect(self.was_set_sync_zoom_by)
 
         self._pixmapItem_main_topleft = QtWidgets.QGraphicsPixmapItem()
         self._scene_main_topleft.addItem(self._pixmapItem_main_topleft)
@@ -317,6 +318,35 @@ class SplitView(QtWidgets.QFrame):
 
         self.enableScrollBars(False) # Clean look with no scrollbars
 
+        # Determine zoom adjustment to scale the non-main images now instead
+        # on zoom call because the sender and receivers are always the same.
+        # TODO: If the photostream feature (next/prev) is to be created, these 
+        # adjustment values will need to be recalculated on each new image.
+        sync_by = "box"
+        sender_width = self._pixmapItem_main_topleft.pixmap().width()
+        sender_height = self._pixmapItem_main_topleft.pixmap().height()
+        sender_dimension = determineSyncSenderDimension(sender_width,
+                                                        sender_height,
+                                                        sync_by)
+
+        topright_width = self._pixmapItem_topright.pixmap().width()
+        topright_height = self._pixmapItem_topright.pixmap().height()
+        self._topright_zoom_adjust = determineSyncAdjustmentFactor(sync_by, sender_dimension,
+                                                                  topright_width,
+                                                                  topright_height)
+        
+        bottomright_width = self._pixmapItem_bottomright.pixmap().width()
+        bottomright_height = self._pixmapItem_bottomright.pixmap().height()
+        self._bottomright_zoom_adjust = determineSyncAdjustmentFactor(sync_by, sender_dimension,
+                                                                      bottomright_width,
+                                                                      bottomright_height)
+        
+        bottomleft_width = self._pixmapItem_bottomleft.pixmap().width()
+        bottomleft_height = self._pixmapItem_bottomleft.pixmap().height()
+        self._bottomleft_zoom_adjust = determineSyncAdjustmentFactor(sync_by, sender_dimension,
+                                                                     bottomleft_width,
+                                                                     bottomleft_height)
+
     @property
     def currentFile(self):
         """str: Filepath of base image (filename_main_topleft)."""
@@ -447,7 +477,10 @@ class SplitView(QtWidgets.QFrame):
         self.set_scene_background(brush)
         self._scene_main_topleft.background_color = color
         self.refresh_close_pushbutton_stylesheet()
-        
+
+    def update_sync_zoom_by(self, by: str):
+        """[str] Update right-click menu of sync zoom by."""
+        self._scene_main_topleft.sync_zoom_by = by
     
     def pixmap_none_ify(self, pixmap):
         """Return None if pixmap has no pixels.
@@ -498,8 +531,8 @@ class SplitView(QtWidgets.QFrame):
             y = y_percent*self.height()
             point_of_split_on_widget = QtCore.QPoint(x, y)
         else:
-            width_pixmap_main_topleft = self._pixmapItem_main_topleft.pixmap().width()
-            height_pixmap_main_topleft = self._pixmapItem_main_topleft.pixmap().height()
+            width_pixmap_main_topleft = self.imageWidth
+            height_pixmap_main_topleft = self.imageHeight
 
             x = x_percent*width_pixmap_main_topleft
             y = y_percent*height_pixmap_main_topleft
@@ -543,15 +576,19 @@ class SplitView(QtWidgets.QFrame):
         self._view_layoutdriving_topleft.setMaximumHeight(max(point_of_mouse_on_widget.y(),0))
         
         render_buffer = 100 # Needed to prevent slight pixel offset of the sliding overlays when zoomed-out below ~0.5x
+
+        scale_topright = 1/self._topright_zoom_adjust  # Needed to scale images to the same relative size as the main image
+        scale_bottomright = 1/self._bottomright_zoom_adjust
+        scale_bottomleft = 1/self._bottomleft_zoom_adjust
     
-        top_left_of_scene_topright          = QtCore.QPointF(point_of_split_on_scene_main.x(), point_of_widget_origin_on_scene_main.y())
-        bottom_right_of_scene_topright      = QtCore.QPointF(point_of_bottom_right_on_scene_main.x() + render_buffer, point_of_split_on_scene_main.y() + render_buffer)
+        top_left_of_scene_topright          = QtCore.QPointF(point_of_split_on_scene_main.x()*scale_topright, point_of_widget_origin_on_scene_main.y()*scale_topright)
+        bottom_right_of_scene_topright      = QtCore.QPointF(point_of_bottom_right_on_scene_main.x()*scale_topright + render_buffer, point_of_split_on_scene_main.y()*scale_topright + render_buffer)
         
-        top_left_of_scene_bottomright       = QtCore.QPointF(point_of_split_on_scene_main.x(), point_of_split_on_scene_main.y())
-        bottom_right_of_scene_bottomright   = QtCore.QPointF(point_of_bottom_right_on_scene_main.x() + render_buffer, point_of_bottom_right_on_scene_main.y() + render_buffer)
+        top_left_of_scene_bottomright       = QtCore.QPointF(point_of_split_on_scene_main.x()*scale_bottomright, point_of_split_on_scene_main.y()*scale_bottomright)
+        bottom_right_of_scene_bottomright   = QtCore.QPointF(point_of_bottom_right_on_scene_main.x()*scale_bottomright + render_buffer, point_of_bottom_right_on_scene_main.y()*scale_bottomright + render_buffer)
         
-        top_left_of_scene_bottomleft        = QtCore.QPointF(point_of_widget_origin_on_scene_main.x(), point_of_split_on_scene_main.y())
-        bottom_right_of_scene_bottomleft    = QtCore.QPointF(point_of_split_on_scene_main.x() + render_buffer, point_of_bottom_right_on_scene_main.y() + render_buffer)
+        top_left_of_scene_bottomleft        = QtCore.QPointF(point_of_widget_origin_on_scene_main.x()*scale_bottomleft, point_of_split_on_scene_main.y()*scale_bottomleft)
+        bottom_right_of_scene_bottomleft    = QtCore.QPointF(point_of_split_on_scene_main.x()*scale_bottomleft + render_buffer, point_of_bottom_right_on_scene_main.y()*scale_bottomleft + render_buffer)
         
         rect_of_scene_topright = QtCore.QRectF(top_left_of_scene_topright, bottom_right_of_scene_topright)
         rect_of_scene_bottomright = QtCore.QRectF(top_left_of_scene_bottomright, bottom_right_of_scene_bottomright)
@@ -582,15 +619,19 @@ class SplitView(QtWidgets.QFrame):
         self._view_layoutdriving_topleft.setMaximumHeight(max(point_of_mouse_on_widget.y(),0))
         
         render_buffer = 100 # Needed to prevent slight pixel offset of the sliding overlays when zoomed-out below ~0.5x
+
+        scale_topright = 1/self._topright_zoom_adjust  # Needed to scale images to the same relative size as the main image
+        scale_bottomright = 1/self._bottomright_zoom_adjust
+        scale_bottomleft = 1/self._bottomleft_zoom_adjust
     
-        top_left_of_scene_topright          = QtCore.QPointF(point_of_split_on_scene_main.x(), point_of_widget_origin_on_scene_main.y())
-        bottom_right_of_scene_topright      = QtCore.QPointF(point_of_bottom_right_on_scene_main.x() + render_buffer, point_of_split_on_scene_main.y() + render_buffer)
+        top_left_of_scene_topright          = QtCore.QPointF(point_of_split_on_scene_main.x()*scale_topright, point_of_widget_origin_on_scene_main.y()*scale_topright)
+        bottom_right_of_scene_topright      = QtCore.QPointF(point_of_bottom_right_on_scene_main.x()*scale_topright + render_buffer, point_of_split_on_scene_main.y()*scale_topright + render_buffer)
         
-        top_left_of_scene_bottomright       = QtCore.QPointF(point_of_split_on_scene_main.x(), point_of_split_on_scene_main.y())
-        bottom_right_of_scene_bottomright   = QtCore.QPointF(point_of_bottom_right_on_scene_main.x() + render_buffer, point_of_bottom_right_on_scene_main.y() + render_buffer)
+        top_left_of_scene_bottomright       = QtCore.QPointF(point_of_split_on_scene_main.x()*scale_bottomright, point_of_split_on_scene_main.y()*scale_bottomright)
+        bottom_right_of_scene_bottomright   = QtCore.QPointF(point_of_bottom_right_on_scene_main.x()*scale_bottomright + render_buffer, point_of_bottom_right_on_scene_main.y()*scale_bottomright + render_buffer)
         
-        top_left_of_scene_bottomleft        = QtCore.QPointF(point_of_widget_origin_on_scene_main.x(), point_of_split_on_scene_main.y())
-        bottom_right_of_scene_bottomleft    = QtCore.QPointF(point_of_split_on_scene_main.x() + render_buffer, point_of_bottom_right_on_scene_main.y() + render_buffer)
+        top_left_of_scene_bottomleft        = QtCore.QPointF(point_of_widget_origin_on_scene_main.x()*scale_bottomleft, point_of_split_on_scene_main.y()*scale_bottomleft)
+        bottom_right_of_scene_bottomleft    = QtCore.QPointF(point_of_split_on_scene_main.x()*scale_bottomleft + render_buffer, point_of_bottom_right_on_scene_main.y()*scale_bottomleft + render_buffer)
         
         rect_of_scene_topright = QtCore.QRectF(top_left_of_scene_topright, bottom_right_of_scene_topright)
         rect_of_scene_bottomright = QtCore.QRectF(top_left_of_scene_bottomright, bottom_right_of_scene_bottomright)
@@ -643,7 +684,7 @@ class SplitView(QtWidgets.QFrame):
 
         pos_p1 = self._view_main_topleft.mapToScene(widget_width*placement_factor, widget_height*placement_factor)
         pos_p2 = self._view_main_topleft.mapToScene(widget_width*(1-placement_factor), widget_height*(1-placement_factor))
-        self._scene_main_topleft.addItem(RulerItem(unit=unit, px_per_unit=px_per_unit, initial_pos_p1=pos_p1, initial_pos_p2=pos_p2, relative_origin_position=relative_origin_position))
+        self._scene_main_topleft.addItem(RulerItem(unit=unit, px_per_mm=px_per_unit, initial_pos_p1=pos_p1, initial_pos_p2=pos_p2, relative_origin_position=relative_origin_position))
 
     def on_changed_px_per_unit(self, unit, px_per_unit):
         """Update the units and pixel-per-unit conversions of all rulers in main scene.
@@ -654,8 +695,7 @@ class SplitView(QtWidgets.QFrame):
         """
         for item in self._scene_main_topleft.items():
             if isinstance(item, RulerItem):
-                if item.unit == unit:
-                    item.set_and_refresh_px_per_unit(px_per_unit)
+                item.set_and_refresh_px_per_unit(px_per_unit)
 
     def on_right_click_save_all_comments(self):
         """Open a dialog window for user to save all existing comments on the main scene to .csv.
@@ -844,6 +884,9 @@ class SplitView(QtWidgets.QFrame):
 
     was_set_scene_background_color = QtCore.pyqtSignal(list)
     """Emitted when background color is set in right-click menu (passes it along)."""
+
+    was_set_sync_zoom_by = QtCore.pyqtSignal(str)
+    """Emitted when sync zoom option is set in right-click menu (passes it along)."""
 
     positionChanged = QtCore.pyqtSignal(QtCore.QPoint)
     """Emitted when mouse changes position."""
@@ -1034,8 +1077,8 @@ class SplitView(QtWidgets.QFrame):
         width_viewport = (width_viewport_window - peek_margin_x)/scene_to_viewport_factor # This is the size of the viewport on the screen
         height_viewport = (height_viewport_window - peek_margin_y)/scene_to_viewport_factor
         
-        width_pixmap = self._pixmapItem_main_topleft.pixmap().width()
-        height_pixmap = self._pixmapItem_main_topleft.pixmap().height()
+        width_pixmap = self.imageWidth
+        height_pixmap = self.imageHeight
         
         width_scene = 2.0*(width_viewport + width_pixmap/2.0) # The scene spans twice the viewport plus the pixmap
         height_scene = 2.0*(height_viewport + height_pixmap/2.0)
@@ -1110,47 +1153,42 @@ class SplitView(QtWidgets.QFrame):
         Args:
             newZoomFactor (float)
         """
-        if newZoomFactor < 1.0:
-            self._pixmapItem_main_topleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_topright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-        elif self.transform_mode_smooth:
-            self._pixmapItem_main_topleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_topright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-        else:
-            self._pixmapItem_main_topleft.setTransformationMode(QtCore.Qt.FastTransformation)
-            self._pixmapItem_topright.setTransformationMode(QtCore.Qt.FastTransformation)
-            self._pixmapItem_bottomright.setTransformationMode(QtCore.Qt.FastTransformation)
-            self._pixmapItem_bottomleft.setTransformationMode(QtCore.Qt.FastTransformation)
-
         self._view_main_topleft.zoomFactor = newZoomFactor
 
-        newZoomFactor = newZoomFactor / self._view_topright.transform().m11()
-        self._view_topright.scale(newZoomFactor, newZoomFactor)
-        self._view_bottomright.scale(newZoomFactor, newZoomFactor)
-        self._view_bottomleft.scale(newZoomFactor, newZoomFactor)
+        scale_topright = newZoomFactor * self._topright_zoom_adjust / self._view_topright.transform().m11()
+        scale_bottomright = newZoomFactor * self._bottomright_zoom_adjust / self._view_bottomright.transform().m11()
+        scale_bottomleft = newZoomFactor * self._bottomleft_zoom_adjust / self._view_bottomleft.transform().m11()
+
+        self._view_topright.scale(scale_topright, scale_topright)
+        self._view_bottomright.scale(scale_bottomright, scale_bottomright)
+        self._view_bottomleft.scale(scale_bottomleft, scale_bottomleft)
+
+        self.refresh_transform_mode()
 
     def refresh_transform_mode(self):
         """Refresh zoom of all views, taking into account the transform mode."""
-        self._view_main_topleft.zoomFactor
-        if self.zoomFactor < 1.0:
-            self._pixmapItem_main_topleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_topright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-        elif self.transform_mode_smooth:
-            self._pixmapItem_main_topleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_topright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomright.setTransformationMode(QtCore.Qt.SmoothTransformation)
-            self._pixmapItem_bottomleft.setTransformationMode(QtCore.Qt.SmoothTransformation)
+        zoomFactor = self.zoomFactor
+        self.set_pixmap_transform_from_scale(self._pixmapItem_main_topleft,
+                                            zoomFactor)
+        
+        scale_topright = self._view_topright.transform().m11()
+        scale_bottomright = self._view_bottomright.transform().m11()
+        scale_bottomleft = self._view_bottomleft.transform().m11()
+
+        self.set_pixmap_transform_from_scale(self._pixmapItem_topright,
+                                            scale_topright)
+        self.set_pixmap_transform_from_scale(self._pixmapItem_bottomright,
+                                            scale_bottomright)
+        self.set_pixmap_transform_from_scale(self._pixmapItem_bottomleft,
+                                            scale_bottomleft)
+
+    def set_pixmap_transform_from_scale(self, pixmap_item, scale, limit: float = 1.0):
+        """Set a given pixmap transform based on scale (zoom)."""
+
+        if (scale < limit) or (self.transform_mode_smooth):
+            pixmap_item.setTransformationMode(QtCore.Qt.SmoothTransformation)
         else:
-            self._pixmapItem_main_topleft.setTransformationMode(QtCore.Qt.FastTransformation)
-            self._pixmapItem_topright.setTransformationMode(QtCore.Qt.FastTransformation)
-            self._pixmapItem_bottomright.setTransformationMode(QtCore.Qt.FastTransformation)
-            self._pixmapItem_bottomleft.setTransformationMode(QtCore.Qt.FastTransformation)
+            pixmap_item.setTransformationMode(QtCore.Qt.FastTransformation)
 
     @property
     def _horizontalScrollBar(self):
@@ -1242,7 +1280,7 @@ class SplitView(QtWidgets.QFrame):
         viewport_rect = self._view_main_topleft.viewport().rect().adjusted(padding_margin, padding_margin,
                                                          -padding_margin, -padding_margin)
         aspect_ratio_viewport = viewport_rect.width()/viewport_rect.height()
-        aspect_ratio_pixmap   = self._pixmapItem_main_topleft.pixmap().width()/self._pixmapItem_main_topleft.pixmap().height()
+        aspect_ratio_pixmap   = self.imageWidth/self.imageHeight
         if aspect_ratio_viewport > aspect_ratio_pixmap:
             self.fitHeight()
         else:
@@ -1258,7 +1296,7 @@ class SplitView(QtWidgets.QFrame):
         padding_margin = 2
         viewRect = self._view_main_topleft.viewport().rect().adjusted(padding_margin, padding_margin,
                                                          -padding_margin, -padding_margin)
-        factor = viewRect.width() / self._pixmapItem_main_topleft.pixmap().width()
+        factor = viewRect.width() / self.imageWidth
         self.scaleImage(factor, combine=False)
         self._view_main_topleft.centerView()
     
@@ -1270,9 +1308,19 @@ class SplitView(QtWidgets.QFrame):
         padding_margin = 2
         viewRect = self._view_main_topleft.viewport().rect().adjusted(padding_margin, padding_margin,
                                                          -padding_margin, -padding_margin)
-        factor = viewRect.height() / self._pixmapItem_main_topleft.pixmap().height()
+        factor = viewRect.height() / self.imageHeight
         self.scaleImage(factor, combine=False)
         self._view_main_topleft.centerView()
+
+    @property
+    def imageWidth(self):
+        """int: Width of base (main) image pixmap."""
+        return self._pixmapItem_main_topleft.pixmap().width()
+    
+    @property
+    def imageHeight(self):
+        """int: Height of base (main) image pixmap."""
+        return self._pixmapItem_main_topleft.pixmap().height()
 
     def handleWheelNotches(self, notches):
         """Handle wheel notch event from underlying |QGraphicsView|.

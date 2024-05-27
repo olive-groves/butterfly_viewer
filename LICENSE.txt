@@ -14,16 +14,25 @@ GNU General Public License for more details.
 A copy of the GNU General Public License is provided below, but
 you may also see it at <http://www.gnu.org/licenses/>.
 
-This program uses elements of PyQt MDI Image Viewer (tpgit)
-[changes made], which is made available under the Creative
+This program uses modified elements of PyQt MDI Image Viewer, copyright (c) 
+tpgit (https://github.com/tpgit), made available under the Creative
 Commons Attribution 3.0 license.
+
+This program uses modified elements of SvgButton, SvgToolButton, and
+SvgAbstractButton, copyright (c) 2022 Jung Gyu Yoon 
+(https://github.com/yjg30737), made available under the MIT License.
+
+This program uses modified icons of Siemens Industrial Experience Icons, 
+copyright (c) Siemens (https://github.com/siemens/ix-icons/), made available 
+under the MIT License, and acquired from SVG Repo at 
+https://www.svgrepo.com/collection/industrial-sharp-ui-icons/.
 
 The Butterfly logo is by Marco Roling.
 
 The graphical user interface uses PyQt5 (Riverbank Computing
-Limited), which is released under the GNU General Public License v3.
+Limited), released under the GNU General Public License v3.
 
-Registered images processed using OpenCV 3.4.2, which is released
+Registered images processed using OpenCV 3.4.2, released
 under the 3-clause BSD License.
 
                     GNU GENERAL PUBLIC LICENSE
