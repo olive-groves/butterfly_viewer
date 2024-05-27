@@ -889,7 +889,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             filename_bottomleft (str): The image filepath for bottom-left of the sliding overlay (set None to exclude)
             filename_bottomright (str): The image filepath for bottom-right of the sliding overlay (set None to exclude)
         """
-
+        
         self.display_loading_grayout(True, "Loading viewer with main image '" + filename_main_topleft.split("/")[-1] + "'...")
 
         activeMdiChild = self.activeMdiChild
@@ -947,8 +947,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 self.synchZoom(activeMdiChild)
                 
         self._mdiArea.tile_what_was_done_last_time()
-        
-        child.fitToWindow()
+
         child.set_close_pushbutton_always_visible(self.is_interface_showing)
         if self.scene_background_color is not None:
             child.set_scene_background_color(self.scene_background_color)
@@ -959,6 +958,11 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self._last_accessed_fullpath = filename_main_topleft
 
         self.display_loading_grayout(False)
+        
+        sync_by = self.sync_zoom_by
+        child.update_sync_zoom_by(sync_by)
+
+        child.fitToWindow()
 
         self.statusBar().showMessage("File loaded", 2000)
 
