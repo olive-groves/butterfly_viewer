@@ -44,6 +44,12 @@ Most types of PNG, JPEG, and TIFF can be loaded into the Viewer.
   <i>Auto-arranging side-by-side image windows</i>
 </p>
 
+<p align="center">
+  <img src="https://olive-groves.github.io/butterfly_viewer/images/sync_by_modes.gif" alt="Animated screencapture of Butterfly Viewer showing the four synchronized zooming modes.">
+  <br />
+  <i>Synchronized zooming modes</i>
+</p>
+
 ## How-to's
 
 Our [Butterfly Viewer page](https://olive-groves.github.io/butterfly_viewer) documents how to install and use the Viewer, as well how contribute to it as a developer. 
