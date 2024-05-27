@@ -37,18 +37,19 @@
     <li><a href="#synchronized-side-by-side-images">Synchronized side-by-side images</a></li>
     <li><a href="#sliding-overlays-and-opacity-sliders">Sliding overlays and opacity sliders</a></li>
     <li><a href="#alphascale-maps-with-sliding-overlays">Alphascale maps with sliding overlays</a></li>
+    <li><a href="#set-zoom-synchronization-mode">Set zoom synchronization mode</a></li>
   </ul></li>
   <li><a href="#common-questions">Common questions</a>
   <ul>
     <li><a href="#report-a-bug">Report a bug?</a></li>
     <li><a href="#request-new-feature">Request new feature?</a></li>
     <li><a href="#seeing-pixelated-images">Seeing pixelated images?</a></li>
-    <li><a href="#unequal-zoom-with-sync-enabled">Unequal zoom with sync enabled?</a></li>
     <li><a href="#what-is-alphascale">What is alphascale?</a></li>
   </ul></li>
   <li><a href="#developers">Developers</a>
   <ul>
     <li><a href="#contributing-to-butterfly_viewer">Contributing to <code>butterfly_viewer</code></a></li>
+    <li><a href="#adding-and-changing-icons">Adding and changing icons</a></li>
     <li><a href="#creating-the-executable-and-setup-installer">Creating the executable and setup installer</a></li>
     <li><a href="#generating-documentation-with-pdoc">Generating documentation with pdoc</a></li>
     <li><a href="#updating-packages-in-environmentyml">Updating packages in <code>environment.yml</code></a></li>
@@ -65,6 +66,7 @@
         <li>
                     <li><a href="butterfly_viewer/butterfly_viewer.html">butterfly_viewer</a></li>
             <ul>
+                        <li><a href="butterfly_viewer/aux_buttons.html">aux_buttons</a></li>
                         <li><a href="butterfly_viewer/aux_comments.html">aux_comments</a></li>
                         <li><a href="butterfly_viewer/aux_dialogs.html">aux_dialogs</a></li>
                         <li><a href="butterfly_viewer/aux_dragdrop.html">aux_dragdrop</a></li>
@@ -123,12 +125,11 @@ butterfly_viewer    </h1>
 
 <p>Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.</p>
 
-<p>The Viewer runs as an <a href="#windows-executable">installable Windows executable</a> or directly on its <a href="#python">Python source code</a>.
-Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
+<p>The Viewer runs as an <a href="#windows-executable">installable Windows executable</a>, a <a href="#macos-app">macOS app</a>, or directly on its <a href="#python">Python source code</a>.</p>
 
-<p>Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. </p>
+<p>Supported filetypes include PNG, JPG/JPEG, TIF/TIFF, BMP, WEBP, SVG, ICO, and CUR.</p>
 
-<p><a href="https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html">Butterfly Registrator<sup>↗</sup></a> can be used to create aligned copies of your images so you can more accurately compare them with synced movement and sliding overlays in the Viewer. The Registrator helps you align (or <em>register</em>) images to a given reference image such that their heights and widths match and the features within those images line up.</p>
+<p><a href="https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html">Butterfly Registrator<sup>↗</sup></a> can be used to create aligned copies of your images so you can more accurately compare them in the Viewer. The Registrator helps you align (or <em>register</em>) images to a given reference image such that their heights and widths match and the features within those images line up.</p>
 
 <p><sup>¹<em>Small Pear Tree in Blossom</em> by Vincent van Gogh. Credits: Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation)</sup></p>
 
@@ -143,11 +144,10 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 <p>You can download and install Butterfly Viewer to run:</p>
 
 <ul>
-<li>as a <a href="#windows-executable">Windows executable</a>; or </li>
-<li>directly with <a href="#python">Python</a>.</li>
+<li>as a <a href="#windows-executable">Windows executable</a>; </li>
+<li>as a <a href="#macos-app">macOS app</a>; or </li>
+<li>directly with <a href="#python">Python</a>. </li>
 </ul>
-
-<p>If you use a MacBook or iMac, you can sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 
 <h2 id="windows-executable">Windows executable</h2>
 
@@ -166,7 +166,6 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 <h3 id="prerequisites">Prerequisites</h3>
 
 <ul>
-<li><p>The Viewer executable only runs on Windows. There's currently no support for executables for Linux or macOS.</p></li>
 <li><p>The Viewer uses 106 MB of storage space as an installed app.</p></li>
 <li><p>The Viewer uses locally stored images (like PNG, JPEG, TIFF) to create and explore views of those images. It's designed to be navigated by mouse or trackpad by clicking, dragging, and dropping.</p></li>
 <li><p>The Viewer doesn't use the internet, so any online images you wish to use must be locally available — for example, by downloading them or by selecting “always keep on your device” if they sync to cloud storage like OneDrive or Google Drive. Images on network shares can be loaded into the Viewer, but they can take more time to load than those stored locally, especially if accessing the share through a VPN.</p></li>
@@ -178,7 +177,7 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 
 <p><img src="images/install/download_zip.jpg" alt="Screenshot showing the download link of the Butterfly Viewer installer ZIP on its GitHub repo." />
 <br>
-<sup>Here v1.0.0 is shown, but you should download the <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest">latest version</a>.</sup></p>
+<sup>Here v1.1 is shown, but you should download the <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest">latest version</a>.</sup></p>
 
 <h3 id="extract-zip">Extract ZIP</h3>
 
@@ -289,11 +288,54 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 
 <h2 id="macos-app">macOS app</h2>
 
+<blockquote>
+  <p>Download: <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest"><code>butterfly_viewer_v1.y.z_macOS.app.zip</code><sup>↗</sup></a></p>
+  
+  <p><sup><strong>110 MB installed</strong></sup></p>
+</blockquote>
+
+<p>For macOS, Butterfly Viewer installs to your computer with an app file which you drag into Applications. The Viewer can then be started directly from Launchpad.</p>
+
+<h3 id="prerequisites-2">Prerequisites</h3>
+
+<p>MacOS High Sierra is used to create the macOS app, so versions 10.13.6 and newer should be supported. </p>
+
+<p>Other prerequisites are the <a href="#prerequisites">same as the Windows executable</a>.</p>
+
+<h3 id="download-zip-2">Download ZIP</h3>
+
+<p>Download the Viewer from the latest release of the Viewer's GitHub repo, which is packaged as an app under <em>Assets</em> as <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest"><code>butterfly_viewer_v1.y.z_macOS.app.zip</code><sup>↗</sup></a>.</p>
+
+<p><img src="images/install/download_zip.jpg" alt="Screenshot showing the download link of the Butterfly Viewer app ZIP on its GitHub repo." />
+<br>
+<sup>Here v1.1 is shown, but you should download the <a href="https://github.com/olive-groves/butterfly_viewer/releases/latest">latest version</a>.</sup></p>
+
+<h3 id="add-to-applications-and-launchpad">Add to Applications and Launchpad</h3>
+
+<p>These steps are necessary to run Butterfly Viewer directly from Launchpad:</p>
+
+<ul>
+<li><p>In Finder, go to Downloads. If not already unzipped, unzip the ZIP by double-clicking the file.</p></li>
+<li><p>Drag <code>Butterfly Viewer</code> into Applications.</p></li>
+<li><p>Go to Applications (<strong><em>not</em> Launchpad</strong>). </p></li>
+<li><p>In Applications, control-click (right-click) on Butterfly Viewer, then click Open.</p></li>
+</ul>
+
+<blockquote>
+  <p>A warning will likely pop up from Apple saying it can't be checked. <strong>Click Open anyway</strong>.</p>
+  
+  <p><em>Why?  In short, it’s because this app has no certificate.</em></p>
+</blockquote>
+
+<h3 id="run-2">Run</h3>
+
+<p>To run the Viewer, open Launchpad and click on <strong>Butterfly Viewer</strong>.</p>
+
 <p><img src="images/install/macOS.png" alt="Screenshot of Butterfly Viewer on macOS." /></p>
 
-<p>Sign up to <a href="https://forms.gle/y9QeT6MLgHszU1su5">beta test the macOS version<sup>↗<sup></a> of Butterfly Viewer on your MacBook or iMac. The download link will be sent within 24 hours.</p>
+<h3 id="uninstall-2">Uninstall</h3>
 
-<p>With your help, we can get a working macOS app for both the Butterfly Viewer and Butterfly Registrator.</p>
+<p>You can uninstall the Viewer app from macOS by going to Applications and dragging <strong>Butterfly Viewer</strong> to Trash. </p>
 
 <hr />
 
@@ -413,17 +455,11 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 
 <p><img src="images/tutorial/drag_multiple.jpg" alt="Screenshots showing the raking light and zinc map dragged into the Viewer's main area." /></p>
 
-<p>Clicking and dragging image files directly into the Viewer creates an individual image window for each image and automatically arranges them side-by-side.</p>
+<p>Clicking and dragging image files directly into the Viewer creates an individual image window for each image and automatically arranges them side-by-side. </p>
 
-<p><img src="images/tutorial/grid_multiple.jpg" alt="Screenshot showing the three previously added images arranged as a grid." /></p>
+<p>Images are arranges horizontally (left to right) by default, but you arrange them vertically or as a grid using the interface buttons on the bottom right of the Viewer. </p>
 
-<p>Let's change the arrangement of the image windows from a grid to a row — that is, horizontally side-by-side.</p>
-
-<p>Arrange the windows horizontally by clicking <img src="images/tutorial/arrange_horizontal_button.png" alt="Arrange horizontal button" />.</p>
-
-<p><img src="images/tutorial/arrange_multiple_grid_to_row.jpg" alt="Screenshot showing the Viewer's windows arranged horizontally." /></p>
-
-<p>When arranged horizontally, image windows are shown left-to-right in the order they were created.</p>
+<p><img src="images/tutorial/arrange_buttons.jpg" alt="Arrange and fit interface buttons" />.</p>
 
 <p>Zoom (scroll) and pan (left-click drag) to explore the images synchronously.</p>
 
@@ -481,7 +517,7 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 </ul>
 
 <blockquote>
-  <p>To accurately compare images with a sliding overlay in the Viewer, those images must already be registered with one another. That means their heights and widths must match, and the features within those images must be aligned.</p>
+  <p>To accurately compare images with a sliding overlay in the Viewer, those images must already be registered with one another. That means their aspect ratios must match, and the features within those images must be aligned.</p>
   
   <p>The sample images here are already registered. If you want to easily create registered copies of your own images, check out <a href="https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html">Butterfly Registrator<sup>↗</sup></a>.</p>
 </blockquote>
@@ -612,6 +648,27 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 
 <p>Once finished, close the Viewer — or explore it further using your own images!</p>
 
+<h2 id="set-zoom-synchronization-mode">Set zoom synchronization mode</h2>
+
+<p>Zoom can be synchronized by width, height, pixel size, or the fit-in-a-box method by right-clicking an image and selecting the mode under <strong>Sync zoom by</strong>.</p>
+
+<p><img src="images/tutorial/right-click_sync_zoom.jpg" alt="Screenshot showing right-click menu with the 'Sync zoom by...' submenu selected." /></p>
+
+<p>Fit in a box (default): images are scaled to fit to the same sized square box.
+<img src="images/tutorial/sync_by_fit-in-a-box.jpg" alt="Screenshot showing sync by fit-in-a-box." /></p>
+
+<p>Sync by width: images are scaled to appear equally as wide.
+<img src="images/tutorial/sync_by_width.jpg" alt="Screenshot showing sync by width." /></p>
+
+<p>Height: images are scaled to appear equally as tall.
+<img src="images/tutorial/sync_by_height.jpg" alt="Screenshot showing sync by height." /></p>
+
+<p>Pixel (relative size): images are not scaled whereby pixels between images are the same size.
+<img src="images/tutorial/sync_by_pixel.jpg" alt="Screenshot showing sync by pixel." /></p>
+
+<p>Sliding overlays scale their non-base images using the fit-in-a-box method.
+<img src="images/viewer_sliding_overlay_scaling.gif" alt="Animated screencapture showing a sliding overlay with the same image at four different resolutions." /></p>
+
 <h1 id="common-questions">Common questions</h1>
 
 <h2 id="report-a-bug">Report a bug?</h2>
@@ -631,16 +688,6 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 <p>By default, the Viewer does not smooth the pixels of images when you overzoom them. Smoothing is turned off to show you precisely where individual pixels are, which is otherwise difficult to do with it on. As a result, this can cause images to appear pixelated — which is true, because you're seeing the exact pixels.</p>
 
 <p>You can toggle smoothing (<em>upsampling</em>) through the right-click menu on any image window.</p>
-
-<h2 id="unequal-zoom-with-sync-enabled">Unequal zoom with sync enabled?</h2>
-
-<p><img src="images/tutorial/unregistered.jpg" alt="Screenshot showing an unregistered zinc element map compared to the color and raking light images along with their respective dimensions." /></p>
-
-<p>The Viewer is working as intended! </p>
-
-<p>When synced, the zoom level in all image windows is set such that the size of a given pixel is the same  across all images. In other words, if you sync an Image A of 1000px × 1000px with an Image B of 500px × 500px, Image B will then appear smaller compared to A because B is half its size. This can give the impression that B is "zoomed out" compared to A.</p>
-
-<p><strong>Remember: Images must be registered</strong> to properly compare them with synchronous features and sliding overlays in the Viewer. This means their heights and widths must match and the features within those images must be aligned. You can use the <a href="https://olive-groves.github.io/butterfly_registrator/butterfly_registrator.html">Butterfly Registrator<sup>↗</sup></a> to register images to one another.</p>
 
 <h2 id="what-is-alphascale">What is alphascale?</h2>
 
@@ -667,6 +714,22 @@ Use a Mac? Sign up to <a href="#macos-app">beta test the macOS version</a>.</p>
 </ol>
 
 <p>Or see the GitHub documentation on <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request">creating a pull request<sup>↗</sup></a>.</p>
+
+<h2 id="adding-and-changing-icons">Adding and changing icons</h2>
+
+<p>To add or change icons (like SVG files) to Viewer, you need to add them first to a resources file following these steps:</p>
+
+<ul>
+<li>Add/change the files in <code>butterfly_viewer/icons</code></li>
+<li>Add/change the corresponding files in <code>icons.qrc</code></li>
+<li>In Anaconda Prompt:
+<ul>
+<li>Activate the standard <code>./env</code> environment</li>
+<li>Change directory to the source code <code><a href="">butterfly_viewer</a></code></li>
+<li>Run <code>pyrcc5 icons.qrc -o icons_rc.py</code></li>
+</ul></li>
+<li>Update the code referencing the icons</li>
+</ul>
 
 <h2 id="creating-the-executable-and-setup-installer">Creating the executable and setup installer</h2>
 
@@ -722,8 +785,14 @@ conda activate viewer_installer
 
 <p>Run PyInstaller with the following command while in the <strong>source code</strong> directory <code>\butterfly_viewer\butterfly_viewer</code>.</p>
 
-<pre><code>cd butterfly_viewer
-pyinstaller --onedir --windowed --icon=icons\icon.ico butterfly_viewer.py
+<p>Windows:</p>
+
+<pre><code>pyinstaller --onedir --windowed --icon=icons\icon.ico butterfly_viewer.py
+</code></pre>
+
+<p>macOS:</p>
+
+<pre><code>pyinstaller --windowed --icon=icons/icon.icns butterfly_viewer.py
 </code></pre>
 
 <blockquote>

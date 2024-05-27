@@ -12,6 +12,17 @@ You can contribute to `butterfly_viewer` with a pull request by following these 
 
 Or see the GitHub documentation on [creating a pull request<sup>↗</sup>](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
+## Adding and changing icons
+
+To add or change icons (like SVG files) to Viewer, you need to add them first to a resources file following these steps:
+- Add/change the files in `butterfly_viewer/icons`
+- Add/change the corresponding files in `icons.qrc`
+- In Anaconda Prompt:
+  - Activate the standard `./env` environment
+  - Change directory to the source code `butterfly_viewer`
+  - Run `pyrcc5 icons.qrc -o icons_rc.py`
+- Update the code referencing the icons
+
 ## Creating the executable and setup installer
 
 The installer executable for Butterfly Viewer is created by first bundling the app with PyInstaller and then creating a setup installer with Inno Setup.
@@ -69,9 +80,13 @@ conda install pyinstaller
 
 Run PyInstaller with the following command while in the **source code** directory ```\butterfly_viewer\butterfly_viewer```.
 
+Windows:
 ```
-cd butterfly_viewer
 pyinstaller --onedir --windowed --icon=icons\icon.ico butterfly_viewer.py
+```
+macOS:
+```
+pyinstaller --windowed --icon=icons/icon.icns butterfly_viewer.py
 ```
 
 > PyInstaller not working? Make sure you've changed directory to the source code directory (the subfolder `butterfly_viewer` within the repo itself).
