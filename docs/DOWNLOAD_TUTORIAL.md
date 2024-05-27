@@ -514,23 +514,22 @@ Once finished, close the Viewer — or explore it further using your own images!
 
 ## Set zoom synchronization mode
 
-Zoom can be synchronized by width, height, pixel size, or the fit-in-a-box method by right-clicking an image and selecting the mode under **Sync zoom by**.
+![Screenshots showing sync by fit-in-a-box, width, height, and pixel.](images/sync_by_modes.gif)
+
+Zoom can be synchronized by one of four modes by right-clicking an image and selecting the mode under **Sync zoom by**:
+
+- Fit in a box (default): images are scaled to fit to the same sized square box.
+
+- Width: images are scaled to appear equally as wide.
+
+- Height: images are scaled to appear equally as tall.
+
+- Pixel (relative size): images are not scaled whereby pixels between images are the same size.
 
 ![Screenshot showing right-click menu with the 'Sync zoom by...' submenu selected.](images/tutorial/right-click_sync_zoom.jpg)
 
-Fit in a box (default): images are scaled to fit to the same sized square box.
-![Screenshot showing sync by fit-in-a-box.](images/tutorial/sync_by_fit-in-a-box.jpg)
-
-Sync by width: images are scaled to appear equally as wide.
-![Screenshot showing sync by width.](images/tutorial/sync_by_width.jpg)
-
-Height: images are scaled to appear equally as tall.
-![Screenshot showing sync by height.](images/tutorial/sync_by_height.jpg)
-
-Pixel (relative size): images are not scaled whereby pixels between images are the same size.
-![Screenshot showing sync by pixel.](images/tutorial/sync_by_pixel.jpg)
-
 Sliding overlays scale their non-base images using the fit-in-a-box method.
+
 ![Animated screencapture showing a sliding overlay with the same image at four different resolutions.](images/viewer_sliding_overlay_scaling.gif)
 
 
