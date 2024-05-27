@@ -219,6 +219,7 @@ python butterfly_viewer.py
 The list of dependencies are in `environment.yml` in the root directory, which includes:
 - Python 3.6 (tested with Python 3.6.13) 
 - PyQt 5.9 (tested with PyQt 5.9.2)
+- piexif
 
 ### Install and run
 
@@ -232,10 +233,20 @@ There are a couple ways to run the Viewer with Python. Here's one way using cond
     cd C:\path\to\the\butterfly_viewer\
     ```
 
-4. Create a new conda environment in a new subfolder named `env` using the `environment.yml` file from the root directory.
+4. If using Windows, create a new conda environment in a new subfolder named `env` using the `environment.yml` file from the root directory.
 
     ```
     conda env create --file environment.yml --prefix ./env
+    ```
+
+   If using macOS or Linux, create a new conda environment named `env` manually:
+
+    ```
+    conda config --append channels conda-forge
+    conda create --prefix ./env python=3.7
+    conda activate ./env
+    conda install pyqt=5.9
+    conda install piexif
     ```
 
 5. Activate the `env` environment.

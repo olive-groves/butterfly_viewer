@@ -353,6 +353,7 @@ butterfly_viewer    </h1>
 <ul>
 <li>Python 3.6 (tested with Python 3.6.13) </li>
 <li>PyQt 5.9 (tested with PyQt 5.9.2)</li>
+<li>piexif</li>
 </ul>
 
 <h3 id="install-and-run">Install and run</h3>
@@ -366,9 +367,18 @@ butterfly_viewer    </h1>
 
 <pre><code>cd C:\path\to\the\butterfly_viewer\
 </code></pre></li>
-<li><p>Create a new conda environment in a new subfolder named <code>env</code> using the <code>environment.yml</code> file from the root directory.</p>
+<li><p>If using Windows, create a new conda environment in a new subfolder named <code>env</code> using the <code>environment.yml</code> file from the root directory.</p>
 
 <pre><code>conda env create --file environment.yml --prefix ./env
+</code></pre>
+
+<p>If using macOS or Linux, create a new conda environment named <code>env</code> manually:</p>
+
+<pre><code>conda config --append channels conda-forge
+conda create --prefix ./env python=3.7
+conda activate ./env
+conda install pyqt=5.9
+conda install piexif
 </code></pre></li>
 <li><p>Activate the <code>env</code> environment.</p>
 
