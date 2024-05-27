@@ -30,7 +30,7 @@
 
 Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
 
-The Viewer runs as an [installable Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable) or directly on its [Python source code](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python).
+The Viewer runs as an [installable Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable), a [macOS app](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#macos-app), or directly on its [Python source code](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python). 
 
 Most types of PNG, JPEG, and TIFF can be loaded into the Viewer. 
 
@@ -49,6 +49,8 @@ Most types of PNG, JPEG, and TIFF can be loaded into the Viewer.
 Our [Butterfly Viewer page](https://olive-groves.github.io/butterfly_viewer) documents how to install and use the Viewer, as well how contribute to it as a developer. 
 
 ### Install as [Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable)
+
+### Add as [macOS app](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#macos-app)
 
 ### Run on [Python](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python)
 
