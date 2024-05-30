@@ -28,7 +28,7 @@
   <i>Synchronized pan and zoom¹</i>
 </p>
 
-Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
+Butterfly Viewer is a desktop multi-image viewer with sliding overlays, synchronized pan and zoom, and other handy features to rapidly compare local image files side by side. This can be useful for visually inspecting painting research data such as high-res and raking-light photos, X-rays, and element maps from XRF and RIS.
 
 The Viewer runs as an [installable Windows executable](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#windows-executable), a [macOS app](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#macos-app), or directly on its [Python source code](https://olive-groves.github.io/butterfly_viewer/butterfly_viewer.html#python). 
 
