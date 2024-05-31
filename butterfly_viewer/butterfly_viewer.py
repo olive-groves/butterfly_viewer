@@ -564,6 +564,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.update_window_highlight(self._mdiArea.activeSubWindow())
         self.update_window_labels(self._mdiArea.activeSubWindow())
         self.set_window_close_pushbuttons_always_visible(self._mdiArea.activeSubWindow(), True)
+        self.set_window_next_pushbuttons_always_visible(self._mdiArea.activeSubWindow(), True)
         self.set_window_mouse_rect_visible(self._mdiArea.activeSubWindow(), True)
         self.interface_mdiarea_topleft.setVisible(True)
         self.interface_mdiarea_bottomleft.setVisible(True)
@@ -584,6 +585,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.update_window_highlight(self._mdiArea.activeSubWindow())
         self.update_window_labels(self._mdiArea.activeSubWindow())
         self.set_window_close_pushbuttons_always_visible(self._mdiArea.activeSubWindow(), False)
+        self.set_window_next_pushbuttons_always_visible(self._mdiArea.activeSubWindow(), False)
         self.set_window_mouse_rect_visible(self._mdiArea.activeSubWindow(), False)
         self.interface_mdiarea_topleft.setVisible(False)
         self.interface_mdiarea_bottomleft.setVisible(False)
@@ -771,6 +773,23 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         for window in windows:
             if window != changed_window:
                 window.widget().set_close_pushbutton_always_visible(always_visible)
+
+    def set_window_next_pushbuttons_always_visible(self, window, boolean):
+        """Enable/disable the always-on visiblilty of the next > on each subwindow.
+        
+        Args:
+            window (QMdiSubWindow): The active subwindow.
+            boolean (bool): True to show the next > always; False to hide unless mouse hovers over.
+        """
+        if window is None:
+            return
+        changed_window = window
+        always_visible = boolean
+        changed_window.widget().set_next_pushbutton_always_visible(always_visible)
+        windows = self._mdiArea.subWindowList()
+        for window in windows:
+            if window != changed_window:
+                window.widget().set_next_pushbutton_always_visible(always_visible)
 
     def set_window_mouse_rect_visible(self, window, boolean):
         """Enable/disable the visiblilty of the red 1x1 outline at the pointer
@@ -1007,6 +1026,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         child.became_closed.connect(self.on_subwindow_closed)
         child.was_clicked_close_pushbutton.connect(self._mdiArea.closeActiveSubWindow)
+        child.was_clicked_next_pushbutton.connect(self.next_image)
         child.shortcut_shift_x_was_activated.connect(self.shortcut_shift_x_was_activated_on_mdichild)
         child.signal_display_loading_grayout.connect(self.display_loading_grayout)
         child.was_set_global_transform_mode.connect(self.set_all_window_transform_mode_smooth)
@@ -1014,6 +1034,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         child.was_set_sync_zoom_by.connect(self.set_all_sync_zoom_by)
 
         return child
+
+
+    # Next/prev methods
+    def next_image(self):
+        widget = self.activeMdiChild
+        if widget:
+            widget._scene_main_topleft.removeItem(widget._pixmapItem_main_topleft)
 
 
     # View and split methods
