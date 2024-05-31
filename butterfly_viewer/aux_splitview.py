@@ -212,6 +212,12 @@ class SplitView(QtWidgets.QFrame):
         self.close_pushbutton.clicked.connect(self.was_clicked_close_pushbutton)
         self.close_pushbutton_always_visible = True
 
+        # Pushbutton to go to next image in directory
+        self.next_pushbutton = QtWidgets.QPushButton(">")
+        self.next_pushbutton.setToolTip("Next image")
+        self.next_pushbutton.clicked.connect(self.was_clicked_next_pushbutton)
+        self.next_pushbutton_always_visible = True
+
         # Create deadzones along the bounds of SplitView to fix the issue of resize handles showing in QMdiArea despite windowless setting.
         # An event tracker "bypass" is needed for each deadzone because they hide the mouse from the sliding overlay, so the mouse must be separately tracked to ensure the split is updated.
         px_deadzone = 8
@@ -297,6 +303,8 @@ class SplitView(QtWidgets.QFrame):
         self._layout.addWidget(self.label_bottomleft, 0, 0, 2, 2, QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeft)
 
         self._layout.addWidget(self.close_pushbutton, 0, 0, 2, 2, QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
+
+        self._layout.addWidget(self.next_pushbutton, 0, 0, 2, 2, QtCore.Qt.AlignCenter | QtCore.Qt.AlignRight)
 
         self.setLayout(self._layout)
 
@@ -449,6 +457,90 @@ class SplitView(QtWidgets.QFrame):
                         background-color: rgba(255, 0, 0, 255);
                     }
                     """)
+
+    def set_next_pushbutton_always_visible(self, boolean):
+        """Enable/disable the always-on visiblilty of the next > of the view.
+        
+        Arg:
+            boolean (bool): True to show the next > always; False to hide unless mouse hovers over.
+        """
+        self.next_pushbutton_always_visible = boolean
+        self.refresh_next_pushbutton_stylesheet()
+            
+    def refresh_next_pushbutton_stylesheet(self):
+        """Refresh stylesheet of next pushbutton based on background color and visibility."""
+        if not self.next_pushbutton:
+            return
+        always_visible = self.next_pushbutton_always_visible
+        background_rgb =  self._scene_main_topleft.background_rgb
+        avg_background_rgb = sum(background_rgb)/len(background_rgb)
+        if not always_visible: # Hide unless hovered
+            self.next_pushbutton.setStyleSheet("""
+                QPushButton {
+                    width: 3.6em;
+                    height: 3.6em;
+                    color: transparent;
+                    background-color: rgba(31, 31, 31, 0); 
+                    font-weight: bold;
+                    border-width: 0px;
+                    border-style: solid;
+                    border-color: transparent;
+                    font-size: 20pt;
+                }
+                QPushButton:hover {
+                    color: white;
+                    background-color: rgba(31, 31, 31, 223);
+                }
+                QPushButton:pressed {
+                    color: white;
+                    background-color: rgba(0, 0, 0, 255);
+                }
+                """)
+        else: # Always visible
+            if avg_background_rgb >= 223: # Unhovered is black X on light background
+                self.next_pushbutton.setStyleSheet("""
+                    QPushButton {
+                        width: 3.6em;
+                    height: 3.6em;
+                        color: black;
+                        background-color: rgba(223, 0, 0, 0); 
+                        font-weight: bold;
+                        border-width: 0px;
+                        border-style: solid;
+                        border-color: transparent;
+                        font-size: 20pt;
+                    }
+                    QPushButton:hover {
+                        color: white;
+                        background-color: rgba(31, 31, 31, 223);
+                    }
+                    QPushButton:pressed {
+                        color: white;
+                        background-color: rgba(0, 0, 0, 255);
+                    }
+                    """)
+            else: # Unhovered is white X on dark background
+                self.next_pushbutton.setStyleSheet("""
+                    QPushButton {
+                        width: 3.6em;
+                        height: 3.6em;
+                        color: white;
+                        background-color: rgba(223, 223, 223, 0); 
+                        font-weight: bold;
+                        border-width: 0px;
+                        border-style: solid;
+                        border-color: transparent;
+                        font-size: 20pt;
+                    }
+                    QPushButton:hover {
+                        color: black;
+                        background-color: rgba(223, 223, 223, 223);
+                    }
+                    QPushButton:pressed {
+                        color: black;
+                        background-color: rgba(255, 255, 255, 255);
+                    }
+                    """)
             
         
     def set_scene_background(self, brush):
@@ -477,6 +569,7 @@ class SplitView(QtWidgets.QFrame):
         self.set_scene_background(brush)
         self._scene_main_topleft.background_color = color
         self.refresh_close_pushbutton_stylesheet()
+        self.refresh_next_pushbutton_stylesheet()
 
     def update_sync_zoom_by(self, by: str):
         """[str] Update right-click menu of sync zoom by."""
@@ -878,6 +971,9 @@ class SplitView(QtWidgets.QFrame):
 
     was_clicked_close_pushbutton = QtCore.pyqtSignal()
     """Emitted when close pushbutton is clicked (pressed+released)."""
+
+    was_clicked_next_pushbutton = QtCore.pyqtSignal()
+    """Emitted when next pushbutton is clicked."""
 
     was_set_global_transform_mode = QtCore.pyqtSignal(bool)
     """Emitted when transform mode is set for all views in right-click menu (passes it along)."""
