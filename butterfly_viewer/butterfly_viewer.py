@@ -247,6 +247,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self.is_interface_showing = True
         self.is_quiet_mode = False
+        self._was_interface_hidden_because_of_fullscreen = False
         self.is_global_transform_mode_smooth = False
         self.scene_background_color = None
         self.sync_zoom_by = "box"
@@ -659,6 +660,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_fullscreen = True
         if self.fullscreen_pushbutton:
             self.fullscreen_pushbutton.setChecked(True)
+        
+        if self.is_interface_showing:
+            self.show_interface_off()
+            self._was_interface_hidden_because_of_fullscreen = True
 
         if self.activeMdiChild:
             self.synchPan(self.activeMdiChild)
@@ -689,6 +694,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         if self.fullscreen_pushbutton:
             self.fullscreen_pushbutton.setChecked(False)
             self.fullscreen_pushbutton.setAttribute(QtCore.Qt.WA_UnderMouse, False)
+
+        if self._was_interface_hidden_because_of_fullscreen:
+            self.show_interface_on()
+            self._was_interface_hidden_because_of_fullscreen = False
 
         self.refreshPanDelayed(100)
 
