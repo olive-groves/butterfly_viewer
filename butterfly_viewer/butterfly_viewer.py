@@ -818,8 +818,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         """Tile the subwindows of MDIArea using previously used tile method."""
         if self.subwindow_was_just_closed:
             self.subwindow_was_just_closed = False
-            QtCore.QTimer.singleShot(50, self._mdiArea.tile_what_was_done_last_time)
-            self.refreshPanDelayed(50)
+            QtCore.QTimer.singleShot(DEFAULT_DELAY_MILLISECONDS, self._mdiArea.tile_what_was_done_last_time)
+            self.refreshPanDelayed(DEFAULT_DELAY_MILLISECONDS)
 
     def update_mdi_buttons(self, window):
         """Update the interface button 'Split Lock' based on the status of the split (locked/unlocked) in the given window.
