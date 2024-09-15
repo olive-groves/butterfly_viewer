@@ -1061,10 +1061,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         if self.activeMdiChild:
             self.activeMdiChild.fitToWindow()
 
-    def fit_to_window_delayed(self, ms=100):
-        """With a delay in [ms], fit the view of the active subwindow (if it exists)."""
-        QtCore.QTimer.singleShot(ms, self.fit_to_window)
-
     def update_split(self):
         """Update the position of the split of the active subwindow (if it exists) relying on the global mouse coordinates."""
         if self.activeMdiChild:
