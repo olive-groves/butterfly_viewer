@@ -248,6 +248,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_interface_showing = True
         self.is_quiet_mode = False
         self._was_interface_hidden_because_of_fullscreen = False
+        self._were_windows_panned_or_zoomed_since_load = False
         self.is_global_transform_mode_smooth = False
         self.scene_background_color = None
         self.sync_zoom_by = "box"
@@ -667,6 +668,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         if self.activeMdiChild:
             self.synchPan(self.activeMdiChild)
+        
+        if not self._were_windows_panned_or_zoomed_since_load:
+            self.fit_to_window_delayed()
 
     def set_fullscreen_off(self):
         """Disable fullscreen of MultiViewMainWindow.
@@ -973,6 +977,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         child.fitToWindow()
 
+        self._were_windows_panned_or_zoomed_since_load = False
+        windows = self._mdiArea.subWindowList()
+
         self.statusBar().showMessage("File loaded", 2000)
 
     def load_from_dragged_and_dropped_file(self, filename_main_topleft):
@@ -1043,6 +1050,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         """Fit the view of the active subwindow (if it exists)."""
         if self.activeMdiChild:
             self.activeMdiChild.fitToWindow()
+
+    def fit_to_window_delayed(self, ms=100):
+        """With a delay in [ms], fit the view of the active subwindow (if it exists)."""
+        QtCore.QTimer.singleShot(ms, self.fit_to_window)
 
     def update_split(self):
         """Update the position of the split of the active subwindow (if it exists) relying on the global mouse coordinates."""
@@ -1634,6 +1645,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     def panChanged(self):
         """Synchronize subwindow pans."""
         mdiChild = self.sender()
+        self._were_windows_panned_or_zoomed_since_load = True
         while mdiChild is not None and type(mdiChild) != SplitViewMdiChild:
             mdiChild = mdiChild.parent()
         if mdiChild and self._synchPanAct.isChecked():
@@ -1649,6 +1661,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     def zoomChanged(self):
         """Synchronize subwindow zooms."""
         mdiChild = self.sender()
+        self._were_windows_panned_or_zoomed_since_load = True
         if self._synchZoomAct.isChecked():
             self.synchZoom(mdiChild)
         self.updateStatusBar()
