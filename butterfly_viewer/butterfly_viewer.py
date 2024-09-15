@@ -60,6 +60,7 @@ SETTING_STATUSBAR = "statusbar"
 SETTING_SYNCHZOOM = "synchzoom"
 SETTING_SYNCHPAN = "synchpan"
 
+DEFAULT_DELAY_MILLISECONDS = 100
 
 
 class SplitViewMdiChild(SplitView):
@@ -648,7 +649,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         # The solution is to move the widget to the position of the app window and then make the widget fullscreen
         # A timer is needed for showFullScreen() to apply on the app's screen (otherwise the command is made before the widget's move is established)
         centralwidget_to_be_made_fullscreen.move(position_of_window)
-        QtCore.QTimer.singleShot(50, centralwidget_to_be_made_fullscreen.showFullScreen)
+        QtCore.QTimer.singleShot(DEFAULT_DELAY_MILLISECONDS, centralwidget_to_be_made_fullscreen.showFullScreen)
 
         self.showMinimized()
 
@@ -663,14 +664,20 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             self.fullscreen_pushbutton.setChecked(True)
         
         if self.is_interface_showing:
-            self.show_interface_off()
+            QtCore.QTimer.singleShot(
+                DEFAULT_DELAY_MILLISECONDS,
+                self.show_interface_off
+            )
             self._was_interface_hidden_because_of_fullscreen = True
 
         if self.activeMdiChild:
             self.synchPan(self.activeMdiChild)
         
         if not self._were_windows_panned_or_zoomed_since_load:
-            self.fit_to_window_delayed()
+            QtCore.QTimer.singleShot(
+                DEFAULT_DELAY_MILLISECONDS,
+                self.fit_to_window
+            )
 
     def set_fullscreen_off(self):
         """Disable fullscreen of MultiViewMainWindow.
@@ -700,10 +707,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             self.fullscreen_pushbutton.setAttribute(QtCore.Qt.WA_UnderMouse, False)
 
         if self._was_interface_hidden_because_of_fullscreen:
-            self.show_interface_on()
+            QtCore.QTimer.singleShot(
+                DEFAULT_DELAY_MILLISECONDS,
+                self.show_interface_on
+            )
             self._was_interface_hidden_because_of_fullscreen = False
 
-        self.refreshPanDelayed(100)
+        self.refreshPanDelayed(DEFAULT_DELAY_MILLISECONDS)
 
     def set_fullscreen(self, boolean):
         """Enable/disable fullscreen of MultiViewMainWindow.
