@@ -1,4 +1,4 @@
-name: C:\art\github\butterfly_viewer\env
+name: butterfly_viewer_env
 channels:
   - defaults
   - conda-forge
