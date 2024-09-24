@@ -1,6 +1,6 @@
 name: Feature request
 description: Request a feature with a form
-title: "[Feature] <title>"
+title: "[Feature] Replace this text with a short title"
 labels: ["feature"]
 body:
 - type: checkboxes
