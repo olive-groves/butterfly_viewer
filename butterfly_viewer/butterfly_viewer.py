@@ -17,6 +17,7 @@ Credits:
 
 
 
+import argparse
 import sip
 import time
 import os
@@ -1990,8 +1991,23 @@ def main():
         app (QApplication): Starts and holds the main event loop of application.
         mainWin (MultiViewMainWindow): The main window.
     """
-    import sys
+    parser = argparse.ArgumentParser(
+                prog='Butterfly Viewer',
+                description='Side-by-side image viewer with synchronized zoom and sliding overlays. Further info: https://olive-groves.github.io/butterfly_viewer/'
+            )
 
+    # Note that despite using argparse, we still forward argv to QApplication further below, so that users can optionally
+    # provide QT-specific arguments. Be sure to choose specific names for custom arguments that won't clash with QT.
+    parser.add_argument('--hide', help='If provided, hides the interface on start.', action='store_true')
+    parser.add_argument('--fullscreen', help='If provided, fullscreens the app on start.', action='store_true')
+    parser.add_argument('--paths', nargs="*", help='If provided, automatically starts with individual (side by side) image windows supplied by these paths.')
+    parser.add_argument('--overlay_path_main_topleft', help='If provided, automatically starts with the main image (top left) supplied by this path.')
+    parser.add_argument('--overlay_path_topright', help='If provided, automatically starts with the top right image supplied by this path.')
+    parser.add_argument('--overlay_path_bottomleft', help='If provided, automatically starts with the bottom left image supplied by this path.')
+    parser.add_argument('--overlay_path_bottomright', help='If provided, automatically starts with the bottom right image supplied by this path.')
+    args = parser.parse_args()
+
+    import sys
     app = QtWidgets.QApplication(sys.argv)
     QtCore.QSettings.setDefaultFormat(QtCore.QSettings.IniFormat)
     app.setOrganizationName(COMPANY)
@@ -2003,8 +2019,36 @@ def main():
     mainWin = MultiViewMainWindow()
     mainWin.setWindowTitle(APPNAME)
 
-    mainWin.show()
+    # Load any predefined images:
+    if args.paths:
+        for path in args.paths:
+            mainWin.loadFile(path)
 
+    dda = mainWin._splitview_creator.drag_drop_area
+    preloadedImageCount = 0
+    if args.overlay_path_main_topleft:
+        dda.app_main_topleft.load_image(args.overlay_path_main_topleft)
+        preloadedImageCount+=1
+    if args.overlay_path_bottomleft:
+        dda.app_bottomleft.load_image(args.overlay_path_bottomleft)
+        preloadedImageCount+=1
+    if args.overlay_path_topright:
+        dda.app_topright.load_image(args.overlay_path_topright)
+        preloadedImageCount+=1
+    if args.overlay_path_bottomright:
+        dda.app_bottomright.load_image(args.overlay_path_bottomright)
+        preloadedImageCount+=1
+
+    if preloadedImageCount >= 2:
+        mainWin.on_create_splitview()
+
+    # Settings:
+    if args.hide:
+        mainWin.show_interface_off()
+    if args.fullscreen:
+        mainWin.set_fullscreen_on()
+
+    mainWin.show()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
