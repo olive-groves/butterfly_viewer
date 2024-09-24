@@ -1999,8 +1999,8 @@ def main():
     # Note that despite using argparse, we still forward argv to QApplication further below, so that users can optionally
     # provide QT-specific arguments. Be sure to choose specific names for custom arguments that won't clash with QT.
     parser.add_argument('--hide', help='If provided, hides the interface on start.', action='store_true')
-    parser.add_argument('--fullscreen', help='If provided, fullscreens the interface on start.', action='store_true')
-    parser.add_argument('--paths', nargs="*", help='If provided, automatically creates individual image windows supplied by these paths.')
+    parser.add_argument('--fullscreen', help='If provided, fullscreens the app on start.', action='store_true')
+    parser.add_argument('--paths', nargs="*", help='If provided, automatically starts with individual (side by side) image windows supplied by these paths.')
     parser.add_argument('--overlay_path_main_topleft', help='If provided, automatically starts with the main image (top left) supplied by this path.')
     parser.add_argument('--overlay_path_topright', help='If provided, automatically starts with the top right image supplied by this path.')
     parser.add_argument('--overlay_path_bottomleft', help='If provided, automatically starts with the bottom left image supplied by this path.')
