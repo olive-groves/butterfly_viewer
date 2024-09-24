@@ -1998,10 +1998,10 @@ def main():
 
     # Note that despite using argparse, we still forward argv to QApplication further below, so that users can optionally
     # provide QT-specific arguments. Be sure to choose specific names for custom arguments that won't clash with QT.
-    parser.add_argument('--image_path_main_topleft', help='If provided, automatically starts with the main image (top left) supplied by this path.')
-    parser.add_argument('--image_path_topright', help='If provided, automatically starts with the top right image supplied by this path.')
-    parser.add_argument('--image_path_bottomleft', help='If provided, automatically starts with the bottom left image supplied by this path.')
-    parser.add_argument('--image_path_bottomright', help='If provided, automatically starts with the bottom right image supplied by this path.')
+    parser.add_argument('--overlay_path_main_topleft', help='If provided, automatically starts with the main image (top left) supplied by this path.')
+    parser.add_argument('--overlay_path_topright', help='If provided, automatically starts with the top right image supplied by this path.')
+    parser.add_argument('--overlay_path_bottomleft', help='If provided, automatically starts with the bottom left image supplied by this path.')
+    parser.add_argument('--overlay_path_bottomright', help='If provided, automatically starts with the bottom right image supplied by this path.')
     args = parser.parse_args()
 
     import sys
@@ -2019,17 +2019,17 @@ def main():
     # Load any predefined images:
     dda = mainWin._splitview_creator.drag_drop_area
     preloadedImageCount = 0
-    if args.image_path_main_topleft:
-        dda.app_main_topleft.load_image(args.image_path_main_topleft)
+    if args.overlay_path_main_topleft:
+        dda.app_main_topleft.load_image(args.overlay_path_main_topleft)
         preloadedImageCount+=1
-    if args.image_path_bottomleft:
-        dda.app_bottomleft.load_image(args.image_path_bottomleft)
+    if args.overlay_path_bottomleft:
+        dda.app_bottomleft.load_image(args.overlay_path_bottomleft)
         preloadedImageCount+=1
-    if args.image_path_topright:
-        dda.app_topright.load_image(args.image_path_topright)
+    if args.overlay_path_topright:
+        dda.app_topright.load_image(args.overlay_path_topright)
         preloadedImageCount+=1
-    if args.image_path_bottomright:
-        dda.app_bottomright.load_image(args.image_path_bottomright)
+    if args.overlay_path_bottomright:
+        dda.app_bottomright.load_image(args.overlay_path_bottomright)
         preloadedImageCount+=1
 
     if preloadedImageCount >= 2:
