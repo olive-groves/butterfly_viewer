@@ -68,7 +68,7 @@ class QMdiAreaWithCustomSignals(QtWidgets.QMdiArea):
         windows = self.subWindowList()
         position = QtCore.QPoint()
         for window in windows:
-            rect = QtCore.QRect(0, 0, self.width(), self.height()/len(windows))
+            rect = QtCore.QRect(0, 0, self.width(), int(self.height()/len(windows)))
             window.setGeometry(rect)
             window.move(position)
             position.setY(position.y() + window.height())
@@ -85,7 +85,7 @@ class QMdiAreaWithCustomSignals(QtWidgets.QMdiArea):
         windows = self.subWindowList()
         position = QtCore.QPoint()
         for window in windows:
-            rect = QtCore.QRect(0, 0, self.width()/len(windows), self.height())
+            rect = QtCore.QRect(0, 0, int(self.width()/len(windows)), self.height())
             window.setGeometry(rect)
             window.move(position)
             position.setX(position.x() + window.width())

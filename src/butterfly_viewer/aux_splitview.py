@@ -11,7 +11,10 @@ Credits:
 
 
 
-import sip
+try:
+    import sip
+except ImportError:
+    sip = None
 import gc
 import os
 import math
@@ -20,23 +23,24 @@ from datetime import datetime
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from aux_viewing import SynchableGraphicsView
-from aux_trackers import EventTracker, EventTrackerSplitBypassDeadzone
-from aux_functions import strippedName, determineSyncSenderDimension, determineSyncAdjustmentFactor
-from aux_labels import FilenameLabel
-from aux_scenes import CustomQGraphicsScene
-from aux_comments import CommentItem
-from aux_rulers import RulerItem
+from .aux_viewing import SynchableGraphicsView
+from .aux_trackers import EventTracker, EventTrackerSplitBypassDeadzone
+from .aux_functions import strippedName, determineSyncSenderDimension, determineSyncAdjustmentFactor
+from .aux_labels import FilenameLabel
+from .aux_scenes import CustomQGraphicsScene
+from .aux_comments import CommentItem
+from .aux_rulers import RulerItem
 
 
 
-sip.setapi('QDate', 2)
-sip.setapi('QTime', 2)
-sip.setapi('QDateTime', 2)
-sip.setapi('QUrl', 2)
-sip.setapi('QTextStream', 2)
-sip.setapi('QVariant', 2)
-sip.setapi('QString', 2)
+if sip:
+    sip.setapi('QDate', 2)
+    sip.setapi('QTime', 2)
+    sip.setapi('QDateTime', 2)
+    sip.setapi('QUrl', 2)
+    sip.setapi('QTextStream', 2)
+    sip.setapi('QVariant', 2)
+    sip.setapi('QString', 2)
 
     
 
@@ -182,8 +186,8 @@ class SplitView(QtWidgets.QFrame):
         self._view_bottomleft.setSizePolicy(size_policy)
 
         # By default the split is set to half the widget's size so all pixmap views are equally sized at the start
-        self._view_layoutdriving_topleft.setMaximumWidth(self.width()/2.0)
-        self._view_layoutdriving_topleft.setMaximumHeight(self.height()/2.0)
+        self._view_layoutdriving_topleft.setMaximumWidth(int(self.width()/2.0))
+        self._view_layoutdriving_topleft.setMaximumHeight(int(self.height()/2.0))
         
         if pixmap_main_topleft: # Instantiate transform and resizing
             self.pixmap_main_topleft = pixmap_main_topleft
@@ -529,7 +533,7 @@ class SplitView(QtWidgets.QFrame):
         if percent_of_visible:
             x = x_percent*self.width()
             y = y_percent*self.height()
-            point_of_split_on_widget = QtCore.QPoint(x, y)
+            point_of_split_on_widget = QtCore.QPoint(int(x), int(y))
         else:
             width_pixmap_main_topleft = self.imageWidth
             height_pixmap_main_topleft = self.imageHeight
@@ -563,14 +567,14 @@ class SplitView(QtWidgets.QFrame):
         point_of_mouse_on_widget.setX(point_of_mouse_on_widget.x()+1) # Offset +1 needed to have mouse cursor be hovering over the main scene (e.g., to allow manipulation of graphics item)
         point_of_mouse_on_widget.setY(point_of_mouse_on_widget.y()+1)
 
-        self.last_updated_point_of_split_on_scene_main = self._view_main_topleft.mapToScene(point_of_mouse_on_widget.x(), point_of_mouse_on_widget.y())
+        self.last_updated_point_of_split_on_scene_main = self._view_main_topleft.mapToScene(int(point_of_mouse_on_widget.x()), int(point_of_mouse_on_widget.y()))
         
         point_of_bottom_right_on_widget = QtCore.QPointF(self.width(), self.height())
         
         point_of_widget_origin_on_scene_main = self._view_main_topleft.mapToScene(0,0)
 
-        point_of_split_on_scene_main = self._view_main_topleft.mapToScene(max(point_of_mouse_on_widget.x(),0),max(point_of_mouse_on_widget.y(),0))
-        point_of_bottom_right_on_scene_main = self._view_main_topleft.mapToScene(point_of_bottom_right_on_widget.x(), point_of_bottom_right_on_widget.y())
+        point_of_split_on_scene_main = self._view_main_topleft.mapToScene(int(max(point_of_mouse_on_widget.x(),0)),int(max(point_of_mouse_on_widget.y(),0)))
+        point_of_bottom_right_on_scene_main = self._view_main_topleft.mapToScene(int(point_of_bottom_right_on_widget.x()), int(point_of_bottom_right_on_widget.y()))
         
         self._view_layoutdriving_topleft.setMaximumWidth(max(point_of_mouse_on_widget.x(),0))
         self._view_layoutdriving_topleft.setMaximumHeight(max(point_of_mouse_on_widget.y(),0))
@@ -613,7 +617,7 @@ class SplitView(QtWidgets.QFrame):
         
         point_of_widget_origin_on_scene_main = self._view_main_topleft.mapToScene(0,0)
         point_of_split_on_scene_main = self._view_main_topleft.mapToScene(max(point_of_mouse_on_widget.x(),0),max(point_of_mouse_on_widget.y(),0))
-        point_of_bottom_right_on_scene_main = self._view_main_topleft.mapToScene(point_of_bottom_right_on_widget.x(), point_of_bottom_right_on_widget.y())
+        point_of_bottom_right_on_scene_main = self._view_main_topleft.mapToScene(int(point_of_bottom_right_on_widget.x()), int(point_of_bottom_right_on_widget.y()))
 
         self._view_layoutdriving_topleft.setMaximumWidth(max(point_of_mouse_on_widget.x(),0))
         self._view_layoutdriving_topleft.setMaximumHeight(max(point_of_mouse_on_widget.y(),0))
@@ -1390,7 +1394,7 @@ class SplitView(QtWidgets.QFrame):
         """
     
         pen = QtGui.QPen() 
-        pen.setWidth(0.1)
+        pen.setWidth(1)
         pen.setColor(QtCore.Qt.red)
         pen.setCapStyle(QtCore.Qt.SquareCap)
         pen.setJoinStyle(QtCore.Qt.MiterJoin)

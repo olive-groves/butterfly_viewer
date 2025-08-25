@@ -18,22 +18,27 @@ Credits:
 
 
 import argparse
-import sip
 import time
 import os
 from datetime import datetime
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from aux_splitview import SplitView
-from aux_functions import strippedName, toBool, determineSyncSenderDimension, determineSyncAdjustmentFactor
-from aux_trackers import EventTrackerSplitBypassInterface
-from aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitViewManager
-from aux_mdi import QMdiAreaWithCustomSignals
-from aux_layouts import GridLayoutFloatingShadow
-from aux_exif import get_exif_rotation_angle
-from aux_buttons import ViewerButton
-import icons_rc
+# sip is not needed with newer PyQt5 versions
+try:
+    import sip
+except ImportError:
+    sip = None
+
+from .aux_splitview import SplitView
+from .aux_functions import strippedName, toBool, determineSyncSenderDimension, determineSyncAdjustmentFactor
+from .aux_trackers import EventTrackerSplitBypassInterface
+from .aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitViewManager
+from .aux_mdi import QMdiAreaWithCustomSignals
+from .aux_layouts import GridLayoutFloatingShadow
+from .aux_exif import get_exif_rotation_angle
+from .aux_buttons import ViewerButton
+from . import icons_rc
 
 
 
@@ -41,13 +46,15 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"]   = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"]             = "1"
 
-sip.setapi('QDate', 2)
-sip.setapi('QTime', 2)
-sip.setapi('QDateTime', 2)
-sip.setapi('QUrl', 2)
-sip.setapi('QTextStream', 2)
-sip.setapi('QVariant', 2)
-sip.setapi('QString', 2)
+# Set API versions if sip is available
+if sip is not None:
+    sip.setapi('QDate', 2)
+    sip.setapi('QTime', 2)
+    sip.setapi('QDateTime', 2)
+    sip.setapi('QUrl', 2)
+    sip.setapi('QTextStream', 2)
+    sip.setapi('QVariant', 2)
+    sip.setapi('QString', 2)
 
 COMPANY = "Butterfly Apps"
 DOMAIN = "https://github.com/olive-groves/butterfly_viewer/"
@@ -1128,7 +1135,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         
             # Use mouse position to grab scene coordinates (activeMdiChild?)
             active_view = self.activeMdiChild._view_main_topleft
-            point_of_mouse_on_scene = active_view.mapToScene(point_of_mouse_on_viewport.x(), point_of_mouse_on_viewport.y())
+            point_of_mouse_on_scene = active_view.mapToScene(int(point_of_mouse_on_viewport.x()), int(point_of_mouse_on_viewport.y()))
 
             if not self._label_mouse.isVisible():
                 self._label_mouse.show()

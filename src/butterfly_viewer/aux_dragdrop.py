@@ -17,8 +17,8 @@ import time
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from aux_labels import FilenameLabel
-from aux_exif import get_exif_rotation_angle
+from .aux_labels import FilenameLabel
+from .aux_exif import get_exif_rotation_angle
 
 
 class ImageLabel(QtWidgets.QLabel):

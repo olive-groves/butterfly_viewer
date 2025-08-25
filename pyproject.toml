@@ -1,0 +1,75 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "butterfly-viewer"
+version = "1.1.0"
+description = "Multi-image viewer for comparing images with synchronized zooming, panning, and sliding overlays"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    { name = "Butterfly Apps" },
+]
+keywords = ["image-viewer", "multi-image", "comparison", "synchronization", "overlay"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics :: Viewers",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+license = { file = "LICENSE.txt" }
+urls = { homepage = "https://github.com/olive-groves/butterfly_viewer/" }
+dependencies = [
+    "PyQt5>=5.9.2",
+    "PyQt5-sip>=12.0.0",
+    "piexif>=1.1.3",
+]
+
+[project.scripts]
+butterfly-viewer = "butterfly_viewer.butterfly_viewer:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-qt>=4.0",
+    "black>=22.0",
+    "flake8>=4.0",
+    "mypy>=0.950",
+    "build>=0.8",
+]
+
+[tool.hatchling.build.targets.wheel]
+packages = ["src/butterfly_viewer"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+include = '\.pyi?$'
+extend-exclude = '''
+# A regex preceded by ^/ will apply only to files and directories
+# in the root of the project.
+^/src/butterfly_viewer/icons_rc\.py$
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+exclude = ["src/butterfly_viewer/icons_rc.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --tb=short"
