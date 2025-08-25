@@ -111,8 +111,8 @@ class SynchableGraphicsView(QtWidgets.QGraphicsView):
     def scrollState(self):
         """Tuple of percentage of scene extents
         *(sceneWidthPercent, sceneHeightPercent)*"""
-        centerPoint = self.mapToScene(self.viewport().width()/2,
-                                      self.viewport().height()/2)
+        centerPoint = self.mapToScene(int(self.viewport().width()/2),
+                                      int(self.viewport().height()/2))
         sceneRect = self.sceneRect()
         centerWidth = centerPoint.x() - sceneRect.left()
         centerHeight = centerPoint.y() - sceneRect.top()
@@ -279,9 +279,9 @@ class SynchableGraphicsView(QtWidgets.QGraphicsView):
     def centerView(self):
         """Center view."""
         sbar = self.verticalScrollBar()
-        sbar.setValue((sbar.maximum() + sbar.minimum())/2)
+        sbar.setValue((sbar.maximum() + sbar.minimum())//2)
         sbar = self.horizontalScrollBar()
-        sbar.setValue((sbar.maximum() + sbar.minimum())/2)
+        sbar.setValue((sbar.maximum() + sbar.minimum())//2)
 
     def enableScrollBars(self, enable):
         """Set visibility of the view's scrollbars.

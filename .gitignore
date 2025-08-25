@@ -132,6 +132,9 @@ venv.bak/
 # Env for docs, installer, and any other env folder
 env*/
 
+# uv
+.uv_cache/
+uv.lock
 
 # Spyder project settings
 .spyderproject

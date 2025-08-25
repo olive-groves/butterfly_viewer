@@ -12,9 +12,9 @@ Creates the base (main) scene of the SplitView for the Butterfly Viewer and Regi
 
 from PyQt5 import QtCore, QtWidgets
 
-from aux_comments import CommentItem
-from aux_rulers import RulerItem
-from aux_dialogs import PixelUnitConversionInputDialog
+from .aux_comments import CommentItem
+from .aux_rulers import RulerItem
+from .aux_dialogs import PixelUnitConversionInputDialog
 
 
 

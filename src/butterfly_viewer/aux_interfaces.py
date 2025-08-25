@@ -17,9 +17,9 @@ import time
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-from aux_dragdrop import FourDragDropImageLabel
-from aux_buttons import ViewerButton
-import icons_rc
+from .aux_dragdrop import FourDragDropImageLabel
+from .aux_buttons import ViewerButton
+from . import icons_rc
 
 
 
@@ -271,12 +271,12 @@ class SliderDeluxe(QtWidgets.QWidget):
 
             painter_icon.setPen(QtCore.Qt.NoPen)
             painter_icon.setBrush(QtCore.Qt.black)
-            painter_icon.drawRect(x_0, y_0, 2.0*x + 1, 2.0*y + 1)
+            painter_icon.drawRect(x_0, y_0, int(2.0*x + 1), int(2.0*y + 1))
 
             painter_icon.setPen(QtCore.Qt.NoPen)
             painter_icon.setBrush(QtCore.Qt.white)
-            painter_icon.drawRect(1 + x_0, 1 + y_0, x, y)
-            painter_icon.drawRect(1 + x_0 + x, 1 + y_0 + y, x, y)
+            painter_icon.drawRect(1 + x_0, 1 + y_0, int(x), int(y))
+            painter_icon.drawRect(int(1 + x_0 + x), int(1 + y_0 + y), int(x), int(y))
 
             painter_icon.end()
             
@@ -285,7 +285,7 @@ class SliderDeluxe(QtWidgets.QWidget):
 
             painter_outline.setPen(QtCore.Qt.black)
             painter_outline.setBrush(QtCore.Qt.NoBrush)
-            painter_outline.drawRect(x_0, y_0, 2.0*x + 1, 2.0*y + 1)
+            painter_outline.drawRect(x_0, y_0, int(2.0*x + 1), int(2.0*y + 1))
  
             painter_outline.setPen(QtCore.Qt.black)
             painter_outline.setBrush(QtCore.Qt.NoBrush)
