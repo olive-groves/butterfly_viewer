@@ -3,8 +3,6 @@
 """Ruler items for CustomQGraphicsScene.
 
 Not intended as a script. Used in Butterfly Viewer.
-
-RulerItem creates a movable ruler on QGraphicsScene with specified units of length.
 """
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,27 +10,19 @@ RulerItem creates a movable ruler on QGraphicsScene with specified units of leng
 
 import sys
 import math
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt6 import QtWidgets, QtCore, QtGui
 
 
 
 class CustomItem(QtWidgets.QGraphicsEllipseItem):
-    """Create an endpoint for RulerItem and handle change in ruler position.
-
-    Instantiated with a QRectF as input argument. For example:
-        rect     = QtCore.QRectF(point_topleft, point_bottomright)
-        endpoint = CustomItem(rect)
-
-    As implemented in RulerItem, the two endpoints reference each other when an endpoint is dragged.
-    This allows the other graphics items of the RulerItem to follow the endpoint movement.
-    """
+    """Endpoint for RulerItem."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.setFlag(self.ItemIsMovable)
-        self.setFlag(self.ItemSendsGeometryChanges)
-        self.setFlag(self.ItemIgnoresTransformations)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
         self.line = None
         self.is_point = None
         self.text = None
@@ -44,48 +34,25 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
         self.y_origin = -1
 
     def add_line(self, line, is_point):
-        """Add QGraphicsLineItem as reference.
-        
-        Args:
-            line (QGraphicsLineItem)
-            is_point (bool): True if endpoint is moving; False if static."""
         self.line = line
         self.is_point = is_point
 
     def add_text(self, text):
-        """QGraphicsTextItem: Add text item to center of ruler."""
         self.text = text
 
     def add_text1(self, text):
-        """QGraphicsTextItem: Add text item to first endpoint of ruler."""
         self.text1 = text
 
     def add_text2(self, text):
-        """QGraphicsTextItem: Add text item to second endpoint of ruler."""
         self.text2 = text
 
     def set_px_per_unit(self, px_per_unit):
-        """float: Set conversion for pixels to specified unit of length."""
         self.px_per_unit = px_per_unit
 
     def set_unit(self, unit):
-        """str: Set abbreviation for unit of length (for example, "mm" or "px")."""
         self.unit = unit
 
     def set_relative_origin_position(self, relative_origin_position):
-        """Set position of origin for coordinates, distances, and angles.
-
-        Two options for relative origin:
-            "topleft" has (0,0) at the top-left pixel of the image, which is typical for graphics
-             systems. One can think of this as a standard XY coordinate system mirrored about the 
-             X-axis, where Y increases downwards. This means clockwise rotation is a positive angle.
-             
-            "bottomright" has (0,0) at the bottom-left pixel of the image, just like a standard XY 
-             coordinate system. This means counter-clockwise rotation is a positive angle.
-        
-        Args:
-            relative_origin_position (str): "topleft" or "bottomleft"
-        """
         self.relative_origin_position = relative_origin_position
         if self.relative_origin_position == "topleft":
             self.y_origin = +1
@@ -93,25 +60,20 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
             self.y_origin = -1
 
     def itemChange(self, change, value):
-        """Extend itemChange to update the positions and texts of the ruler line and labels."""
-        if change == self.ItemPositionChange and self.scene():
+        if change == QtWidgets.QGraphicsItem.GraphicsItemChange.ItemPositionChange and self.scene():
             new_pos = value
 
             self.move_line_to_center(new_pos)
-
             self.update_text()
             self.move_text(new_pos)
-
             self.update_text1()
             self.move_text1(new_pos)
-
             self.update_text2()
             self.move_text2(new_pos)
 
         return super(CustomItem, self).itemChange(change, value)
 
     def move_line_to_center(self, new_pos):
-        """QPointF: Set the center of the ruler line to a position."""
         x_offset = self.rect().x() + self.rect().width()/2
         y_offset = self.rect().y() + self.rect().height()/2
 
@@ -123,7 +85,6 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
         self.line.setLine(QtCore.QLineF(p1, p2))
 
     def update_text(self):
-        """Refresh the text of the ruler's center label."""
         length_px = self.get_line_length(self.line.line())
         unit = self.unit
         px_per_unit = self.px_per_unit
@@ -133,7 +94,6 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
         self.text.setHtml(string)
 
     def update_text1(self):
-        """Refresh the text of the ruler's endpoint 1 label."""
         length_px = self.get_line_length(self.line.line())
         unit = self.unit
         px_per_unit = self.px_per_unit
@@ -154,7 +114,6 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
         self.text1.setHtml(string)
 
     def update_text2(self):
-        """Refresh the text of the ruler's endpoint 2 label."""
         length_px = self.get_line_length(self.line.line())
         unit = self.unit
         px_per_unit = self.px_per_unit
@@ -175,34 +134,24 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
         self.text2.setHtml(string)
 
     def move_text(self, new_pos):
-        """QPointF: Set the position of the ruler's center label."""
         if self.text:
             center_pos = self.line.line().center()
-            x_offset = center_pos.x()
-            y_offset = center_pos.y()
-            new_pos = QtCore.QPointF(x_offset, y_offset)
+            new_pos = QtCore.QPointF(center_pos.x(), center_pos.y())
             self.text.setPos(new_pos)
 
     def move_text1(self, new_pos):
-        """QPointF: Set the position of the ruler's endpoint 1 label."""
         if self.text:
             pos = self.line.line().p1()
-            x_offset = pos.x()
-            y_offset = pos.y()
-            new_pos = QtCore.QPointF(x_offset, y_offset)
+            new_pos = QtCore.QPointF(pos.x(), pos.y())
             self.text1.setPos(new_pos)
 
     def move_text2(self, new_pos):
-        """QPointF: Set the position of the ruler's endpoint 2 label."""
         if self.text:
             pos = self.line.line().p2()
-            x_offset = pos.x()
-            y_offset = pos.y()
-            new_pos = QtCore.QPointF(x_offset, y_offset)
+            new_pos = QtCore.QPointF(pos.x(), pos.y())
             self.text2.setPos(new_pos)
 
     def refresh_positions(self):
-        """Convenience function to refresh (update) positions of the ruler's line and endpoints."""
         self.move_line_to_center(self.pos())
         self.move_text(self.pos())
         self.update_text()
@@ -210,14 +159,6 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
         self.update_text2()
 
     def get_line_length(self, line):
-        """Calculate the length of a QLineF.
-        
-        Args:
-            line (QLineF)
-            
-        Returns:
-            length (float)
-        """
         dx = line.x2() - line.x1()
         dy = line.y2() - line.y1()
         length = math.sqrt(dx**2 + dy**2)
@@ -226,25 +167,9 @@ class CustomItem(QtWidgets.QGraphicsEllipseItem):
 
 
 class RulerItem(QtWidgets.QGraphicsRectItem):
-    """Create a movable ruler on QGraphicsScene with a specified unit of length.
+    """Movable ruler on QGraphicsScene with a specified unit of length."""
 
-    Features:
-        Draggable endpoints.
-        Center label showing absolute length.
-        Endpoint labels showing difference in absolute length, horizontal and vertical delta, and angle.
-
-    Args:
-        unit (str): The text for labeling units of ruler values.
-        px_per_mm (float): The conversion for pixels to millimeters. For example, 10 means 10 
-            pixels-per-mm, meaning the ruler value will show 1 mm when measuring 10 pixels. Set to 
-            1.0 if the ruler has units of pixels.
-        initial_pos_p1 (QPointF): The position of endpoint 1 on the scene.
-        initial_pos_p2 (QPointF): The position of endpoint 2 on the scene.
-        relative_origin_position (str): The orientation of the origin for coordinate system 
-            ("topleft" or "bottomleft").
-    """
-
-    def __init__(self, unit = "px", px_per_mm = None, initial_pos_p1=None, initial_pos_p2=None, relative_origin_position="bottomleft"):
+    def __init__(self, unit="px", px_per_mm=None, initial_pos_p1=None, initial_pos_p2=None, relative_origin_position="bottomleft"):
         super().__init__()
 
         self.unit = unit
@@ -267,7 +192,6 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
             self.px_per_unit = px_per_mm * mm_per_unit
 
         self._mm_per_unit = mm_per_unit
-
         self.relative_origin_position = relative_origin_position
 
         if not initial_pos_p1:
@@ -278,18 +202,17 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
         pen = QtGui.QPen()
         pen.setWidth(2)
         pen.setCosmetic(True)
-        pen.setColor(QtCore.Qt.white) # setColor also works
-        pen.setCapStyle(QtCore.Qt.SquareCap)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setColor(QtGui.QColor(QtCore.Qt.GlobalColor.white))
+        pen.setCapStyle(QtCore.Qt.PenCapStyle.SquareCap)
+        pen.setJoinStyle(QtCore.Qt.PenJoinStyle.MiterJoin)
             
         brush = QtGui.QBrush()
-        brush.setColor(QtCore.Qt.white)
-        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(QtGui.QColor(QtCore.Qt.GlobalColor.white))
+        brush.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
 
         brush_black = QtGui.QBrush()
-        brush_black.setColor(QtCore.Qt.black)
-        brush_black.setStyle(QtCore.Qt.SolidPattern)
-
+        brush_black.setColor(QtGui.QColor(QtCore.Qt.GlobalColor.black))
+        brush_black.setStyle(QtCore.Qt.BrushStyle.SolidPattern)
 
         width = 8
         height = 8
@@ -302,36 +225,29 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
         self.ellipse_item1.setBrush(brush_black)
         self.ellipse_item1.setPen(pen)
 
-
         text_item = QtWidgets.QGraphicsTextItem("text")
         text_item.setPos(0,0)
         font = text_item.font()
         font.setPointSize(11)
         text_item.setFont(font)
-        text_item.setDefaultTextColor(QtCore.Qt.white)
-        text_item.setFlags(QtWidgets.QGraphicsItem.ItemIgnoresTransformations) # QtWidgets.QGraphicsItem.ItemIsSelectable
+        text_item.setDefaultTextColor(QtGui.QColor(QtCore.Qt.GlobalColor.white))
+        text_item.setFlags(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
 
         text_item1 = QtWidgets.QGraphicsTextItem("text")
         text_item1.setPos(initial_pos_p1)
         font = text_item1.font()
         font.setPointSize(10)
         text_item1.setFont(font)
-        text_item1.setDefaultTextColor(QtCore.Qt.white)
-        text_item1.setFlags(QtWidgets.QGraphicsItem.ItemIgnoresTransformations) # QtWidgets.QGraphicsItem.ItemIsSelectable
+        text_item1.setDefaultTextColor(QtGui.QColor(QtCore.Qt.GlobalColor.white))
+        text_item1.setFlags(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
         
         text_item2 = QtWidgets.QGraphicsTextItem("text")
         text_item2.setPos(initial_pos_p2)
         font = text_item2.font()
         font.setPointSize(10)
         text_item2.setFont(font)
-        text_item2.setDefaultTextColor(QtCore.Qt.white)
-        text_item2.setFlags(QtWidgets.QGraphicsItem.ItemIgnoresTransformations) # QtWidgets.QGraphicsItem.ItemIsSelectable
-
-        width = 8
-        height = 8
-
-        point_topleft = QtCore.QPointF(-width/2, -height/2)
-        point_bottomright = QtCore.QPointF(width/2, height/2)
+        text_item2.setDefaultTextColor(QtGui.QColor(QtCore.Qt.GlobalColor.white))
+        text_item2.setFlags(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
 
         ellipse_rect = QtCore.QRectF(point_topleft, point_bottomright)
 
@@ -341,7 +257,7 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
         self.ellipse_item2.setPen(pen)
 
         line_item = QtWidgets.QGraphicsLineItem(QtCore.QLineF(40, 40, 80, 80))
-        pen.setStyle(QtCore.Qt.SolidLine)
+        pen.setStyle(QtCore.Qt.PenStyle.SolidLine)
         line_item.setPen(pen)
         self.shadow_line = QtWidgets.QGraphicsDropShadowEffect(blurRadius=4, color=QtGui.QColor(0, 0, 0, 255), xOffset=0, yOffset=0)
 
@@ -373,7 +289,6 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
         self.ellipse_item1.refresh_positions()
 
     def set_and_refresh_px_per_unit(self, px_per_unit):
-        """float: Set and refresh units conversion factor (for example, if the conversion is recalculated)."""
         unit = self.unit
         if "px" != unit:
             mm_per_unit = self._mm_per_unit
@@ -384,17 +299,16 @@ class RulerItem(QtWidgets.QGraphicsRectItem):
             self.ellipse_item1.refresh_positions()
 
     def set_and_refresh_relative_origin_position(self, relative_origin_position):
-        """str: Set and refresh orientation of coordinate system (for example, if the orientation setting is changed)."""
         self.relative_origin_position = relative_origin_position
         self.ellipse_item1.set_relative_origin_position(self.relative_origin_position)
         self.ellipse_item2.set_relative_origin_position(self.relative_origin_position)
         self.ellipse_item2.refresh_positions()
         self.ellipse_item1.refresh_positions()
-        
+
 
 
 def main():
-    app =QtWidgets.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     scene = QtWidgets.QGraphicsScene()
     pixmap_item = QtWidgets.QGraphicsPixmapItem()
@@ -413,7 +327,7 @@ def main():
     view = QtWidgets.QGraphicsView(scene)
     view.show()
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 

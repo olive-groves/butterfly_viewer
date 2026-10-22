@@ -16,43 +16,38 @@ Credits:
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
-
 import argparse
-import sip
-import time
 import os
+import time
 from datetime import datetime
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-from aux_splitview import SplitView
-from aux_functions import strippedName, toBool, determineSyncSenderDimension, determineSyncAdjustmentFactor
-from aux_trackers import EventTrackerSplitBypassInterface
-from aux_interfaces import SplitViewCreator, SlidersOpacitySplitViews, SplitViewManager
-from aux_mdi import QMdiAreaWithCustomSignals
-from aux_layouts import GridLayoutFloatingShadow
-from aux_exif import get_exif_rotation_angle
-from aux_buttons import ViewerButton
 import icons_rc
-
-
+import psutil
+from aux_buttons import ViewerButton
+from aux_exif import get_exif_rotation_angle
+from aux_functions import (
+    determineSyncAdjustmentFactor,
+    determineSyncSenderDimension,
+    strippedName,
+    toBool,
+    setAvailableMemory,
+    size_format
+)
+from aux_interfaces import SlidersOpacitySplitViews, SplitViewCreator, SplitViewManager
+from aux_layouts import GridLayoutFloatingShadow
+from aux_mdi import QMdiAreaWithCustomSignals
+from aux_splitview import SplitView
+from aux_trackers import EventTrackerSplitBypassInterface
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"]   = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"]             = "1"
 
-sip.setapi('QDate', 2)
-sip.setapi('QTime', 2)
-sip.setapi('QDateTime', 2)
-sip.setapi('QUrl', 2)
-sip.setapi('QTextStream', 2)
-sip.setapi('QVariant', 2)
-sip.setapi('QString', 2)
-
 COMPANY = "Butterfly Apps"
 DOMAIN = "https://github.com/olive-groves/butterfly_viewer/"
 APPNAME = "Butterfly Viewer"
-VERSION = "1.1"
+VERSION = "1.2"
 
 SETTING_RECENTFILELIST = "recentfilelist"
 SETTING_FILEOPEN = "fileOpenDialog"
@@ -60,7 +55,7 @@ SETTING_SCROLLBARS = "scrollbars"
 SETTING_STATUSBAR = "statusbar"
 SETTING_SYNCHZOOM = "synchzoom"
 SETTING_SYNCHPAN = "synchpan"
-
+SETTING_LABELS_IN_QUIETMODE = "labelsinquietmode"
 
 
 class SplitViewMdiChild(SplitView):
@@ -80,10 +75,10 @@ class SplitViewMdiChild(SplitView):
     def __init__(self, pixmap, filename_main_topleft, name, pixmap_topright, pixmap_bottomleft, pixmap_bottomright, transform_mode_smooth):
         super().__init__(pixmap, filename_main_topleft, name, pixmap_topright, pixmap_bottomleft, pixmap_bottomright, transform_mode_smooth)
 
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self._isUntitled = True
 
-        self.toggle_lock_split_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Shift+X"), self)
+        self.toggle_lock_split_shortcut = QtGui.QShortcut(QtGui.QKeySequence("Shift+X"), self)
         self.toggle_lock_split_shortcut.activated.connect(self.toggle_lock_split)
 
         self._sync_this_zoom = True
@@ -165,17 +160,17 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self._mdiArea.first_subwindow_was_opened.connect(self.on_first_subwindow_was_opened)
         self._mdiArea.last_remaining_subwindow_was_closed.connect(self.on_last_remaining_subwindow_was_closed)
 
-        self._mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self._mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self._mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self._mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self._mdiArea.subWindowActivated.connect(self.subWindowActivated)
 
         self._mdiArea.setBackground(QtGui.QColor(32,32,32))
 
-        self._label_mouse = QtWidgets.QLabel() # Pixel coordinates of mouse in a view
+        self._label_mouse = QtWidgets.QLabel()
         self._label_mouse.setText("")
         self._label_mouse.adjustSize()
         self._label_mouse.setVisible(False)
-        self._label_mouse.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignBottom)
+        self._label_mouse.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft | QtCore.Qt.AlignmentFlag.AlignBottom)
         self._label_mouse.setStyleSheet("QLabel {color: white; background-color: rgba(0, 0, 0, 191); border: 0px solid black; margin-left: 0.09em; margin-top: 0.09em; margin-right: 0.09em; margin-bottom: 0.09em; font-size: 7.5pt; border-radius: 0.09em; }")
 
         self._splitview_creator = SplitViewCreator()
@@ -183,8 +178,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         tracker_creator = EventTrackerSplitBypassInterface(self._splitview_creator)
         tracker_creator.mouse_position_changed.connect(self.update_split)
         layout_mdiarea_topleft = GridLayoutFloatingShadow()
-        layout_mdiarea_topleft.addWidget(self._label_mouse, 1, 0, alignment=QtCore.Qt.AlignLeft|QtCore.Qt.AlignBottom)
-        layout_mdiarea_topleft.addWidget(self._splitview_creator, 0, 0, alignment=QtCore.Qt.AlignLeft)
+        layout_mdiarea_topleft.addWidget(self._label_mouse, 1, 0, alignment=QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignBottom)
+        layout_mdiarea_topleft.addWidget(self._splitview_creator, 0, 0, alignment=QtCore.Qt.AlignmentFlag.AlignLeft)
         self.interface_mdiarea_topleft = QtWidgets.QWidget()
         self.interface_mdiarea_topleft.setLayout(layout_mdiarea_topleft)
 
@@ -210,19 +205,19 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self._splitview_manager.lock_split_unlocked.connect(self.unlock_split)
 
         layout_mdiarea_bottomleft = GridLayoutFloatingShadow()
-        layout_mdiarea_bottomleft.addWidget(self._sliders_opacity_splitviews, 0, 0, alignment=QtCore.Qt.AlignBottom)
-        layout_mdiarea_bottomleft.addWidget(self._splitview_manager, 0, 1, alignment=QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        layout_mdiarea_bottomleft.addWidget(self._sliders_opacity_splitviews, 0, 0, alignment=QtCore.Qt.AlignmentFlag.AlignBottom)
+        layout_mdiarea_bottomleft.addWidget(self._splitview_manager, 0, 1, alignment=QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
         self.interface_mdiarea_bottomleft = QtWidgets.QWidget()
         self.interface_mdiarea_bottomleft.setLayout(layout_mdiarea_bottomleft)
         
         
-        self.centralwidget_during_fullscreen_pushbutton = QtWidgets.QToolButton() # Needed for users to return the image viewer to the main window if the window of the viewer is lost during fullscreen
-        self.centralwidget_during_fullscreen_pushbutton.setText("Close Fullscreen") # Needed for users to return the image viewer to the main window if the window of the viewer is lost during fullscreen
+        self.centralwidget_during_fullscreen_pushbutton = QtWidgets.QToolButton()
+        self.centralwidget_during_fullscreen_pushbutton.setText("Close Fullscreen")
         self.centralwidget_during_fullscreen_pushbutton.clicked.connect(self.set_fullscreen_off)
         self.centralwidget_during_fullscreen_pushbutton.setStyleSheet("font-size: 11pt")
         self.centralwidget_during_fullscreen_layout = QtWidgets.QVBoxLayout()
-        self.centralwidget_during_fullscreen_layout.setAlignment(QtCore.Qt.AlignCenter)
-        self.centralwidget_during_fullscreen_layout.addWidget(self.centralwidget_during_fullscreen_pushbutton, alignment=QtCore.Qt.AlignCenter)
+        self.centralwidget_during_fullscreen_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.centralwidget_during_fullscreen_layout.addWidget(self.centralwidget_during_fullscreen_pushbutton, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
         self.centralwidget_during_fullscreen = QtWidgets.QWidget()
         self.centralwidget_during_fullscreen.setLayout(self.centralwidget_during_fullscreen_layout)
 
@@ -230,7 +225,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.fullscreen_pushbutton.setIcon(":/icons/full-screen.svg")
         self.fullscreen_pushbutton.setCheckedIcon(":/icons/full-screen-exit.svg")
         self.fullscreen_pushbutton.setToolTip("Fullscreen on/off (F)")
-        self.fullscreen_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.fullscreen_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.fullscreen_pushbutton.setMouseTracking(True)
         self.fullscreen_pushbutton.setCheckable(True)
         self.fullscreen_pushbutton.toggled.connect(self.set_fullscreen)
@@ -240,29 +235,30 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.interface_toggle_pushbutton.setCheckedIcon(":/icons/eye.svg")
         self.interface_toggle_pushbutton.setIcon(":/icons/eye-cancelled.svg")
         self.interface_toggle_pushbutton.setToolTip("Hide interface (H)")
-        self.interface_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.interface_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.interface_toggle_pushbutton.setMouseTracking(True)
         self.interface_toggle_pushbutton.setCheckable(True)
         self.interface_toggle_pushbutton.setChecked(True)
-        self.interface_toggle_pushbutton.clicked.connect(self.show_interface)
+        self.interface_toggle_pushbutton.clicked.connect(self.toggle_interface)
 
         self.is_interface_showing = True
         self.is_quiet_mode = False
         self.is_global_transform_mode_smooth = False
         self.scene_background_color = None
         self.sync_zoom_by = "box"
+        self.show_labels_in_quiet_mode = True
 
         self.close_all_pushbutton = ViewerButton(style="trigger-severe")
         self.close_all_pushbutton.setIcon(":/icons/clear.svg")
         self.close_all_pushbutton.setToolTip("Close all image windows")
-        self.close_all_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.close_all_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.close_all_pushbutton.setMouseTracking(True)
         self.close_all_pushbutton.clicked.connect(self._mdiArea.closeAllSubWindows)
 
         self.tile_default_pushbutton = ViewerButton(style="trigger")
         self.tile_default_pushbutton.setIcon(":/icons/capacity.svg")
         self.tile_default_pushbutton.setToolTip("Grid arrange windows")
-        self.tile_default_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.tile_default_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.tile_default_pushbutton.setMouseTracking(True)
         self.tile_default_pushbutton.clicked.connect(self._mdiArea.tileSubWindows)
         self.tile_default_pushbutton.clicked.connect(self.fit_to_window)
@@ -271,7 +267,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_horizontally_pushbutton = ViewerButton(style="trigger")
         self.tile_horizontally_pushbutton.setIcon(":/icons/split-vertically.svg")
         self.tile_horizontally_pushbutton.setToolTip("Horizontally arrange windows in a single row")
-        self.tile_horizontally_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.tile_horizontally_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.tile_horizontally_pushbutton.setMouseTracking(True)
         self.tile_horizontally_pushbutton.clicked.connect(self._mdiArea.tile_subwindows_horizontally)
         self.tile_horizontally_pushbutton.clicked.connect(self.fit_to_window)
@@ -280,7 +276,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.tile_vertically_pushbutton = ViewerButton(style="trigger")
         self.tile_vertically_pushbutton.setIcon(":/icons/split-horizontally.svg")
         self.tile_vertically_pushbutton.setToolTip("Vertically arrange windows in a single column")
-        self.tile_vertically_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.tile_vertically_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.tile_vertically_pushbutton.setMouseTracking(True)
         self.tile_vertically_pushbutton.clicked.connect(self._mdiArea.tile_subwindows_vertically)
         self.tile_vertically_pushbutton.clicked.connect(self.fit_to_window)
@@ -289,14 +285,14 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.fit_to_window_pushbutton = ViewerButton(style="trigger")
         self.fit_to_window_pushbutton.setIcon(":/icons/pan.svg")
         self.fit_to_window_pushbutton.setToolTip("Fit and center image in active window (affects all if synced)")
-        self.fit_to_window_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.fit_to_window_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.fit_to_window_pushbutton.setMouseTracking(True)
         self.fit_to_window_pushbutton.clicked.connect(self.fit_to_window)
 
         self.info_pushbutton = ViewerButton(style="trigger-transparent")
         self.info_pushbutton.setIcon(":/icons/about.svg")
         self.info_pushbutton.setToolTip("About...")
-        self.info_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.info_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.info_pushbutton.setMouseTracking(True)
         self.info_pushbutton.clicked.connect(self.info_button_clicked)
 
@@ -304,7 +300,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.stopsync_toggle_pushbutton.setIcon(":/icons/refresh.svg")
         self.stopsync_toggle_pushbutton.setCheckedIcon(":/icons/refresh-cancelled.svg")
         self.stopsync_toggle_pushbutton.setToolTip("Unsynchronize zoom and pan (currently synced)")
-        self.stopsync_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.stopsync_toggle_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.stopsync_toggle_pushbutton.setMouseTracking(True)
         self.stopsync_toggle_pushbutton.setCheckable(True)
         self.stopsync_toggle_pushbutton.toggled.connect(self.set_stopsync_pushbutton)
@@ -312,20 +308,20 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.save_view_pushbutton = ViewerButton()
         self.save_view_pushbutton.setIcon(":/icons/download.svg")
         self.save_view_pushbutton.setToolTip("Save a screenshot of the viewer... | Copy screenshot to clipboard (Ctrl·C)")
-        self.save_view_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.save_view_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.save_view_pushbutton.setMouseTracking(True)
         self.save_view_pushbutton.clicked.connect(self.save_view)
 
         self.open_new_pushbutton = ViewerButton()
         self.open_new_pushbutton.setIcon(":/icons/open-file.svg")
         self.open_new_pushbutton.setToolTip("Open image(s) as single windows...")
-        self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.open_new_pushbutton.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.open_new_pushbutton.setMouseTracking(True)
         self.open_new_pushbutton.clicked.connect(self.open_multiple)
 
         self.buffer_label = ViewerButton(style="invisible")
-        self.buffer_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.buffer_label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.buffer_label.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.buffer_label.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.buffer_label.setMouseTracking(True)
 
         self.label_mdiarea = QtWidgets.QLabel()
@@ -340,8 +336,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 font-size: 10pt;
                 } 
             """)
-        self.label_mdiarea.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.label_mdiarea.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_mdiarea.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.label_mdiarea.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
         layout_mdiarea_bottomright_vertical = GridLayoutFloatingShadow()
         layout_mdiarea_bottomright_vertical.addWidget(self.fullscreen_pushbutton, 5, 0)
@@ -370,9 +366,9 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         tracker_interface_mdiarea_bottomright_horizontal.mouse_position_changed.connect(self.update_split)
 
 
-        self.loading_grayout_label = QtWidgets.QLabel("Loading...") # Needed to give users feedback when loading views
+        self.loading_grayout_label = QtWidgets.QLabel("Loading...")
         self.loading_grayout_label.setWordWrap(True)
-        self.loading_grayout_label.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        self.loading_grayout_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.loading_grayout_label.setVisible(False)
         self.loading_grayout_label.setStyleSheet("""
             QLabel { 
@@ -382,10 +378,10 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 } 
             """)
 
-        self.dragged_grayout_label = QtWidgets.QLabel("Drop to create single view(s)...") # Needed to give users feedback when dragging in images
-        self.dragged_grayout_label.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+        self.dragged_grayout_label = QtWidgets.QLabel("Drop to create single view(s)...")
+        self.dragged_grayout_label.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.dragged_grayout_label.setWordWrap(True)
-        self.dragged_grayout_label.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        self.dragged_grayout_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.dragged_grayout_label.setVisible(False)
         self.dragged_grayout_label.setStyleSheet("""
             QLabel { 
@@ -406,13 +402,13 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         layout_mdiarea.setContentsMargins(0, 0, 0, 0)
         layout_mdiarea.setSpacing(0)
         layout_mdiarea.addWidget(self._mdiArea, 0, 0)
-        layout_mdiarea.addWidget(self.label_mdiarea, 0, 0, QtCore.Qt.AlignCenter)
+        layout_mdiarea.addWidget(self.label_mdiarea, 0, 0, QtCore.Qt.AlignmentFlag.AlignCenter)
         layout_mdiarea.addWidget(self.dragged_grayout_label, 0, 0)
         layout_mdiarea.addWidget(self.loading_grayout_label, 0, 0)
-        layout_mdiarea.addWidget(self.interface_mdiarea_topleft, 0, 0, QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
-        layout_mdiarea.addWidget(self.interface_mdiarea_bottomleft, 0, 0, QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeft)
-        layout_mdiarea.addWidget(self.interface_mdiarea_bottomright_horizontal, 0, 0, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
-        layout_mdiarea.addWidget(self.interface_mdiarea_bottomright_vertical, 0, 0, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
+        layout_mdiarea.addWidget(self.interface_mdiarea_topleft, 0, 0, QtCore.Qt.AlignmentFlag.AlignTop | QtCore.Qt.AlignmentFlag.AlignLeft)
+        layout_mdiarea.addWidget(self.interface_mdiarea_bottomleft, 0, 0, QtCore.Qt.AlignmentFlag.AlignBottom | QtCore.Qt.AlignmentFlag.AlignLeft)
+        layout_mdiarea.addWidget(self.interface_mdiarea_bottomright_horizontal, 0, 0, QtCore.Qt.AlignmentFlag.AlignBottom | QtCore.Qt.AlignmentFlag.AlignRight)
+        layout_mdiarea.addWidget(self.interface_mdiarea_bottomright_vertical, 0, 0, QtCore.Qt.AlignmentFlag.AlignBottom | QtCore.Qt.AlignmentFlag.AlignRight)
 
         self.mdiarea_plus_buttons = QtWidgets.QWidget()
         self.mdiarea_plus_buttons.setLayout(layout_mdiarea)
@@ -420,13 +416,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.mdiarea_plus_buttons)
 
         self.subwindow_was_just_closed = False
-
-        self._windowMapper = QtCore.QSignalMapper(self)
-
-        self._actionMapper = QtCore.QSignalMapper(self)
-        self._actionMapper.mapped[str].connect(self.mappedImageViewerAction)
-        self._recentFileMapper = QtCore.QSignalMapper(self)
-        self._recentFileMapper.mapped[str].connect(self.openRecentFile)
 
         self.createActions()
         self.addAction(self._activateSubWindowSystemMenuAct)
@@ -445,6 +434,27 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self.setStyleSheet("QWidget{font-size: 9pt}")
 
+        QtWidgets.QApplication.instance().installEventFilter(self)
+
+    def eventFilter(self, obj, event):
+        """Global filter: Alt (without Ctrl/Shift/Meta) toggle menu bar."""
+        if event.type() == QtCore.QEvent.Type.KeyPress:
+            if event.key() == QtCore.Qt.Key.Key_Alt:
+                blockers = (QtCore.Qt.KeyboardModifier.ControlModifier |
+                            QtCore.Qt.KeyboardModifier.ShiftModifier |
+                            QtCore.Qt.KeyboardModifier.MetaModifier)
+                if not (event.modifiers() & blockers):
+                    if self.isActiveWindow():
+                        self._toggle_menu_bar()
+                        return True
+        return super().eventFilter(obj, event)
+
+    def _toggle_menu_bar(self):
+        if self.menuBar().isVisible():
+            self.menuBar().hide()
+        else:
+            self.menuBar().show()
+            self.menuBar().setFocus()
 
     # Screenshot window
 
@@ -453,7 +463,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         
         self.display_loading_grayout(True, "Screenshot copied to clipboard.")
 
-        interface_was_already_set_hidden = not self.is_interface_showing # Needed to hide the interface temporarily while grabbing a screenshot (makes sure the screenshot only shows the views)
+        interface_was_already_set_hidden = not self.is_interface_showing
         if not interface_was_already_set_hidden:
             self.show_interface_off()
 
@@ -482,15 +492,15 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             self.display_loading_grayout(False, pseudo_load_time=0)
             return
 
-        interface_was_already_set_hidden = not self.is_interface_showing # Needed to hide the interface temporarily while grabbing a screenshot (makes sure the screenshot only shows the views)
+        interface_was_already_set_hidden = not self.is_interface_showing
         if not interface_was_already_set_hidden:
             self.show_interface_off()
 
         pixmap = self._mdiArea.grab()
 
-        date_and_time = datetime.now().strftime('%Y-%m-%d %H%M%S') # Sets the default filename with date and time 
+        date_and_time = datetime.now().strftime('%Y-%m-%d %H%M%S')
         filename = "Viewer screenshot " + date_and_time + ".png"
-        name_filters = "PNG (*.png);; JPEG (*.jpeg);; TIFF (*.tiff);; JPG (*.jpg);; TIF (*.tif)" # Allows users to select filetype of screenshot
+        name_filters = "PNG (*.png);; JPEG (*.jpeg);; TIFF (*.tiff);; JPG (*.jpg);; TIF (*.tif)"
 
         self.display_loading_grayout(True, "Selecting folder and name for the viewer screenshot...", pseudo_load_time=0)
         
@@ -543,17 +553,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         """Hide instructions label of MDIArea."""
         self.label_mdiarea.setVisible(False)
 
-    def show_interface(self, boolean):
-        """Show/hide interface elements for sliding overlay creator and transparencies.
-
-        Args:
-            boolean (bool): True to show interface; False to hide.
-        """ 
-        if boolean:
-            self.show_interface_on()
-        elif not boolean:
-            self.show_interface_off()
-
     def show_interface_on(self):
         """Show interface elements for sliding overlay creator and transparencies.""" 
         if self.is_interface_showing:
@@ -593,15 +592,20 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         if self.interface_toggle_pushbutton:
             self.interface_toggle_pushbutton.setChecked(False)
-            self.interface_toggle_pushbutton.setAttribute(QtCore.Qt.WA_UnderMouse, False)
+            self.interface_toggle_pushbutton.setAttribute(QtCore.Qt.WidgetAttribute.WA_UnderMouse, False)
 
-    def toggle_interface(self):
+    def toggle_interface(self, boolean=None):
         """Toggle visibilty of interface elements for sliding overlay creator and transparencies.""" 
-        if self.is_interface_showing: # If interface is showing, then toggle it off; if not, then toggle it on
+        if self.is_interface_showing:
             self.show_interface_off()
         else:
             self.show_interface_on()
 
+    def toggle_show_labels_in_quiet_mode(self, checked):
+        """Set whether filenames stay visible when the interface is hidden (studio mode)."""
+        self.show_labels_in_quiet_mode = checked
+        self.update_window_labels(self._mdiArea.activeSubWindow())
+    
     def set_stopsync_pushbutton(self, boolean):
         """Set state of synchronous zoom/pan and appearance of corresponding interface button.
 
@@ -643,9 +647,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         centralwidget_to_be_made_fullscreen.setParent(None)
 
-        # move() is needed when using multiple monitors because when the widget loses its parent, its position moves to the primary screen origin (0,0) instead of retaining the app's screen
-        # The solution is to move the widget to the position of the app window and then make the widget fullscreen
-        # A timer is needed for showFullScreen() to apply on the app's screen (otherwise the command is made before the widget's move is established)
         centralwidget_to_be_made_fullscreen.move(position_of_window)
         QtCore.QTimer.singleShot(50, centralwidget_to_be_made_fullscreen.showFullScreen)
 
@@ -689,7 +690,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.is_fullscreen = False
         if self.fullscreen_pushbutton:
             self.fullscreen_pushbutton.setChecked(False)
-            self.fullscreen_pushbutton.setAttribute(QtCore.Qt.WA_UnderMouse, False)
+            self.fullscreen_pushbutton.setAttribute(QtCore.Qt.WidgetAttribute.WA_UnderMouse, False)
 
         self.refreshPanDelayed(100)
 
@@ -741,7 +742,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             return
         changed_window = window
         label_visible = True
-        if self.is_quiet_mode:
+        if self.is_quiet_mode and not self.show_labels_in_quiet_mode:
             label_visible = False
         changed_window.widget().label_main_topleft.set_visible_based_on_text(label_visible)
         changed_window.widget().label_topright.set_visible_based_on_text(label_visible)
@@ -894,7 +895,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.display_loading_grayout(True, "Loading viewer with main image '" + filename_main_topleft.split("/")[-1] + "'...")
 
         activeMdiChild = self.activeMdiChild
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
 
         transform_mode_smooth = self.is_global_transform_mode_smooth
         
@@ -906,7 +907,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         QtWidgets.QApplication.restoreOverrideCursor()
         
         if (not pixmap or
-            pixmap.width()==0 or pixmap.height==0):
+            pixmap.width()==0 or pixmap.height()==0):
             self.display_loading_grayout(True, "Waiting on dialog box...")
             QtWidgets.QMessageBox.warning(self, APPNAME,
                                       "Cannot read file %s." % (filename_main_topleft,))
@@ -933,7 +934,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         child = self.createMdiChild(pixmap, filename_main_topleft, pixmap_topright, pixmap_bottomleft, pixmap_bottomright, transform_mode_smooth)
 
-        # Show filenames
         child.label_main_topleft.setText(filename_main_topleft)
         child.label_topright.setText(filename_topright)
         child.label_bottomright.setText(filename_bottomright)
@@ -996,7 +996,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         child.sync_this_zoom = True
         child.sync_this_pan = True
         
-        self._mdiArea.addSubWindow(child, QtCore.Qt.FramelessWindowHint) # LVM: No frame, starts fitted
+        self._mdiArea.addSubWindow(child, QtCore.Qt.WindowType.FramelessWindowHint)
 
         child.scrollChanged.connect(self.panChanged)
         child.transformChanged.connect(self.zoomChanged)
@@ -1022,13 +1022,11 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     @QtCore.pyqtSlot()
     def on_create_splitview(self):
         """Load a sliding overlay using the filepaths of the current images in the sliding overlay creator."""
-        # Get filenames
         file_path_main_topleft = self._splitview_creator.drag_drop_area.app_main_topleft.file_path
         file_path_topright = self._splitview_creator.drag_drop_area.app_topright.file_path
         file_path_bottomleft = self._splitview_creator.drag_drop_area.app_bottomleft.file_path
         file_path_bottomright = self._splitview_creator.drag_drop_area.app_bottomright.file_path
 
-        # loadFile with those filenames
         self.loadFile(file_path_main_topleft, file_path_topright, file_path_bottomleft, file_path_bottomright)
 
     def fit_to_window(self):
@@ -1039,7 +1037,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     def update_split(self):
         """Update the position of the split of the active subwindow (if it exists) relying on the global mouse coordinates."""
         if self.activeMdiChild:
-            self.activeMdiChild.update_split() # No input = Rely on global mouse position calculation
+            self.activeMdiChild.update_split()
 
     def lock_split(self):
         """Lock the position of the overlay split of active subwindow and set relevant interface elements."""
@@ -1125,10 +1123,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         pos_qcursor_global = QtGui.QCursor.pos()
         
         if self.activeMdiChild:
-        
-            # Use mouse position to grab scene coordinates (activeMdiChild?)
             active_view = self.activeMdiChild._view_main_topleft
-            point_of_mouse_on_scene = active_view.mapToScene(point_of_mouse_on_viewport.x(), point_of_mouse_on_viewport.y())
+            point_of_mouse_on_scene = active_view.mapToScene(int(point_of_mouse_on_viewport.x()), int(point_of_mouse_on_viewport.y()))
 
             if not self._label_mouse.isVisible():
                 self._label_mouse.show()
@@ -1136,10 +1132,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             
             pos_qcursor_view = active_view.mapFromGlobal(pos_qcursor_global)
             pos_qcursor_scene = active_view.mapToScene(pos_qcursor_view)
-            # print("Cursor coords scene: ( %d , %d )" % (pos_qcursor_scene.x(), pos_qcursor_scene.y()))
-            
         else:
-            
             self._label_mouse.setText("View pixel coordinates: ( N/A , N/A )")
             
         self._label_mouse.adjustSize()
@@ -1147,17 +1140,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     
     # Transparency methods
 
-
     @QtCore.pyqtSlot(int)
     def on_slider_opacity_base_changed(self, value):
-        """Set transparency of base of sliding overlay of active subwindow.
-        
-        Triggered upon change in interface transparency slider.
-        Temporarily sets position of split to the center of the visible area to give user a preview of the transparency effect.
-
-        Args:
-            value (float,int): The transparency as percent opacity, where 100 is opaque (not transparent) and 0 is transparent (0-100).
-        """
         if not self.activeMdiChild:
             return
         if not self.activeMdiChild.split_locked:
@@ -1166,14 +1150,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot(int)
     def on_slider_opacity_topright_changed(self, value):
-        """Set transparency of top-right of sliding overlay of active subwindow.
-        
-        Triggered upon change in interface transparency slider.
-        Temporarily sets position of split to the center of the visible area to give user a preview of the transparency effect.
-
-        Args:
-            value (float,int): The transparency as percent opacity, where 100 is opaque (not transparent) and 0 is transparent (0-100).
-        """
         if not self.activeMdiChild:
             return
         if not self.activeMdiChild.split_locked:
@@ -1182,14 +1158,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot(int)
     def on_slider_opacity_bottomright_changed(self, value):
-        """Set transparency of bottom-right of sliding overlay of active subwindow.
-        
-        Triggered upon change in interface transparency slider.
-        Temporarily sets position of split to the center of the visible area to give user a preview of the transparency effect.
-
-        Args:
-            value (float,int): The transparency as percent opacity, where 100 is opaque (not transparent) and 0 is transparent (0-100).
-        """
         if not self.activeMdiChild:
             return
         if not self.activeMdiChild.split_locked:
@@ -1198,14 +1166,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot(int)
     def on_slider_opacity_bottomleft_changed(self, value):
-        """Set transparency of bottom-left of sliding overlay of active subwindow.
-        
-        Triggered upon change in interface transparency slider.
-        Temporarily sets position of split to the center of the visible area to give user a preview of the transparency effect.
-
-        Args:
-            value (float,int): The transparency as percent opacity, where 100 is opaque (not transparent) and 0 is transparent (0-100).
-        """
         if not self.activeMdiChild:
             return
         if not self.activeMdiChild.split_locked:
@@ -1237,102 +1197,93 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     # [Legacy methods from derived MDI Image Viewer]
 
     def createMappedAction(self, icon, text, parent, shortcut, methodName):
-        """Create |QAction| that is mapped via methodName to call.
-
-        :param icon: icon associated with |QAction|
-        :type icon: |QIcon| or None
-        :param str text: the |QAction| descriptive text
-        :param QObject parent: the parent |QObject|
-        :param QKeySequence shortcut: the shortcut |QKeySequence|
-        :param str methodName: name of method to call when |QAction| is
-                               triggered
-        :rtype: |QAction|"""
-
         if icon is not None:
-            action = QtWidgets.QAction(icon, text, parent,
-                                   shortcut=shortcut,
-                                   triggered=self._actionMapper.map)
+            action = QtGui.QAction(icon, text, parent, shortcut=shortcut)
         else:
-            action = QtWidgets.QAction(text, parent,
-                                   shortcut=shortcut,
-                                   triggered=self._actionMapper.map)
-        self._actionMapper.setMapping(action, methodName)
+            action = QtGui.QAction(text, parent, shortcut=shortcut)
+        action.triggered.connect(
+            lambda checked=False, name=methodName: self.mappedImageViewerAction(name)
+        )
         return action
 
     def createActions(self):
         """Create actions used in menus."""
-        #File menu actions
-        self._openAct = QtWidgets.QAction(
+        self._openAct = QtGui.QAction(
             "&Open...", self,
-            shortcut=QtGui.QKeySequence.Open,
+            shortcut=QtGui.QKeySequence.StandardKey.Open,
             statusTip="Open an existing file",
             triggered=self.open)
 
-        self._switchLayoutDirectionAct = QtWidgets.QAction(
+        self._switchLayoutDirectionAct = QtGui.QAction(
             "Switch &layout direction", self,
             triggered=self.switchLayoutDirection)
 
-        #create dummy recent file actions
         for i in range(MultiViewMainWindow.MaxRecentFiles):
-            self._recentFileActions.append(
-                QtWidgets.QAction(self, visible=False,
-                              triggered=self._recentFileMapper.map))
+            action = QtGui.QAction(self, visible=False)
+            action.triggered.connect(
+                lambda checked=False, a=action: self.open_recent_file_from_action(a)
+            )
+            self._recentFileActions.append(action)
 
-        self._exitAct = QtWidgets.QAction(
+        self._exitAct = QtGui.QAction(
             "E&xit", self,
-            shortcut=QtGui.QKeySequence.Quit,
+            shortcut=QtGui.QKeySequence.StandardKey.Quit,
             statusTip="Exit the application",
             triggered=QtWidgets.QApplication.closeAllWindows)
 
-        #View menu actions
-        self._showScrollbarsAct = QtWidgets.QAction(
+        self._showScrollbarsAct = QtGui.QAction(
             "&Scrollbars", self,
             checkable=True,
             statusTip="Toggle display of subwindow scrollbars",
             triggered=self.toggleScrollbars)
 
-        self._showStatusbarAct = QtWidgets.QAction(
+        self._showStatusbarAct = QtGui.QAction(
             "S&tatusbar", self,
             checkable=True,
             statusTip="Toggle display of statusbar",
             triggered=self.toggleStatusbar)
 
-        self._synchZoomAct = QtWidgets.QAction(
+        self._synchZoomAct = QtGui.QAction(
             "Synch &Zoom", self,
             checkable=True,
             statusTip="Synch zooming of subwindows",
             triggered=self.toggleSynchZoom)
 
-        self._synchPanAct = QtWidgets.QAction(
+        self._synchPanAct = QtGui.QAction(
             "Synch &Pan", self,
             checkable=True,
             statusTip="Synch panning of subwindows",
             triggered=self.toggleSynchPan)
 
-        #Scroll menu actions
+        self._showLabelsInQuietModeAct = QtGui.QAction(
+            "Show &Filenames in studio mode", self,
+            checkable=True,
+            statusTip="Show filenames of image windows even when the interface is hidden",
+            triggered=self.toggle_show_labels_in_quiet_mode)
+
         self._scrollActions = [
             self.createMappedAction(
                 None,
                 "&Top", self,
-                QtGui.QKeySequence.MoveToStartOfDocument,
+                QtGui.QKeySequence.StandardKey.MoveToStartOfDocument,
                 "scrollToTop"),
 
             self.createMappedAction(
                 None,
                 "&Bottom", self,
-                QtGui.QKeySequence.MoveToEndOfDocument,
+                QtGui.QKeySequence.StandardKey.MoveToEndOfDocument,
                 "scrollToBottom"),
 
             self.createMappedAction(
                 None,
                 "&Left Edge", self,
-                QtGui.QKeySequence.MoveToStartOfLine,
+                QtGui.QKeySequence.StandardKey.MoveToStartOfLine,
                 "scrollToBegin"),
 
             self.createMappedAction(
                 None,
                 "&Right Edge", self,
-                QtGui.QKeySequence.MoveToEndOfLine,
+                QtGui.QKeySequence.StandardKey.MoveToEndOfLine,
                 "scrollToEnd"),
 
             self.createMappedAction(
@@ -1342,28 +1293,21 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 "centerView"),
             ]
 
-        #zoom menu actions
-        separatorAct = QtWidgets.QAction(self)
+        separatorAct = QtGui.QAction(self)
         separatorAct.setSeparator(True)
 
         self._zoomActions = [
             self.createMappedAction(
                 None,
                 "Zoo&m In (25%)", self,
-                QtGui.QKeySequence.ZoomIn,
+                QtGui.QKeySequence.StandardKey.ZoomIn,
                 "zoomIn"),
 
             self.createMappedAction(
                 None,
                 "Zoom &Out (25%)", self,
-                QtGui.QKeySequence.ZoomOut,
+                QtGui.QKeySequence.StandardKey.ZoomOut,
                 "zoomOut"),
-
-            #self.createMappedAction(
-                #None,
-                #"&Zoom To...", self,
-                #"Z",
-                #"zoomTo"),
 
             separatorAct,
 
@@ -1392,59 +1336,57 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                 "fitHeight"),
            ]
 
-        #Window menu actions
-        self._activateSubWindowSystemMenuAct = QtWidgets.QAction(
+        self._activateSubWindowSystemMenuAct = QtGui.QAction(
             "Activate &System Menu", self,
             shortcut="Ctrl+ ",
             statusTip="Activate subwindow System Menu",
             triggered=self.activateSubwindowSystemMenu)
 
-        self._closeAct = QtWidgets.QAction(
+        self._closeAct = QtGui.QAction(
             "Cl&ose", self,
-            shortcut=QtGui.QKeySequence.Close,
-            shortcutContext=QtCore.Qt.WidgetShortcut,
-            #shortcut="Ctrl+Alt+F4",
+            shortcut=QtGui.QKeySequence.StandardKey.Close,
+            shortcutContext=QtCore.Qt.ShortcutContext.WidgetShortcut,
             statusTip="Close the active window",
             triggered=self._mdiArea.closeActiveSubWindow)
 
-        self._closeAllAct = QtWidgets.QAction(
+        self._closeAllAct = QtGui.QAction(
             "Close &All", self,
             statusTip="Close all the windows",
             triggered=self._mdiArea.closeAllSubWindows)
 
-        self._tileAct = QtWidgets.QAction(
+        self._tileAct = QtGui.QAction(
             "&Tile", self,
             statusTip="Tile the windows",
             triggered=self._mdiArea.tileSubWindows)
 
         self._tileAct.triggered.connect(self.tile_and_fit_mdiArea)
 
-        self._cascadeAct = QtWidgets.QAction(
+        self._cascadeAct = QtGui.QAction(
             "&Cascade", self,
             statusTip="Cascade the windows",
             triggered=self._mdiArea.cascadeSubWindows)
 
-        self._nextAct = QtWidgets.QAction(
+        self._nextAct = QtGui.QAction(
             "Ne&xt", self,
-            shortcut=QtGui.QKeySequence.NextChild,
+            shortcut=QtGui.QKeySequence.StandardKey.NextChild,
             statusTip="Move the focus to the next window",
             triggered=self._mdiArea.activateNextSubWindow)
 
-        self._previousAct = QtWidgets.QAction(
+        self._previousAct = QtGui.QAction(
             "Pre&vious", self,
-            shortcut=QtGui.QKeySequence.PreviousChild,
+            shortcut=QtGui.QKeySequence.StandardKey.PreviousChild,
             statusTip="Move the focus to the previous window",
             triggered=self._mdiArea.activatePreviousSubWindow)
 
-        self._separatorAct = QtWidgets.QAction(self)
+        self._separatorAct = QtGui.QAction(self)
         self._separatorAct.setSeparator(True)
 
-        self._aboutAct = QtWidgets.QAction(
+        self._aboutAct = QtGui.QAction(
             "&About", self,
             statusTip="Show the application's About box",
             triggered=self.about)
 
-        self._aboutQtAct = QtWidgets.QAction(
+        self._aboutQtAct = QtGui.QAction(
             "About &Qt", self,
             statusTip="Show the Qt library's About box",
             triggered=QtWidgets.QApplication.aboutQt)
@@ -1468,6 +1410,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self._viewMenu.addSeparator()
         self._viewMenu.addAction(self._synchZoomAct)
         self._viewMenu.addAction(self._synchPanAct)
+        self._viewMenu.addSeparator()
+        self._viewMenu.addAction(self._showLabelsInQuietModeAct)
 
         self._scrollMenu = self.menuBar().addMenu("&Scroll")
         [self._scrollMenu.addAction(action) for action in self._scrollActions]
@@ -1513,8 +1457,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             self._recentFileActions[i].setText(text)
             self._recentFileActions[i].setData(files[i])
             self._recentFileActions[i].setVisible(True)
-            self._recentFileMapper.setMapping(self._recentFileActions[i],
-                                              files[i])
 
         for j in range(numRecentFiles, MultiViewMainWindow.MaxRecentFiles):
             self._recentFileActions[j].setVisible(False)
@@ -1547,17 +1489,15 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             action = self._windowMenu.addAction(text)
             action.setCheckable(True)
             action.setChecked(child == self.activeMdiChild)
-            action.triggered.connect(self._windowMapper.map)
-            self._windowMapper.setMapping(action, window)
+            action.triggered.connect(
+                lambda checked=False, w=window: self.setActiveSubWindow(w)
+            )
 
-    def createStatusBarLabel(self, stretch=0):
-        """Create status bar label.
-
-        :param int stretch: stretch factor
-        :rtype: |QLabel|"""
+    def createStatusBarLabel(self, tooltip, stretch=0):
         label = QtWidgets.QLabel()
-        label.setFrameStyle(QtWidgets.QFrame.Panel | QtWidgets.QFrame.Sunken)
-        label.setLineWidth(2)
+        label.setFrameStyle(QtWidgets.QFrame.Shape.Panel | QtWidgets.QFrame.Shadow.Plain)
+        label.setLineWidth(1)
+        label.setToolTip(tooltip)
         self.statusBar().addWidget(label, stretch)
         return label
 
@@ -1565,11 +1505,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         """Create status bar."""
         statusBar = self.statusBar()
 
-        self._sbLabelName = self.createStatusBarLabel(1)
-        self._sbLabelSize = self.createStatusBarLabel()
-        self._sbLabelDimensions = self.createStatusBarLabel()
-        self._sbLabelDate = self.createStatusBarLabel()
-        self._sbLabelZoom = self.createStatusBarLabel()
+        self._sbLabelName = self.createStatusBarLabel("File name", 1)
+        self._sbLabelSize = self.createStatusBarLabel("File size")
+        self._sbLabelDimensions = self.createStatusBarLabel("Image dimensions and color depth")
+        self._sbLabelDate = self.createStatusBarLabel("File last modified date")
+        self._sbLabelZoom = self.createStatusBarLabel("Current zoom")
+        self._sbLabelAvailRam = self.createStatusBarLabel("Available RAM")
 
         statusBar.showMessage("Ready")
 
@@ -1584,11 +1525,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
 
     def closeEvent(self, event):
-        """Overrides close event to save application settings.
-
-        :param QEvent event: instance of |QEvent|"""
-
-        if self.is_fullscreen: # Needed to properly close the image viewer if the main window is closed while the viewer is fullscreen
+        if self.is_fullscreen:
             self.is_fullscreen = False
             self.setCentralWidget(self.mdiarea_plus_buttons)
 
@@ -1608,10 +1545,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
     
     @QtCore.pyqtSlot(str)
     def mappedImageViewerAction(self, methodName):
-        """Perform action mapped to :class:`aux_splitview.SplitView`
-        methodName.
-
-        :param str methodName: method to call"""
         activeViewer = self.activeMdiChild
         if hasattr(activeViewer, str(methodName)):
             getattr(activeViewer, str(methodName))()
@@ -1646,16 +1579,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self.updateStatusBar()
 
     def synchPan(self, fromViewer):
-        """Synch panning of all subwindowws to the same as *fromViewer*.
-
-        :param fromViewer: :class:`SplitViewMdiChild` that initiated synching"""
-
         assert isinstance(fromViewer, SplitViewMdiChild)
         if not fromViewer:
             return
         if self._handlingScrollChangedSignal:
             return
-        if fromViewer.parent() != self._mdiArea.activeSubWindow(): # Prevent circular scroll state change signals from propagating
+        if fromViewer.parent() != self._mdiArea.activeSubWindow():
             if fromViewer.parent() != self:
                 return
         self._handlingScrollChangedSignal = True
@@ -1672,9 +1601,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self._handlingScrollChangedSignal = False
 
     def synchZoom(self, fromViewer):
-        """Synch zoom of all subwindowws to the same as *fromViewer*.
-
-        :param fromViewer: :class:`SplitViewMdiChild` that initiated synching"""
         if not fromViewer:
             return
         newZoomFactor = fromViewer.zoomFactor
@@ -1716,16 +1642,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot()
     def activateSubwindowSystemMenu(self):
-        """Activate current subwindow's System Menu."""
         activeSubWindow = self._mdiArea.activeSubWindow()
         if activeSubWindow:
             activeSubWindow.showSystemMenu()
 
     @QtCore.pyqtSlot(str)
     def openRecentFile(self, filename_main_topleft):
-        """Open a recent file.
-
-        :param str filename_main_topleft: filename_main_topleft to view"""
         self.loadFile(filename_main_topleft, None, None, None)
 
     @QtCore.pyqtSlot()
@@ -1744,13 +1666,19 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             fileDialog.setDirectory(".")
         else:
             self.restoreDialogState(fileDialog, SETTING_FILEOPEN)
-        fileDialog.setFileMode(QtWidgets.QFileDialog.ExistingFile)
-        if not fileDialog.exec_():
+        fileDialog.setFileMode(QtWidgets.QFileDialog.FileMode.ExistingFile)
+        if not fileDialog.exec():
             return
         self.saveDialogState(fileDialog, SETTING_FILEOPEN)
 
         filename_main_topleft = fileDialog.selectedFiles()[0]
         self.loadFile(filename_main_topleft, None, None, None)
+
+    def open_recent_file_from_action(self, action):
+        """Open file from QAction - recent (replacing QSignalMapper)."""
+        filepath = action.data()
+        if isinstance(filepath, str) and filepath:
+            self.openRecentFile(filepath)
 
     def open_multiple(self):
         """Handle the open multiple action."""
@@ -1771,7 +1699,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot()
     def toggleScrollbars(self):
-        """Toggle subwindow scrollbar visibility."""
         checked = self._showScrollbarsAct.isChecked()
 
         windows = self._mdiArea.subWindowList()
@@ -1781,37 +1708,38 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
     @QtCore.pyqtSlot()
     def toggleStatusbar(self):
-        """Toggle status bar visibility."""
         self.statusBar().setVisible(self._showStatusbarAct.isChecked())
+        if self._showStatusbarAct.isChecked():
+            self.updateStatusBar()
 
 
     @QtCore.pyqtSlot()
     def about(self):
-        """Display About dialog box."""
         QtWidgets.QMessageBox.about(self, "About MDI",
                 "<b>MDI Image Viewer</b> demonstrates how to"
                 "synchronize the panning and zooming of multiple image"
                 "viewer windows using Qt.")
+
     @QtCore.pyqtSlot(QtWidgets.QMdiSubWindow)
     def subWindowActivated(self, window):
-        """Handle |QMdiSubWindow| activated signal.
-
-        :param |QMdiSubWindow| window: |QMdiSubWindow| that was just
-                                       activated"""
         self.updateStatusBar()
 
     @QtCore.pyqtSlot(QtWidgets.QMdiSubWindow)
     def setActiveSubWindow(self, window):
-        """Set active |QMdiSubWindow|.
-
-        :param |QMdiSubWindow| window: |QMdiSubWindow| to activate """
         if window:
             self._mdiArea.setActiveSubWindow(window)
 
 
     def updateStatusBar(self):
         """Update status bar."""
+        
         self.statusBar().setVisible(self._showStatusbarAct.isChecked())
+        if not self._showStatusbarAct.isChecked():
+            return
+        
+        self._sbLabelAvailRam.show()
+        self._sbLabelAvailRam.setText(size_format(psutil.virtual_memory().available))
+
         imageViewer = self.activeMdiChild
         if not imageViewer:
             self._sbLabelName.setText("")
@@ -1831,20 +1759,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         fi = QtCore.QFileInfo(filename_main_topleft)
         size = fi.size()
-        fmt = " %.1f %s "
-        if size > 1024*1024*1024:
-            unit = "MB"
-            size /= 1024*1024*1024
-        elif size > 1024*1024:
-            unit = "MB"
-            size /= 1024*1024
-        elif size > 1024:
-            unit = "KB"
-            size /= 1024
-        else:
-            unit = "Bytes"
-            fmt = " %d %s "
-        self._sbLabelSize.setText(fmt % (size, unit))
+        self._sbLabelSize.setText(size_format(size))
 
         pixmap = imageViewer.pixmap_main_topleft
         self._sbLabelDimensions.setText(" %dx%dx%d " %
@@ -1854,7 +1769,7 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
 
         self._sbLabelDate.setText(
             " %s " %
-            fi.lastModified().toString(QtCore.Qt.SystemLocaleShortDate))
+            fi.lastModified().toString(QtCore.Qt.DateFormat.ISODate))
         self._sbLabelZoom.setText(" %0.f%% " % (imageViewer.zoomFactor*100,))
 
         self._sbLabelSize.show()
@@ -1863,17 +1778,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         self._sbLabelZoom.show()
         
     def switchLayoutDirection(self):
-        """Switch MDI subwindow layout direction."""
-        if self.layoutDirection() == QtCore.Qt.LeftToRight:
-            QtWidgets.QApplication.setLayoutDirection(QtCore.Qt.RightToLeft)
+        if self.layoutDirection() == QtCore.Qt.LayoutDirection.LeftToRight:
+            QtWidgets.QApplication.setLayoutDirection(QtCore.Qt.LayoutDirection.RightToLeft)
         else:
-            QtWidgets.QApplication.setLayoutDirection(QtCore.Qt.LeftToRight)
+            QtWidgets.QApplication.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
 
     def saveDialogState(self, dialog, groupName):
-        """Save dialog state, position & size.
-
-        :param |QDialog| dialog: dialog to save state of
-        :param str groupName: |QSettings| group name"""
         assert isinstance(dialog, QtWidgets.QDialog)
 
         settings = QtCore.QSettings()
@@ -1886,9 +1796,6 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         settings.endGroup()
 
     def restoreDialogState(self, dialog, groupName):
-        """Restore dialog state, position & size.
-
-        :param str groupName: |QSettings| group name"""
         assert isinstance(dialog, QtWidgets.QDialog)
 
         settings = QtCore.QSettings()
@@ -1916,6 +1823,8 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
                           self._synchZoomAct.isChecked())
         settings.setValue(SETTING_SYNCHPAN,
                           self._synchPanAct.isChecked())
+        settings.setValue(SETTING_LABELS_IN_QUIETMODE,
+                          self._showLabelsInQuietModeAct.isChecked())
 
     def readSettings(self):
         """Read application settings."""
@@ -1958,12 +1867,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
             self._synchPanAct.setChecked(
                 toBool(settings.value(SETTING_SYNCHPAN, False)))
 
-    def updateRecentFileSettings(self, filename_main_topleft, delete=False):
-        """Update recent file list setting.
+        self._showLabelsInQuietModeAct.setChecked(
+            toBool(settings.value(SETTING_LABELS_IN_QUIETMODE, True)))
+        self.show_labels_in_quiet_mode = self._showLabelsInQuietModeAct.isChecked()
 
-        :param str filename_main_topleft: filename_main_topleft to add or remove from recent file
-                             list
-        :param bool delete: if True then filename_main_topleft removed, otherwise added"""
+
+    def updateRecentFileSettings(self, filename_main_topleft, delete=False):
         settings = QtCore.QSettings()
         
         try:
@@ -1983,21 +1892,12 @@ class MultiViewMainWindow(QtWidgets.QMainWindow):
         settings.setValue(SETTING_RECENTFILELIST, files)
 
 
-
 def main():
-    """Run MultiViewMainWindow as main app.
-    
-    Attributes:
-        app (QApplication): Starts and holds the main event loop of application.
-        mainWin (MultiViewMainWindow): The main window.
-    """
     parser = argparse.ArgumentParser(
                 prog='Butterfly Viewer',
                 description='Side-by-side image viewer with synchronized zoom and sliding overlays. Further info: https://olive-groves.github.io/butterfly_viewer/'
             )
 
-    # Note that despite using argparse, we still forward argv to QApplication further below, so that users can optionally
-    # provide QT-specific arguments. Be sure to choose specific names for custom arguments that won't clash with QT.
     parser.add_argument('--hide', help='If provided, hides the interface on start.', action='store_true')
     parser.add_argument('--fullscreen', help='If provided, fullscreens the app on start.', action='store_true')
     parser.add_argument('--paths', nargs="*", help='If provided, automatically starts with individual (side by side) image windows supplied by these paths.')
@@ -2009,17 +1909,18 @@ def main():
 
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    QtCore.QSettings.setDefaultFormat(QtCore.QSettings.IniFormat)
+    QtCore.QSettings.setDefaultFormat(QtCore.QSettings.Format.IniFormat)
     app.setOrganizationName(COMPANY)
     app.setOrganizationDomain(DOMAIN)
     app.setApplicationName(APPNAME)
     app.setApplicationVersion(VERSION)
     app.setWindowIcon(QtGui.QIcon(":/icons/icon.png"))
 
+    setAvailableMemory()
+
     mainWin = MultiViewMainWindow()
     mainWin.setWindowTitle(APPNAME)
 
-    # Load any predefined images:
     if args.paths:
         for path in args.paths:
             mainWin.loadFile(path)
@@ -2042,14 +1943,13 @@ def main():
     if preloadedImageCount >= 2:
         mainWin.on_create_splitview()
 
-    # Settings:
     if args.hide:
         mainWin.show_interface_off()
     if args.fullscreen:
         mainWin.set_fullscreen_on()
 
     mainWin.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 if __name__ == '__main__':
     main()

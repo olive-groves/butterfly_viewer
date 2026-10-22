@@ -3,14 +3,12 @@
 """QGraphicsScene with signals and right-click functionality for SplitView.
 
 Not intended as a script.
-
-Creates the base (main) scene of the SplitView for the Butterfly Viewer and Registrator.
 """
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from aux_comments import CommentItem
 from aux_rulers import RulerItem
@@ -19,18 +17,8 @@ from aux_dialogs import PixelUnitConversionInputDialog
 
 
 class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
-    """QGraphicsScene with signals and right-click functionality for SplitView.
+    """QGraphicsScene with signals and right-click functionality for SplitView."""
 
-    Recommended to be instantiated without input (for example, my_scene = CustomQGraphicsScene())
-    
-    Signals for right click menu for comments (create comment, save comments, load comments).
-    Signals for right click menu for rulers (create ruler, set origin relative position, set px-per-unit conversion) 
-    Signals for right click menu for transform mode (interpolate, non-interpolate)
-    Methods for right click menu.
-
-    Args:
-        Identical to base class QGraphicsScene.
-    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -61,11 +49,11 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
         self.disable_right_click = False
 
     right_click_comment = QtCore.pyqtSignal(QtCore.QPointF)
-    right_click_ruler = QtCore.pyqtSignal(QtCore.QPointF, str, str, float) # Scene position, relative origin position, unit, px-per-unit
+    right_click_ruler = QtCore.pyqtSignal(QtCore.QPointF, str, str, float)
     right_click_save_all_comments = QtCore.pyqtSignal()
     right_click_load_comments = QtCore.pyqtSignal()
     right_click_relative_origin_position = QtCore.pyqtSignal(str)
-    changed_px_per_unit = QtCore.pyqtSignal(str, float) # Unit, px-per-unit
+    changed_px_per_unit = QtCore.pyqtSignal(str, float)
     right_click_single_transform_mode_smooth = QtCore.pyqtSignal(bool)
     right_click_all_transform_mode_smooth = QtCore.pyqtSignal(bool)
     right_click_background_color = QtCore.pyqtSignal(list)
@@ -73,13 +61,6 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
     position_changed_qgraphicsitem = QtCore.pyqtSignal()
     
     def contextMenuEvent(self, event):
-        """Override the event of the context menu (right-click menu)  to display options.
-
-        Triggered when mouse is right-clicked on scene.
-
-        Args:
-            event (PyQt event for contextMenuEvent)
-        """
         if self.disable_right_click:
             return
         
@@ -90,20 +71,14 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
 
         action_delete = None
         menu_set_color = None
-        action_set_color_red = None
-        action_set_color_white = None
-        action_set_color_blue = None
-        action_set_color_green = None
-        action_set_color_yellow = None
-        action_set_color_black = None
 
         item_parent = item
         if item is not None:
-            while item_parent.parentItem(): # Loop "upwards" to find parent item
+            while item_parent.parentItem():
                 item_parent = item_parent.parentItem()
         
         if isinstance(item_parent, CommentItem) or isinstance(item_parent, RulerItem):
-            action_delete = QtWidgets.QAction("Delete")
+            action_delete = QtGui.QAction("Delete")
 
             if isinstance(item_parent, CommentItem):
                 menu_set_color = QtWidgets.QMenu("Set comment color...")
@@ -130,11 +105,11 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
             if menu_set_color:
                 menu.addMenu(menu_set_color)
             if action_delete:
-                menu.addAction(action_delete) # action_delete.triggered.connect(lambda: self.removeItem(item.parentItem())) # = menu.addAction("Delete", self.removeItem(item.parentItem()))
+                menu.addAction(action_delete)
         else:
             action_comment = menu.addAction("Comment")
             action_comment.setToolTip("Add a draggable text comment here")
-            action_comment.triggered.connect(lambda: self.right_click_comment.emit(scene_pos)) # action_comment.triggered.connect(lambda state, x=scene_pos: self.right_click_comment.emit(x))
+            action_comment.triggered.connect(lambda: self.right_click_comment.emit(scene_pos))
 
             menu_ruler = QtWidgets.QMenu("Measurement ruler...")
             menu_ruler.setToolTip("Add a ruler to measure distances and angles in this image window...")
@@ -230,7 +205,7 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
             action_set_all_transform_mode_smooth_on = menu_transform.addAction("Switch all on")
             action_set_all_transform_mode_smooth_on.setToolTip(transform_on_tooltip_str+" (applies to all windows)")
             action_set_all_transform_mode_smooth_on.triggered.connect(lambda: self.right_click_all_transform_mode_smooth.emit(True))
-    
+
             action_set_all_transform_mode_smooth_off = menu_transform.addAction("Switch all off")
             action_set_all_transform_mode_smooth_off.setToolTip(transform_off_tooltip_str+" (applies to all windows)")
             action_set_all_transform_mode_smooth_off.triggered.connect(lambda: self.right_click_all_transform_mode_smooth.emit(False))
@@ -270,42 +245,18 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
                     action_sync_zoom_by.setCheckable(True)
                     action_sync_zoom_by.setChecked(True)
 
-
-
         menu.exec(event.screenPos())
 
     def set_relative_origin_position(self, string):
-        """Set the descriptor of the position of the relative origin for rulers.
-
-        Describes the coordinate orientation:
-            "bottomleft" for Cartesian-style (positive X right, positive Y up)
-            "topleft" for image-style (positive X right, positive Y down)
-        
-        Args:
-            string (str): "topleft" or "bottomleft" for position of the origin for coordinate system of rulers.
-        """
         self.relative_origin_position = string
 
     def set_single_transform_mode_smooth(self, boolean):
-        """Set the descriptor of the status of smooth transform mode.
-
-        Describes the transform mode of pixels on zoom:
-            True for smooth (interpolated)
-            False for non-smooth (non-interpolated)
-        
-        Args:
-            boolean (bool): True for smooth; False for non-smooth.
-        """
         self.single_transform_mode_smooth = boolean
 
     def dialog_to_set_px_per_mm(self):
-        """Open the dialog for users to set the conversion for pixels to millimeters.
-        
-        Emits the value of the px-per-mm conversion if user clicks "Ok" on dialog.
-        """        
         dialog_window = PixelUnitConversionInputDialog(unit="mm", px_conversion=self.px_conversion, unit_conversion=self.unit_conversion, px_per_unit=self.px_per_unit)
-        dialog_window.setWindowModality(QtCore.Qt.ApplicationModal)
-        if dialog_window.exec_() == QtWidgets.QDialog.Accepted:
+        dialog_window.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
+        if dialog_window.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             self.px_per_unit = dialog_window.px_per_unit
             if self.px_per_unit_conversion_set:
                 self.changed_px_per_unit.emit("mm", self.px_per_unit)
@@ -315,33 +266,26 @@ class CustomQGraphicsScene(QtWidgets.QGraphicsScene):
 
     @property
     def background_color(self):
-        """Current background color."""
         return self._background_color
     
     @background_color.setter
     def background_color(self, color):
-        """Set color as list with descriptor and RGB values [str, r, g, b]."""
         self._background_color = color
 
     def background_color_lambda(self, color):
-        """Within lambda, set color as list with descriptor and RGB values [str, r, g, b]."""
         self.background_color = color
 
     @property
     def background_rgb(self):
-        """Current background color RGB [int, int, int]."""
         return self._background_color[1:4]
     
     @property
     def sync_zoom_by(self):
-        """Current sync zoom by."""
         return self._sync_zoom_by
     
     @sync_zoom_by.setter
     def sync_zoom_by(self, by):
-        """Set sync zoom by as str."""
         self._sync_zoom_by = by
 
     def sync_zoom_by_lambda(self, by):
-        """Within lambda, set sync zoom by str."""
         self.sync_zoom_by = by

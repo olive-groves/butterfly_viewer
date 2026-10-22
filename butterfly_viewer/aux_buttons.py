@@ -12,22 +12,15 @@ Credits:
 
 
 
-from PyQt5.QtGui import QColor, QPalette, qGray
-from PyQt5.QtWidgets import QAbstractButton, QGraphicsColorizeEffect, QWidget, qApp, QPushButton, QToolButton
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.QtGui import QColor, QPalette, qGray
+from PyQt6.QtWidgets import QAbstractButton, QGraphicsColorizeEffect, QWidget, QPushButton, QToolButton
 
 
 
 class SvgAbstractButton(QAbstractButton):
-    """QAbstractButton whose icon can be truly set to an SVG image file.
-    
-    Changes made to original SvgAbstractButton:
-    - Color setters
-    - Auto colors
-    - Default colors
-    
-    Original SvgAbstractButton: Copyright (c) 2022 Jung Gyu Yoon
-    From https://github.com/yjg30737/pyqt-svg-abstractbutton
-    """
+    """QAbstractButton whose icon can be truly set to an SVG image file."""
+
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__baseWidget = base_widget
@@ -35,8 +28,7 @@ class SvgAbstractButton(QAbstractButton):
         self.__styleInit()
 
     def __initVal(self):
-        # to set size accordance with scale
-        sc = qApp.screens()[0]
+        sc = QtWidgets.QApplication.instance().screens()[0]
         sc.logicalDotsPerInchChanged.connect(self.__scaleChanged)
         self.__size = sc.logicalDotsPerInch() // 4
         self.__padding = self.__border_radius = self.__size // 10
@@ -68,7 +60,7 @@ class SvgAbstractButton(QAbstractButton):
         self.__checked_border_factor = 220
 
     def __initColorByBaseWidget(self):
-        self.__base_color = self.__baseWidget.palette().color(QPalette.Base)
+        self.__base_color = self.__baseWidget.palette().color(QPalette.ColorRole.Base)
         self.__hover_color = self.__getHoverColor(self.__base_color)
         self.__pressed_color = self.__getPressedColor(self.__base_color)
         self.__checked_color = self.__getPressedColor(self.__base_color)
@@ -163,11 +155,7 @@ class SvgAbstractButton(QAbstractButton):
 
     def eventFilter(self, obj, e):
         if obj == self:
-            # to change grayscale when button gets disabled
-            # if button get enabled/disabled EnableChange will emit
-            # so catch the EnabledChange
-            if e.type() == 98:
-                # change to enabled state
+            if e.type() == QtCore.QEvent.Type.EnabledChange:
                 effect = QGraphicsColorizeEffect()
                 effect.setColor(QColor(255, 255, 255))
                 if self.isEnabled():
@@ -177,13 +165,10 @@ class SvgAbstractButton(QAbstractButton):
                     effect.setColor(QColor(150, 150, 150))
                 self.setGraphicsEffect(effect)
         if obj == self.__baseWidget:
-            # catch the StyleChange event of base widget
-            if e.type() == 100:
-                # if base widget's background is transparent (#ffffff)
-                if self.__baseWidget.palette().color(QPalette.Base).name() == '#ffffff':
-                    # then check the parent widget's background
+            if e.type() == QtCore.QEvent.Type.StyleChange:
+                if self.__baseWidget.palette().color(QPalette.ColorRole.Base).name() == '#ffffff':
                     if self.__baseWidget.parent():
-                        if self.__baseWidget.parent().palette().color(QPalette.Base).name() == '#ffffff':
+                        if self.__baseWidget.parent().palette().color(QPalette.ColorRole.Base).name() == '#ffffff':
                             pass
                         else:
                             self.__baseWidget = self.__baseWidget.parent()
@@ -212,14 +197,11 @@ class SvgAbstractButton(QAbstractButton):
         self.setBorderRadius(self.height() // 2)
         self.__styleInit()
 
-    # to set size accordance with scale
     def __scaleChanged(self, dpi):
         self.__size = dpi // 4
         self.__styleInit()
 
     def setHoverColor(self, color=None, auto=False):
-        """Set color when hovered ('#XXXXXX', '#XXX', '<color>', 'transparent', None)
-        """
         if auto:
             self.__hover_color = self.__getHoverColor(QColor(self.__checked_color))
         elif color:
@@ -231,8 +213,6 @@ class SvgAbstractButton(QAbstractButton):
         self.__styleInit()
 
     def setPressedColor(self, color=None, auto=False):
-        """Set color when pressed ('#XXXXXX', '#XXX', '<color>', 'transparent', None)
-        """
         if auto:
             self.__pressed_color = self.__getPressedColor(QColor(self.__checked_color))
         elif color:
@@ -244,8 +224,6 @@ class SvgAbstractButton(QAbstractButton):
         self.__styleInit()
 
     def setCheckedColor(self, color=None):
-        """Set color when checked ('#XXXXXX', '#XXX', '<color>', 'transparent', None)
-        """
         if color:
             self.__checked_color = color
         elif self.__baseWidget:
@@ -255,8 +233,6 @@ class SvgAbstractButton(QAbstractButton):
         self.__styleInit()
 
     def setTextColor(self, color=None):
-        """Set text color ('#XXXXXX', '#XXX', '<color>', 'transparent', None)
-        """
         if color:
             self.__text_color = color
         elif self.__baseWidget:
@@ -266,30 +242,16 @@ class SvgAbstractButton(QAbstractButton):
         self.__styleInit()
 
     def setCheckedBorderFactor(self, factor: int=220):
-        """[int 0-inf] Set lighten factor for checked border color.
-        """
         self.__checked_border_factor = factor
         self.__styleInit()
 
 
 class SvgButton(QPushButton, SvgAbstractButton):
-    """QPushButton which supports SVG icon.
-    
-    Copyright (c) 2022 Jung Gyu Yoon
-
-    From https://github.com/yjg30737/pyqt-svg-button/
-    """
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)
 
 
 class SvgToolButton(QToolButton, SvgAbstractButton):
-    """QToolButton which supports SVG icon
-    
-    Copyright (c) 2022 Jung Gyu Yoon
-
-    From https://github.com/yjg30737/pyqt-svg-toolbutton/blob/main/pyqt_svg_toolbutton/svgToolButton.py
-    """
     def __init__(self, base_widget: QWidget = None, *args, **kwargs):
         super().__init__(base_widget, *args, **kwargs)
 
